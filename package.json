@@ -3,7 +3,7 @@
   "displayName": "vsc-extension-gitlink",
   "description": "A VCS extension that opens a local file under Git version control in its remote host using the default browser.",
   "version": "0.0.1",
-  "icon": "resources/icon.svg",
+  "icon": "resources/gitlink.png",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -113,6 +113,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
+    "vscode:package": "vsce package",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",

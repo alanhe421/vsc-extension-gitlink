@@ -1,55 +1,55 @@
 # GitLink - VS Code Extension
 
-这个 VS Code 扩展允许你在 Git仓库下直接打开网页版地址。
+A VS Code extension that allows you to open the web version of files in your Git repository.
 
-目前支持[GitHub](https://github.com)、[Coding.net](https://coding.net)。
+Currently supports [GitHub](https://github.com), [Coding.net](https://coding.net), and other Git hosting platforms through custom configuration.
 
-## 功能
+## Features
 
-- 在编辑器中右键点击文件，选择 "Open in GitHub" 选项，在浏览器中打开文件
-- 在编辑器中右键点击文件，选择 "Copy GitHub Link" 选项，复制链接到剪贴板
-- 在资源管理器中右键点击文件，选择 "Open in GitHub" 选项，在浏览器中打开文件
-- 在资源管理器中右键点击文件，选择 "Copy GitHub Link" 选项，复制链接到剪贴板
-- 自动检测 Git 仓库信息，并构建正确的 URL
-- 支持 SSH 和 HTTPS 格式的远程 URL
-- 在加载项目时自动检测是否为支持的 Git 托管平台，如果不是则提示用户
-- 支持自定义 Git 托管平台和 URL 模板
-- 支持域名到平台的映射配置
+- Right-click on a file in the editor and select "Open in GitHub" to open the file in your browser
+- Right-click on a file in the editor and select "Copy GitHub Link" to copy the link to your clipboard
+- Right-click on a file in the explorer and select "Open in GitHub" to open the file in your browser
+- Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard
+- Automatically detects Git repository information and constructs the correct URL
+- Supports both SSH and HTTPS remote URL formats
+- Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
+- Supports custom Git hosting platforms and URL templates
+- Supports domain-to-platform mapping configuration
 
-## 使用方法
+## Usage
 
-1. 在 VS Code 中打开一个 Git 仓库项目
-2. 在编辑器中打开一个文件，或在资源管理器中选择一个文件
-3. 右键点击，选择 "Open in GitHub" 选项在浏览器中打开，或选择 "Copy GitHub Link" 选项复制链接
-4. 如果选择打开，默认浏览器将打开该文件在 Git 托管平台上的页面
-5. 如果选择复制，链接将被复制到剪贴板，可以粘贴到其他地方使用
+1. Open a Git repository project in VS Code
+2. Open a file in the editor or select a file in the explorer
+3. Right-click and select "Open in GitHub" to open in the browser, or select "Copy GitHub Link" to copy the link
+4. If you choose to open, your default browser will open the file's page on the Git hosting platform
+5. If you choose to copy, the link will be copied to your clipboard for use elsewhere
 
-## 要求
+## Requirements
 
-- 项目必须是一个 Git 仓库
-- 项目必须有一个名为 "origin" 的远程仓库
+- The project must be a Git repository
+- The project must have a remote repository named "origin"
 
-## 扩展设置
+## Extension Settings
 
-此扩展提供以下设置：
+This extension provides the following settings:
 
-* `gitlink.platforms`: 自定义 Git 托管平台配置，包含以下字段：
-  * `name`: 平台名称（用户自定义）
-  * `urlTemplate`: URL 模板，支持以下变量：
-    * `{repo:path}`: 仓库路径（例如 username/repo）
-    * `{branch}`: 当前分支名称
-    * `{file:path}`: 文件相对路径
-    * `{file:name}`: 文件名
-    * `{file:dir}`: 文件所在目录路径
-    * `{remote:url}`: 远程仓库域名（例如 github.com）
-    * `{remote:url:path:n}`: 远程URL路径的第n个段（索引从0开始）（例如对于git@github.com:alanhe421/alfred-workflows.git，{remote:url:path:0}为alanhe421，{remote:url:path:1}为alfred-workflows）
-    * `{user}`: 用户名或组织名（已废弃，请使用{remote:url:path:0}代替）
+* `gitlink.platforms`: Custom Git hosting platform configuration, with the following fields:
+  * `name`: Platform name (user-defined)
+  * `urlTemplate`: URL template, supporting the following variables:
+    * `{repo:path}`: Repository path (e.g., username/repo)
+    * `{branch}`: Current branch name
+    * `{file:path}`: Relative file path
+    * `{file:name}`: File name
+    * `{file:dir}`: File directory path
+    * `{remote:url}`: Remote repository domain (e.g., github.com)
+    * `{remote:url:path:n}`: The nth segment of the remote URL path (index starts from 0) (e.g., for git@github.com:alanhe421/alfred-workflows.git, {remote:url:path:0} is alanhe421, {remote:url:path:1} is alfred-workflows)
+    * `{user}`: Username or organization name (deprecated, use {remote:url:path:0} instead)
 
-* `gitlink.domainRegistry`: 域名到平台的映射配置，包含以下字段：
-  * `domain`: 域名（例如 github.com, gitlab.com）
-  * `platform`: 平台名称，必须与 `gitlink.platforms` 中定义的平台名称匹配
+* `gitlink.domainRegistry`: Domain-to-platform mapping configuration, with the following fields:
+  * `domain`: Domain (e.g., github.com, gitlab.com)
+  * `platform`: Platform name, must match a platform name defined in `gitlink.platforms`
 
-### 配置示例
+### Configuration Example
 
 ```json
 "gitlink.platforms": [
@@ -98,8 +98,8 @@
 ]
 ```
 
-## 已知问题
+## Known Issues
 
-- 如果项目不是支持的 Git 托管平台，扩展会在加载时提示用户，并提供打开设置的选项
+- If the project is not using a supported Git hosting platform, the extension will prompt the user when loading and provide an option to open settings
 
 **Enjoy!**
