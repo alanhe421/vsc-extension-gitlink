@@ -15,53 +15,12 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "gitlink" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri) => {
+	// Register the "Open in GitHub" command
+	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri) => {
 		try {
-			// Get the current file path
-			let filePath: string;
-			if (uri) {
-				filePath = uri.fsPath;
-			} else {
-				const activeEditor = vscode.window.activeTextEditor;
-				if (!activeEditor) {
-					vscode.window.showErrorMessage('No file is currently open');
-					return;
-				}
-				filePath = activeEditor.document.uri.fsPath;
-			}
-
-			// Get the git repository root
-			const gitRootPath = await getGitRootPath(filePath);
-			if (!gitRootPath) {
-				vscode.window.showErrorMessage('Not a git repository');
-				return;
-			}
-
-			// Get the remote URL
-			const remoteUrl = await getGitRemoteUrl(gitRootPath);
-			if (!remoteUrl) {
-				vscode.window.showErrorMessage('No GitHub remote URL found');
-				return;
-			}
-
-			// Get the current branch or commit
-			const branch = await getCurrentBranch(gitRootPath);
-			if (!branch) {
-				vscode.window.showErrorMessage('Failed to get current branch');
-				return;
-			}
-
-			// Get the relative path from the git root
-			const relativePath = path.relative(gitRootPath, filePath).replace(/\\/g, '/');
-
-			// Construct the GitHub URL
-			const githubUrl = constructGitHubUrl(remoteUrl, branch, relativePath);
+			const githubUrl = await getGitHubUrl(uri);
 			if (!githubUrl) {
-				vscode.window.showErrorMessage('Failed to construct GitHub URL');
-				return;
+				return; // Error messages are already shown in getGitHubUrl
 			}
 
 			// Open the URL in the default browser
@@ -72,7 +31,72 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(disposable);
+	// Register the "Copy GitHub Link" command
+	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri?: vscode.Uri) => {
+		try {
+			const githubUrl = await getGitHubUrl(uri);
+			if (!githubUrl) {
+				return; // Error messages are already shown in getGitHubUrl
+			}
+
+			// Copy the URL to clipboard
+			await vscode.env.clipboard.writeText(githubUrl);
+			vscode.window.showInformationMessage(`GitHub link copied to clipboard: ${githubUrl}`);
+		} catch (error) {
+			vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
+		}
+	});
+
+	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable);
+}
+
+// Common function to get GitHub URL for both commands
+async function getGitHubUrl(uri?: vscode.Uri): Promise<string | null> {
+	// Get the current file path
+	let filePath: string;
+	if (uri) {
+		filePath = uri.fsPath;
+	} else {
+		const activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			vscode.window.showErrorMessage('No file is currently open');
+			return null;
+		}
+		filePath = activeEditor.document.uri.fsPath;
+	}
+
+	// Get the git repository root
+	const gitRootPath = await getGitRootPath(filePath);
+	if (!gitRootPath) {
+		vscode.window.showErrorMessage('Not a git repository');
+		return null;
+	}
+
+	// Get the remote URL
+	const remoteUrl = await getGitRemoteUrl(gitRootPath);
+	if (!remoteUrl) {
+		vscode.window.showErrorMessage('No GitHub remote URL found');
+		return null;
+	}
+
+	// Get the current branch or commit
+	const branch = await getCurrentBranch(gitRootPath);
+	if (!branch) {
+		vscode.window.showErrorMessage('Failed to get current branch');
+		return null;
+	}
+
+	// Get the relative path from the git root
+	const relativePath = path.relative(gitRootPath, filePath).replace(/\\/g, '/');
+
+	// Construct the GitHub URL
+	const githubUrl = constructGitHubUrl(remoteUrl, branch, relativePath);
+	if (!githubUrl) {
+		vscode.window.showErrorMessage('Failed to construct GitHub URL');
+		return null;
+	}
+
+	return githubUrl;
 }
 
 async function getGitRootPath(filePath: string): Promise<string | null> {

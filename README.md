@@ -1,11 +1,13 @@
 # GitLink - VS Code Extension
 
-这个 VS Code 扩展允许你在 GitHub 网页版中打开当前正在编辑的文件或在资源管理器中选择的文件。
+这个 VS Code 扩展允许你在 GitHub 网页版中打开当前正在编辑的文件或在资源管理器中选择的文件，也可以复制 GitHub 链接到剪贴板。
 
 ## 功能
 
-- 在编辑器中右键点击文件，选择 "Open in GitHub" 选项
-- 在资源管理器中右键点击文件，选择 "Open in GitHub" 选项
+- 在编辑器中右键点击文件，选择 "Open in GitHub" 选项，在浏览器中打开文件
+- 在编辑器中右键点击文件，选择 "Copy GitHub Link" 选项，复制链接到剪贴板
+- 在资源管理器中右键点击文件，选择 "Open in GitHub" 选项，在浏览器中打开文件
+- 在资源管理器中右键点击文件，选择 "Copy GitHub Link" 选项，复制链接到剪贴板
 - 自动检测 Git 仓库信息，并构建正确的 GitHub URL
 - 支持 SSH 和 HTTPS 格式的 GitHub 远程 URL
 
@@ -13,8 +15,9 @@
 
 1. 在 VS Code 中打开一个 Git 仓库项目
 2. 在编辑器中打开一个文件，或在资源管理器中选择一个文件
-3. 右键点击，选择 "Open in GitHub" 选项
-4. 默认浏览器将打开该文件在 GitHub 上的页面
+3. 右键点击，选择 "Open in GitHub" 选项在浏览器中打开，或选择 "Copy GitHub Link" 选项复制链接
+4. 如果选择打开，默认浏览器将打开该文件在 GitHub 上的页面
+5. 如果选择复制，链接将被复制到剪贴板，可以粘贴到其他地方使用
 
 ## 要求
 
@@ -35,6 +38,7 @@
 
 初始版本，实现基本功能：
 - 在 GitHub 中打开文件
+- 复制 GitHub 链接到剪贴板
 
 ---
 

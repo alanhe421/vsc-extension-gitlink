@@ -18,16 +18,28 @@
       {
         "command": "gitlink.openInGitHub",
         "title": "Open in GitHub"
+      },
+      {
+        "command": "gitlink.copyGitHubLink",
+        "title": "Copy GitHub Link"
       }
     ],
     "menus": {
       "explorer/context": [
+        {
+          "command": "gitlink.copyGitHubLink",
+          "group": "navigation"
+        },
         {
           "command": "gitlink.openInGitHub",
           "group": "navigation"
         }
       ],
       "editor/context": [
+        {
+          "command": "gitlink.copyGitHubLink",
+          "group": "navigation"
+        },
         {
           "command": "gitlink.openInGitHub",
           "group": "navigation"
