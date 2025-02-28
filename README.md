@@ -42,7 +42,7 @@
     * `{file:name}`: 文件名
     * `{file:dir}`: 文件所在目录路径
     * `{remote:url}`: 远程仓库域名（例如 github.com）
-    * `{remote:url:path:n}`: 远程URL路径的第n个段（索引从0开始）（例如对于git@e.coding.net:tangrui9/mes/mes-dashboard-v2.git，{remote:url:path:0}为tangrui9，{remote:url:path:1}为mes）
+    * `{remote:url:path:n}`: 远程URL路径的第n个段（索引从0开始）（例如对于git@github.com:alanhe421/alfred-workflows.git，{remote:url:path:0}为alanhe421，{remote:url:path:1}为alfred-workflows）
     * `{user}`: 用户名或组织名（已废弃，请使用{remote:url:path:0}代替）
 
 * `gitlink.domainRegistry`: 域名到平台的映射配置，包含以下字段：

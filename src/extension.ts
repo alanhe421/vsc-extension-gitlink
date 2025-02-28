@@ -101,7 +101,7 @@ async function detectGitRepository() {
 		}
 
 		const workspaceRoot = workspaceFolders[0].uri.fsPath;
-		
+
 		// 检查是否为 Git 仓库
 		const gitRootPath = await getGitRootPath(workspaceRoot);
 		if (!gitRootPath) {
@@ -126,7 +126,7 @@ async function detectGitRepository() {
 			// 显示提示消息，并提供按钮引导到配置部分
 			const message = `GitLink could not detect which platform you use for remote URL: ${remoteUrl}. You can configure custom platforms in settings.`;
 			const openSettings = 'Open Settings';
-			
+
 			vscode.window.showWarningMessage(message, openSettings).then(selection => {
 				if (selection === openSettings) {
 					vscode.commands.executeCommand('gitlink.openSettings');
@@ -142,24 +142,24 @@ async function detectGitRepository() {
 function extractRepoInfoFromRemoteUrl(remoteUrl: string): DomainResult {
 	let domain = '';
 	let pathSegments: string[] = [];
-	
+
 	try {
 		if (remoteUrl.startsWith('https://') || remoteUrl.startsWith('http://')) {
 			// 处理 HTTPS URL
 			const url = new URL(remoteUrl);
 			domain = url.hostname;
-			
+
 			// 提取路径段，并去掉 .git 后缀
-			const pathname = url.pathname.endsWith('.git') 
+			const pathname = url.pathname.endsWith('.git')
 				? url.pathname.slice(0, -4) // 去掉 .git 后缀
 				: url.pathname;
 			pathSegments = pathname.split('/').filter(part => part.length > 0);
 		} else if (remoteUrl.includes('@')) {
-			// 处理 SSH URL，例如 git@github.com:username/repo.git 或 git@e.coding.net:tangrui9/mes/mes-dashboard-v2.git
+			// 处理 SSH URL，例如 git@github.com:username/repo.git
 			const match = remoteUrl.match(/@([^:]+):(.+?)(?:\.git)?$/);
 			if (match && match[1] && match[2]) {
 				domain = match[1];
-				
+
 				// 提取路径段，.git 后缀已在正则表达式中处理
 				pathSegments = match[2].split('/').filter(part => part.length > 0);
 			}
@@ -167,7 +167,7 @@ function extractRepoInfoFromRemoteUrl(remoteUrl: string): DomainResult {
 	} catch (error) {
 		console.error('Error extracting domain from remote URL:', error);
 	}
-	
+
 	return { domain, remoteUrl, pathSegments };
 }
 
@@ -239,7 +239,7 @@ async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 	const platform = getPlatformForDomain(domainResult.domain);
 	if (!platform) {
 		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.');
-		
+
 		// 提供按钮引导到配置部分
 		const openSettings = 'Open Settings';
 		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.', openSettings).then(selection => {
@@ -247,7 +247,7 @@ async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 				vscode.commands.executeCommand('gitlink.openSettings');
 			}
 		});
-		
+
 		return null;
 	}
 
@@ -288,13 +288,13 @@ function extractRepoPath(remoteUrl: string): string | null {
 		if (sshMatch && sshMatch[1]) {
 			return sshMatch[1];
 		}
-		
+
 		// 处理 HTTPS URL，例如 https://github.com/username/repo.git
 		const httpsMatch = remoteUrl.match(/https?:\/\/[^\/]+\/(.+?)(?:\.git)?$/);
 		if (httpsMatch && httpsMatch[1]) {
 			return httpsMatch[1];
 		}
-		
+
 		return null;
 	} catch (error) {
 		console.error('Error extracting repo path:', error);
@@ -306,7 +306,7 @@ function extractRepoPath(remoteUrl: string): string | null {
 function constructGitUrl(platform: Platform, repoPath: string, branch: string, filePath: string, fileName: string, fileDirPath: string, domain: string, pathSegments?: string[]): string | null {
 	try {
 		let url = platform.urlTemplate;
-		
+
 		// 替换模板中的变量
 		url = url.replace(/{repo:path}/g, repoPath);
 		url = url.replace(/{branch}/g, branch);
@@ -314,31 +314,31 @@ function constructGitUrl(platform: Platform, repoPath: string, branch: string, f
 		url = url.replace(/{file:name}/g, fileName);
 		url = url.replace(/{file:dir}/g, fileDirPath);
 		url = url.replace(/{remote:url}/g, domain);
-		
+
 		// 替换路径段变量 {remote:url:path:n}
 		if (pathSegments && pathSegments.length > 0) {
 			console.log('Path segments:', pathSegments);
 			console.log('URL template before path segment replacement:', url);
-			
+
 			// 使用字符串替换方法而不是正则表达式的exec方法
 			// 这样可以确保所有匹配都被替换
 			for (let i = 0; i < pathSegments.length; i++) {
 				const pattern = `{remote:url:path:${i}}`;
 				const replacement = pathSegments[i];
 				console.log(`Replacing ${pattern} with ${replacement}`);
-				
+
 				// 全局替换所有匹配项
 				while (url.includes(pattern)) {
 					url = url.replace(pattern, replacement);
 				}
 			}
-			
+
 			// 替换任何剩余的 {remote:url:path:n} 为空字符串
 			url = url.replace(/{remote:url:path:\d+}/g, '');
-			
+
 			console.log('URL after path segment replacement:', url);
 		}
-		
+
 		return url;
 	} catch (error) {
 		console.error('Error constructing Git URL:', error);
