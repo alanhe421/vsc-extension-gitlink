@@ -9,15 +9,31 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "gitlink.helloWorld",
-        "title": "Hello World"
+        "command": "gitlink.openInGitHub",
+        "title": "Open in GitHub"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "gitlink.openInGitHub",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "gitlink.openInGitHub",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

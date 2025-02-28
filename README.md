@@ -1,71 +1,41 @@
-# gitlink README
+# GitLink - VS Code Extension
 
-This is the README for your extension "gitlink". After writing up a brief description, we recommend including the following sections.
+这个 VS Code 扩展允许你在 GitHub 网页版中打开当前正在编辑的文件或在资源管理器中选择的文件。
 
-## Features
+## 功能
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- 在编辑器中右键点击文件，选择 "Open in GitHub" 选项
+- 在资源管理器中右键点击文件，选择 "Open in GitHub" 选项
+- 自动检测 Git 仓库信息，并构建正确的 GitHub URL
+- 支持 SSH 和 HTTPS 格式的 GitHub 远程 URL
 
-For example if there is an image subfolder under your extension project workspace:
+## 使用方法
 
-\!\[feature X\]\(images/feature-x.png\)
+1. 在 VS Code 中打开一个 Git 仓库项目
+2. 在编辑器中打开一个文件，或在资源管理器中选择一个文件
+3. 右键点击，选择 "Open in GitHub" 选项
+4. 默认浏览器将打开该文件在 GitHub 上的页面
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## 要求
 
-## Requirements
+- 项目必须是一个 Git 仓库
+- 项目必须有一个名为 "origin" 的远程仓库，指向 GitHub
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## 扩展设置
 
-## Extension Settings
+此扩展不需要任何特殊设置。
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## 已知问题
 
-For example:
+- 目前仅支持 GitHub 仓库，不支持其他 Git 托管服务（如 GitLab、Bitbucket 等）
 
-This extension contributes the following settings:
+## 发布说明
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### 0.0.1
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+初始版本，实现基本功能：
+- 在 GitHub 中打开文件
 
 ---
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
