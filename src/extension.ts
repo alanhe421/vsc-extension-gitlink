@@ -7,25 +7,50 @@ import * as vscode from 'vscode';
 
 const execAsync = promisify(exec);
 
+// 定义平台和域名注册表的接口
+interface Platform {
+	/**
+	 * 平台名称，比如GitHub/腾讯Coding
+	 */
+	name: string;
+	/**
+	 * 平台URL模板，比如https://github.com/{repo:path}/blob/{branch}/{file:path}
+	 * 支持的变量：
+	 * {repo:path}：仓库路径，比如username/repo
+	 * {branch}：分支，比如main
+	 * {file:path}：文件路径，比如src/index.js
+	 * {file:name}：文件名，比如index.js
+	 * {file:dir}：文件目录，比如src
+	 */
+	urlTemplate: string;
+}
+
+interface DomainMapping {
+	domain: string;
+	platform: string;
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "gitlink" is now active!');
 
+	// 在扩展激活时检测项目
+	detectGitRepository();
+
 	// Register the "Open in GitHub" command
 	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri) => {
 		try {
-			const githubUrl = await getGitHubUrl(uri);
-			if (!githubUrl) {
-				return; // Error messages are already shown in getGitHubUrl
+			const gitUrl = await getGitUrl(uri);
+			if (!gitUrl) {
+				return; // Error messages are already shown in getGitUrl
 			}
 
 			// Open the URL in the default browser
-			vscode.env.openExternal(vscode.Uri.parse(githubUrl));
-			vscode.window.showInformationMessage(`Opening ${githubUrl}`);
+			vscode.env.openExternal(vscode.Uri.parse(gitUrl));
+			vscode.window.showInformationMessage(`Opening ${gitUrl}`);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
 		}
@@ -34,24 +59,110 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register the "Copy GitHub Link" command
 	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri?: vscode.Uri) => {
 		try {
-			const githubUrl = await getGitHubUrl(uri);
-			if (!githubUrl) {
-				return; // Error messages are already shown in getGitHubUrl
+			const gitUrl = await getGitUrl(uri);
+			if (!gitUrl) {
+				return; // Error messages are already shown in getGitUrl
 			}
 
 			// Copy the URL to clipboard
-			await vscode.env.clipboard.writeText(githubUrl);
-			vscode.window.showInformationMessage(`GitHub link copied to clipboard: ${githubUrl}`);
+			await vscode.env.clipboard.writeText(gitUrl);
+			vscode.window.showInformationMessage(`Git link copied to clipboard: ${gitUrl}`);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	});
 
-	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable);
+	// Register the "Open Settings" command
+	const openSettingsDisposable = vscode.commands.registerCommand('gitlink.openSettings', () => {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'gitlink');
+	});
+
+	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable);
 }
 
-// Common function to get GitHub URL for both commands
-async function getGitHubUrl(uri?: vscode.Uri): Promise<string | null> {
+// 检测项目是否为 Git 仓库，并检查是否有匹配的平台
+async function detectGitRepository() {
+	try {
+		// 获取当前工作区文件夹
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		if (!workspaceFolders || workspaceFolders.length === 0) {
+			return; // 没有打开的工作区
+		}
+
+		const workspaceRoot = workspaceFolders[0].uri.fsPath;
+		
+		// 检查是否为 Git 仓库
+		const gitRootPath = await getGitRootPath(workspaceRoot);
+		if (!gitRootPath) {
+			return; // 不是 Git 仓库，不显示提示
+		}
+
+		// 获取远程 URL
+		const remoteUrl = await getGitRemoteUrl(gitRootPath);
+		if (!remoteUrl) {
+			return; // 没有远程 URL，不显示提示
+		}
+
+		// 检查是否有匹配的平台
+		const platform = getPlatformForRemoteUrl(remoteUrl);
+		if (!platform) {
+			// 显示提示消息，并提供按钮引导到配置部分
+			const message = 'GitLink could not detect which platform you use. You can configure custom platforms in settings.';
+			const openSettings = 'Open Settings';
+			
+			vscode.window.showWarningMessage(message, openSettings).then(selection => {
+				if (selection === openSettings) {
+					vscode.commands.executeCommand('gitlink.openSettings');
+				}
+			});
+		}
+	} catch (error) {
+		console.error('Error detecting Git repository:', error);
+	}
+}
+
+// 根据远程 URL 获取匹配的平台
+function getPlatformForRemoteUrl(remoteUrl: string): Platform | null {
+	try {
+		// 从配置中获取域名注册表
+		const config = vscode.workspace.getConfiguration('gitlink');
+		const domainRegistry: DomainMapping[] = config.get('domainRegistry') || [];
+		const platforms: Platform[] = config.get('platforms') || [];
+
+		// 从远程 URL 中提取域名
+		let domain = '';
+		if (remoteUrl.startsWith('https://') || remoteUrl.startsWith('http://')) {
+			// 处理 HTTPS URL
+			const url = new URL(remoteUrl);
+			domain = url.hostname;
+		} else if (remoteUrl.includes('@')) {
+			// 处理 SSH URL，例如 git@github.com:username/repo.git
+			const match = remoteUrl.match(/@([^:]+):/);
+			if (match && match[1]) {
+				domain = match[1];
+			}
+		}
+
+		if (!domain) {
+			return null;
+		}
+
+		// 在域名注册表中查找匹配的平台
+		const mapping = domainRegistry.find(m => domain.includes(m.domain));
+		if (!mapping) {
+			return null;
+		}
+
+		// 在平台列表中查找匹配的平台
+		return platforms.find(p => p.name === mapping.platform) || null;
+	} catch (error) {
+		console.error('Error getting platform for remote URL:', error);
+		return null;
+	}
+}
+
+// Common function to get Git URL for both commands
+async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 	// Get the current file path
 	let filePath: string;
 	if (uri) {
@@ -75,7 +186,23 @@ async function getGitHubUrl(uri?: vscode.Uri): Promise<string | null> {
 	// Get the remote URL
 	const remoteUrl = await getGitRemoteUrl(gitRootPath);
 	if (!remoteUrl) {
-		vscode.window.showErrorMessage('No GitHub remote URL found');
+		vscode.window.showErrorMessage('No Git remote URL found');
+		return null;
+	}
+
+	// Get the platform for this remote URL
+	const platform = getPlatformForRemoteUrl(remoteUrl);
+	if (!platform) {
+		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.');
+		
+		// 提供按钮引导到配置部分
+		const openSettings = 'Open Settings';
+		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.', openSettings).then(selection => {
+			if (selection === openSettings) {
+				vscode.commands.executeCommand('gitlink.openSettings');
+			}
+		});
+		
 		return null;
 	}
 
@@ -88,15 +215,65 @@ async function getGitHubUrl(uri?: vscode.Uri): Promise<string | null> {
 
 	// Get the relative path from the git root
 	const relativePath = path.relative(gitRootPath, filePath).replace(/\\/g, '/');
+	const fileName = path.basename(filePath);
+	const fileDirPath = path.dirname(relativePath);
 
-	// Construct the GitHub URL
-	const githubUrl = constructGitHubUrl(remoteUrl, branch, relativePath);
-	if (!githubUrl) {
-		vscode.window.showErrorMessage('Failed to construct GitHub URL');
+	// Extract repository path from remote URL
+	const repoPath = extractRepoPath(remoteUrl);
+	if (!repoPath) {
+		vscode.window.showErrorMessage('Failed to extract repository path from remote URL');
 		return null;
 	}
 
-	return githubUrl;
+	// Construct the URL using the platform's template
+	const gitUrl = constructGitUrl(platform, repoPath, branch, relativePath, fileName, fileDirPath);
+	if (!gitUrl) {
+		vscode.window.showErrorMessage('Failed to construct Git URL');
+		return null;
+	}
+
+	return gitUrl;
+}
+
+// 从远程 URL 中提取仓库路径
+function extractRepoPath(remoteUrl: string): string | null {
+	try {
+		// 处理 SSH URL，例如 git@github.com:username/repo.git
+		const sshMatch = remoteUrl.match(/git@[^:]+:(.+)\.git$/);
+		if (sshMatch && sshMatch[1]) {
+			return sshMatch[1];
+		}
+		
+		// 处理 HTTPS URL，例如 https://github.com/username/repo.git
+		const httpsMatch = remoteUrl.match(/https?:\/\/[^\/]+\/(.+)\.git$/);
+		if (httpsMatch && httpsMatch[1]) {
+			return httpsMatch[1];
+		}
+		
+		return null;
+	} catch (error) {
+		console.error('Error extracting repo path:', error);
+		return null;
+	}
+}
+
+// 使用平台模板构建 Git URL
+function constructGitUrl(platform: Platform, repoPath: string, branch: string, filePath: string, fileName: string, fileDirPath: string): string | null {
+	try {
+		let url = platform.urlTemplate;
+		
+		// 替换模板中的变量
+		url = url.replace(/{repo:path}/g, repoPath);
+		url = url.replace(/{branch}/g, branch);
+		url = url.replace(/{file:path}/g, filePath);
+		url = url.replace(/{file:name}/g, fileName);
+		url = url.replace(/{file:dir}/g, fileDirPath);
+		
+		return url;
+	} catch (error) {
+		console.error('Error constructing Git URL:', error);
+		return null;
+	}
 }
 
 async function getGitRootPath(filePath: string): Promise<string | null> {
@@ -127,30 +304,6 @@ async function getCurrentBranch(gitRootPath: string): Promise<string | null> {
 		console.error('Error getting current branch:', error);
 		return null;
 	}
-}
-
-function constructGitHubUrl(remoteUrl: string, branch: string, relativePath: string): string | null {
-	// Extract the GitHub repository path from the remote URL
-	let repoPath: string | null = null;
-	
-	// Handle SSH URLs like git@github.com:username/repo.git
-	const sshMatch = remoteUrl.match(/git@github\.com:(.+)\.git$/);
-	if (sshMatch) {
-		repoPath = sshMatch[1];
-	}
-	
-	// Handle HTTPS URLs like https://github.com/username/repo.git
-	const httpsMatch = remoteUrl.match(/https:\/\/github\.com\/(.+)\.git$/);
-	if (httpsMatch) {
-		repoPath = httpsMatch[1];
-	}
-	
-	if (!repoPath) {
-		return null;
-	}
-	
-	// Construct the GitHub URL
-	return `https://github.com/${repoPath}/blob/${branch}/${relativePath}`;
 }
 
 // This method is called when your extension is deactivated

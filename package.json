@@ -22,29 +22,84 @@
       {
         "command": "gitlink.copyGitHubLink",
         "title": "Copy GitHub Link"
+      },
+      {
+        "command": "gitlink.openSettings",
+        "title": "Open GitLink Settings"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "gitlink.copyGitHubLink",
-          "group": "navigation"
+          "command": "gitlink.openInGitHub",
+          "group": "navigation@1"
         },
         {
-          "command": "gitlink.openInGitHub",
-          "group": "navigation"
+          "command": "gitlink.copyGitHubLink",
+          "group": "navigation@2"
         }
       ],
       "editor/context": [
         {
-          "command": "gitlink.copyGitHubLink",
-          "group": "navigation"
+          "command": "gitlink.openInGitHub",
+          "group": "navigation@1"
         },
         {
-          "command": "gitlink.openInGitHub",
-          "group": "navigation"
+          "command": "gitlink.copyGitHubLink",
+          "group": "navigation@2"
         }
       ]
+    },
+    "configuration": {
+      "title": "GitLink",
+      "properties": {
+        "gitlink.platforms": {
+          "type": "array",
+          "default": [
+            {
+              "name": "GitHub",
+              "urlTemplate": "https://github.com/{repo:path}/blob/{branch}/{file:path}"
+            }
+          ],
+          "description": "Custom Git hosting platforms configuration",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User-defined name for the platform"
+              },
+              "urlTemplate": {
+                "type": "string",
+                "description": "URL template for the platform. Available variables: {repo:path}, {branch}, {file:path}, {file:name}"
+              }
+            }
+          }
+        },
+        "gitlink.domainRegistry": {
+          "type": "array",
+          "default": [
+            {
+              "domain": "github.com",
+              "platform": "GitHub"
+            }
+          ],
+          "description": "Domain to platform mapping",
+          "items": {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "description": "Domain name (e.g., github.com, gitlab.com)"
+              },
+              "platform": {
+                "type": "string",
+                "description": "Platform name that matches one of the defined platforms"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "scripts": {
