@@ -215,7 +215,7 @@ async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 	// Get the git repository root
 	const gitRootPath = await getGitRootPath(filePath);
 	if (!gitRootPath) {
-		vscode.window.showErrorMessage('Not a git repository');
+		vscode.window.showErrorMessage('This file is not under Git version control');
 		return null;
 	}
 

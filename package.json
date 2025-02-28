@@ -32,21 +32,21 @@
       "explorer/context": [
         {
           "command": "gitlink.openInGitHub",
-          "group": "navigation@1"
+          "group": "gitlink"
         },
         {
           "command": "gitlink.copyGitHubLink",
-          "group": "navigation@2"
+          "group": "gitlink"
         }
       ],
       "editor/context": [
         {
           "command": "gitlink.openInGitHub",
-          "group": "navigation@1"
+          "group": "gitlink"
         },
         {
           "command": "gitlink.copyGitHubLink",
-          "group": "navigation@2"
+          "group": "gitlink"
         }
       ]
     },
