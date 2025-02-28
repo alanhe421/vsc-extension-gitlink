@@ -39,6 +39,9 @@
     * `{file:path}`: 文件相对路径
     * `{file:name}`: 文件名
     * `{file:dir}`: 文件所在目录路径
+    * `{remote:url}`: 远程仓库域名（例如 github.com）
+    * `{remote:url:path:n}`: 远程URL路径的第n个段（索引从0开始）（例如对于git@e.coding.net:tangrui9/mes/mes-dashboard-v2.git，{remote:url:path:0}为tangrui9，{remote:url:path:1}为mes）
+    * `{user}`: 用户名或组织名（已废弃，请使用{remote:url:path:0}代替）
 
 * `gitlink.domainRegistry`: 域名到平台的映射配置，包含以下字段：
   * `domain`: 域名（例如 github.com, gitlab.com）
@@ -50,19 +53,23 @@
 "gitlink.platforms": [
   {
     "name": "GitHub",
-    "urlTemplate": "https://github.com/{repo:path}/blob/{branch}/{file:path}"
+    "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}"
   },
   {
     "name": "GitLab",
-    "urlTemplate": "https://gitlab.com/{repo:path}/-/blob/{branch}/{file:path}"
+    "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
   },
   {
     "name": "Bitbucket",
-    "urlTemplate": "https://bitbucket.org/{repo:path}/src/{branch}/{file:path}"
+    "urlTemplate": "https://{remote:url}/{repo:path}/src/{branch}/{file:path}"
   },
   {
     "name": "Azure DevOps",
-    "urlTemplate": "https://dev.azure.com/{repo:path}/_git/{repo:path}?path={file:path}&version=GB{branch}"
+    "urlTemplate": "https://{remote:url}/{repo:path}/_git/{repo:path}?path={file:path}&version=GB{branch}"
+  },
+  {
+    "name": "Coding",
+    "urlTemplate": "https://{remote:url}/{remote:url:path:0}/{remote:url:path:1}/blob/{branch}/{file:path}"
   }
 ],
 "gitlink.domainRegistry": [
@@ -81,6 +88,10 @@
   {
     "domain": "dev.azure.com",
     "platform": "Azure DevOps"
+  },
+  {
+    "domain": "e.coding.net",
+    "platform": "Coding"
   }
 ]
 ```
@@ -98,6 +109,7 @@
 - 复制 Git 托管平台链接到剪贴板
 - 自动检测项目是否为支持的 Git 托管平台
 - 支持自定义 Git 托管平台和 URL 模板
+- 支持使用 `{remote:url:path:n}` 变量在 URL 模板中引用路径段
 
 ---
 
