@@ -116,11 +116,8 @@ export function activate(context: vscode.ExtensionContext) {
 					if (!selection.isEmpty) {
 						// 有选中的代码
 						codeContent = activeEditor.document.getText(selection);
-
-						// 从文件扩展名获取语言
-						const fileName = activeEditor.document.fileName;
-						language = path.extname(fileName).substring(1); // 去掉点号
-
+						console.log('languageId', activeEditor.document.languageId);
+						language = activeEditor.document.languageId; // 去掉点号
 						// 映射一些常见语言的文件扩展名
 						language = mapLanguageExtension(language);
 

@@ -22,6 +22,7 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 - Right-click on a file in the explorer and select "Open in GitHub" to open the file in your browser
 - Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard
 - Right-click on a file in the explorer and select "Copy GitHub Markdown" to copy the markdown link to your clipboard
+- Right-click on a file in the explorer and select "Copy GitHub Markdown Snippet" to copy the markdown snippet to your clipboard
 - Supports both SSH and HTTPS remote URL formats
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
