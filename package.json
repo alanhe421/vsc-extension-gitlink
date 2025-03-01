@@ -51,29 +51,29 @@
       "explorer/context": [
         {
           "command": "gitlink.openInGitHub",
-          "group": "gitlink"
+          "group": "gitlink@1"
         },
         {
           "command": "gitlink.copyGitHubLink",
-          "group": "gitlink"
+          "group": "gitlink@2"
         },
         {
           "command": "gitlink.copyGitHubMarkdownLink",
-          "group": "gitlink"
+          "group": "gitlink@3"
         }
       ],
       "editor/context": [
         {
           "command": "gitlink.openInGitHub",
-          "group": "gitlink"
+          "group": "gitlink@1"
         },
         {
           "command": "gitlink.copyGitHubLink",
-          "group": "gitlink"
+          "group": "gitlink@2"
         },
         {
           "command": "gitlink.copyGitHubMarkdownLink",
-          "group": "gitlink"
+          "group": "gitlink@3"
         }
       ]
     },
