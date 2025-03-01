@@ -60,6 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
 async function detectGitRepository() {
+	console.log('gitlink: detectGitRepository start');
 	try {
 		// 获取当前工作区文件夹
 		const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -72,18 +73,21 @@ async function detectGitRepository() {
 		// 检查是否为 Git 仓库
 		const gitRootPath = await getGitRootPath(workspaceRoot);
 		if (!gitRootPath) {
+			vscode.window.showWarningMessage('GitLink: Not a Git repository');
 			return; // 不是 Git 仓库，不显示提示
 		}
 
 		// 获取远程 URL
 		const remoteUrl = await getGitRemoteUrl(gitRootPath);
 		if (!remoteUrl) {
+			vscode.window.showWarningMessage('GitLink: No remote URL found');
 			return; // 没有远程 URL，不显示提示
 		}
 
 		// 从远程 URL 中提取域名
 		const repoInfo = extractRepoInfoFromRemoteUrl(remoteUrl);
 		if (!repoInfo.domain) {
+			vscode.window.showWarningMessage('GitLink: Failed to extract domain from remote URL');
 			return; // 无法提取域名，不显示提示
 		}
 
