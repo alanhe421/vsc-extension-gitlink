@@ -19,11 +19,10 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 - Right-click on a file in the editor and select "Copy GitHub Link" to copy the link to your clipboard
 - Right-click on a file in the explorer and select "Open in GitHub" to open the file in your browser
 - Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard
-- Automatically detects Git repository information and constructs the correct URL
+- Right-click on a file in the explorer and select "Copy GitHub Markdown" to copy the markdown link to your clipboard
 - Supports both SSH and HTTPS remote URL formats
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
-- Supports domain-to-platform mapping configuration
 
 ## Usage
 
@@ -33,10 +32,6 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 4. If you choose to open, your default browser will open the file's page on the Git hosting platform
 5. If you choose to copy, the link will be copied to your clipboard for use elsewhere
 
-## Requirements
-
-- The project must be a Git repository
-- The project must have a remote repository named "origin"
 
 ## Extension Settings
 
@@ -52,7 +47,8 @@ This extension provides the following settings:
     * `{file:dir}`: File directory path
     * `{remote:url}`: Remote repository domain (e.g., github.com)
     * `{remote:url:path:n}`: The nth segment of the remote URL path (index starts from 0) (e.g., for git@github.com:alanhe421/alfred-workflows.git, {remote:url:path:0} is alanhe421, {remote:url:path:1} is alfred-workflows)
-    * `{user}`: Username or organization name (deprecated, use {remote:url:path:0} instead)
+    * `{line:start}`: Line number (e.g., 1)
+    * `{line:end}`: Line number (e.g., 10)
 
 * `gitlink.domainRegistry`: Domain-to-platform mapping configuration, with the following fields:
   * `domain`: Domain (e.g., github.com, gitlab.com)
@@ -61,50 +57,28 @@ This extension provides the following settings:
 ### Configuration Example
 
 ```json
-"gitlink.platforms": [
-  {
-    "name": "GitHub",
-    "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}"
-  },
-  {
-    "name": "GitLab",
-    "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
-  },
-  {
-    "name": "Bitbucket",
-    "urlTemplate": "https://{remote:url}/{repo:path}/src/{branch}/{file:path}"
-  },
-  {
-    "name": "Azure DevOps",
-    "urlTemplate": "https://{remote:url}/{repo:path}/_git/{repo:path}?path={file:path}&version=GB{branch}"
-  },
-  {
-    "name": "Coding",
-    "urlTemplate": "https://{remote:url}/{remote:url:path:0}/{remote:url:path:1}/blob/{branch}/{file:path}"
-  }
-],
-"gitlink.domainRegistry": [
-  {
-    "domain": "github.com",
-    "platform": "GitHub"
-  },
-  {
-    "domain": "gitlab.com",
-    "platform": "GitLab"
-  },
-  {
-    "domain": "bitbucket.org",
-    "platform": "Bitbucket"
-  },
-  {
-    "domain": "dev.azure.com",
-    "platform": "Azure DevOps"
-  },
-  {
-    "domain": "e.coding.net",
-    "platform": "Coding"
-  }
-]
+{
+  "gitlink.platforms": [
+    {
+      "name": "GitHub",
+      "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}"
+    },
+    {
+      "name": "GitLab",
+      "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
+    }
+  ],
+  "gitlink.domainRegistry": [
+    {
+      "domain": "github.com",
+      "platform": "GitHub"
+    },
+    {
+      "domain": "gitlab.com",
+      "platform": "GitLab"
+    }
+  ]
+}
 ```
 
 ## Known Issues
