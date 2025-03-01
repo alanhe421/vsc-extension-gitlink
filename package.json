@@ -17,7 +17,10 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alanhe421/vsc-extension-gitlink.git"
+    "url": "https://github.com/alanhe421/vsc-extension-gitlink.git",
+    "bugs": {
+        "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues/issues"
+    }
   },
   "contributes": {
     "commands": [
