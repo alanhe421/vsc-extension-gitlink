@@ -2,7 +2,7 @@
 
 A VS Code extension that allows you to open the web version of files in your Git repository.
 
-Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [Coding.net](https://coding.net), and other Git hosting platforms through custom configuration.
+Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [Tencent Coding.net](https://coding.net), and other Git hosting platforms through custom configuration.
 
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
