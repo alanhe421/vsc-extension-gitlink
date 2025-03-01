@@ -118,9 +118,6 @@ export function activate(context: vscode.ExtensionContext) {
 						codeContent = activeEditor.document.getText(selection);
 						console.log('languageId', activeEditor.document.languageId);
 						language = activeEditor.document.languageId; // 去掉点号
-						// 映射一些常见语言的文件扩展名
-						language = mapLanguageExtension(language);
-
 						// 构建 Markdown 代码块格式，使用文件名作为链接文本
 						clipboardContent = `[${linkText}](${gitUrl})\n\n\`\`\`${language}\n${codeContent}\n\`\`\``;
 					} else {
