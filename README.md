@@ -26,15 +26,6 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
 
-## Usage
-
-1. Open a Git repository project in VS Code
-2. Open a file in the editor or select a file in the explorer
-3. Right-click and select "Open in GitHub" to open in the browser, or select "Copy GitHub Link" to copy the link
-4. If you choose to open, your default browser will open the file's page on the Git hosting platform
-5. If you choose to copy, the link will be copied to your clipboard for use elsewhere
-
-
 ## Extension Settings
 
 This extension provides the following settings:
@@ -82,6 +73,13 @@ This extension provides the following settings:
   ]
 }
 ```
+
+## Sponsor
+
+- [PayPal ](https://www.paypal.com/paypalme/alanhe421)
+- [微信打赏](https://github.com/alanhe421/alfred-workflows/blob/master/.github/wechat-award.jpg)
+
+<a href="https://www.buymeacoffee.com/alanhg" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
 
 ## Known Issues
 
