@@ -19,7 +19,8 @@
     "type": "git",
     "url": "https://github.com/alanhe421/vsc-extension-gitlink.git",
     "bugs": {
-        "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues/issues"
+        "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues/issues",
+        "email": "alan@1991421.cn"
     }
   },
   "contributes": {
