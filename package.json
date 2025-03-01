@@ -24,8 +24,8 @@
     "type": "git",
     "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues.git",
     "bugs": {
-        "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues/issues",
-        "email": "alan@1991421.cn"
+      "url": "https://github.com/alanhe421/vsc-extension-gitlink-issues/issues",
+      "email": "alan@1991421.cn"
     }
   },
   "contributes": {
@@ -45,6 +45,10 @@
       {
         "command": "gitlink.copyGitHubMarkdownLink",
         "title": "Copy GitHub Markdown Link"
+      },
+      {
+        "command": "gitlink.copyGitHubMarkdownSnippet",
+        "title": "Copy GitHub Markdown Snippet"
       }
     ],
     "menus": {
@@ -60,6 +64,10 @@
         {
           "command": "gitlink.copyGitHubMarkdownLink",
           "group": "gitlink@3"
+        },
+        {
+          "submenu": "gitlink.submenu.others",
+          "group": "gitlink@4"
         }
       ],
       "editor/context": [
@@ -74,9 +82,24 @@
         {
           "command": "gitlink.copyGitHubMarkdownLink",
           "group": "gitlink@3"
+        },
+        {
+          "submenu": "gitlink.submenu.others",
+          "group": "gitlink@4"
+        }
+      ],
+      "gitlink.submenu.others": [
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet"
         }
       ]
     },
+    "submenus": [
+      {
+        "id": "gitlink.submenu.others",
+        "label": "GitLink Others"
+      }
+    ],
     "configuration": {
       "title": "GitLink",
       "properties": {
