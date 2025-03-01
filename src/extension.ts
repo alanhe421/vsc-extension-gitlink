@@ -320,7 +320,13 @@ function constructGitUrl(platform: Platform, repoPath: string, branch: string, f
 
 async function getGitRootPath(filePath: string): Promise<string | null> {
 	try {
-		const { stdout } = await execAsync('git rev-parse --show-toplevel', { cwd: path.dirname(filePath) });
+		console.log('gitlink: getGitRootPath start', filePath);
+		// 如果是文件则使用其所在目录作为cwd，如果是目录则直接使用该目录
+		const cwd = (await vscode.workspace.fs.stat(vscode.Uri.file(filePath))).type === vscode.FileType.File 
+			? path.dirname(filePath)
+			: filePath;
+		console.log('gitlink: getGitRootPath cwd', cwd);
+		const { stdout } = await execAsync('git rev-parse --show-toplevel', { cwd });
 		return stdout.trim();
 	} catch (error) {
 		console.error('Error getting git root path:', error);
