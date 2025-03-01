@@ -158,7 +158,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
 async function detectGitRepository() {
-	console.log('gitlink: detectGitRepository start');
+	console.log('detectGitRepository start');
 	try {
 		// 获取当前工作区文件夹
 		const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -171,7 +171,7 @@ async function detectGitRepository() {
 		// 检查是否为 Git 仓库
 		const gitRootPath = await getGitRootPath(workspaceRoot);
 		if (!gitRootPath) {
-			showMessage('GitLink: Not a Git repository', 'warning');
+			showMessage('Not a Git repository', 'warning');
 			return; // 不是 Git 仓库，不显示提示
 		}
 	} catch (error) {
@@ -243,7 +243,7 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	// Get the current file path and selected lines
 	let filePath = commandSource === 'explorer' ? uri.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
 	if (!filePath) {
-		showMessage('GitLink: No file is currently open', 'error');
+		showMessage('No file is currently open', 'error');
 		return null;
 	}
 	let lineStart: number | undefined;
@@ -453,12 +453,12 @@ function constructGitUrl({
 
 async function getGitRootPath(filePath: string): Promise<string | null> {
 	try {
-		console.log('gitlink: getGitRootPath start', filePath);
+		console.log('getGitRootPath start', filePath);
 		// 如果是文件则使用其所在目录作为cwd，如果是目录则直接使用该目录
 		const cwd = (await vscode.workspace.fs.stat(vscode.Uri.file(filePath))).type === vscode.FileType.File
 			? path.dirname(filePath)
 			: filePath;
-		console.log('gitlink: getGitRootPath cwd', cwd);
+		console.log('getGitRootPath cwd', cwd);
 		const { stdout } = await execAsync('git rev-parse --show-toplevel', { cwd });
 		return stdout.trim();
 	} catch (error) {
