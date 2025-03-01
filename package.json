@@ -65,6 +65,10 @@
             {
               "name": "Coding",
               "urlTemplate": "https://{remote:url:path:0}.coding.net/p/{remote:url:path:1}/d/{remote:url:path:2}/git/tree/{branch}/{file:path}"
+            },
+            {
+              "name": "GitLab",
+              "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
             }
           ],
           "description": "Custom Git hosting platforms configuration",
@@ -96,6 +100,10 @@
             {
               "domain": "git.code.tencent.com",
               "platform": "GitHub"
+            },
+            {
+              "domain": "gitlab.com",
+              "platform": "GitLab"
             }
           ],
           "description": "Domain to platform mapping",
