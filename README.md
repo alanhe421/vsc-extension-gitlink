@@ -11,6 +11,8 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
+![screenshot1.gif](resources/screenshots/screenshot1.gif)
+
 ## Features
 
 - Right-click on a file in the editor and select "Open in GitHub" to open the file in your browser
