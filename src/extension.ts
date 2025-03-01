@@ -109,34 +109,6 @@ async function detectGitRepository() {
 			vscode.window.showWarningMessage('GitLink: Not a Git repository');
 			return; // 不是 Git 仓库，不显示提示
 		}
-
-		// 获取远程 URL
-		const remoteUrl = await getGitRemoteUrl(gitRootPath);
-		if (!remoteUrl) {
-			vscode.window.showWarningMessage('GitLink: No remote URL found');
-			return; // 没有远程 URL，不显示提示
-		}
-
-		// 从远程 URL 中提取域名
-		const repoInfo = extractRepoInfoFromRemoteUrl(remoteUrl);
-		if (!repoInfo.domain) {
-			vscode.window.showWarningMessage('GitLink: Failed to extract domain from remote URL');
-			return; // 无法提取域名，不显示提示
-		}
-
-		// 检查是否有匹配的平台
-		const platform = getPlatformForDomain(repoInfo.domain);
-		if (!platform) {
-			// 显示提示消息，并提供按钮引导到配置部分
-			const message = `GitLink could not detect which platform you use for remote URL: ${remoteUrl}. You can configure custom platforms in settings.`;
-			const openSettings = 'Open Settings';
-
-			vscode.window.showWarningMessage(message, openSettings).then(selection => {
-				if (selection === openSettings) {
-					vscode.commands.executeCommand('gitlink.openSettings');
-				}
-			});
-		}
 	} catch (error) {
 		console.error('Error detecting Git repository:', error);
 	}
@@ -430,12 +402,53 @@ async function getGitRootPath(filePath: string): Promise<string | null> {
 	}
 }
 
+// 获取所有远程仓库
+async function getGitRemotes(gitRootPath: string): Promise<string[]> {
+	try {
+		const { stdout } = await execAsync('git remote', { cwd: gitRootPath });
+		return stdout.trim().split('\n').filter(remote => remote.length > 0);
+	} catch (error) {
+		console.error('Error getting git remotes:', error);
+		return [];
+	}
+}
+
+// 改造后的函数
 async function getGitRemoteUrl(gitRootPath: string): Promise<string | null> {
 	try {
-		const { stdout } = await execAsync('git remote get-url origin', { cwd: gitRootPath });
+		// 获取所有远程仓库
+		const remotes = await getGitRemotes(gitRootPath);
+		
+		if (remotes.length === 0) {
+			return null;
+		}
+		
+		let selectedRemote: string | undefined;
+		
+		// 如果只有一个远程仓库，直接使用它
+		if (remotes.length === 1) {
+			selectedRemote = remotes[0];
+		} else {
+			// 有多个远程仓库，显示选择框
+			const quickPickOptions: vscode.QuickPickOptions = {
+				placeHolder: 'Select a git remote',
+				canPickMany: false
+			};
+			
+			selectedRemote = await vscode.window.showQuickPick(remotes, quickPickOptions);
+			
+			// 如果用户取消了选择，返回 null
+			if (!selectedRemote) {
+				return null;
+			}
+		}
+		
+		// 获取选定远程仓库的 URL
+		const { stdout } = await execAsync(`git remote get-url ${selectedRemote}`, { cwd: gitRootPath });
 		return stdout.trim();
 	} catch (error) {
 		console.error('Error getting git remote URL:', error);
+		vscode.window.showErrorMessage(`Error getting git remote URL: ${error instanceof Error ? error.message : String(error)}`);
 		return null;
 	}
 }
