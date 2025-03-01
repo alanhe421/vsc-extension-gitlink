@@ -11,7 +11,7 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
-![screenshot1.gif](https://private-user-images.githubusercontent.com/9245110/418260403-7729ab71-81f8-4d20-bf41-dca3c0a82ded.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDA4MTg1NTMsIm5iZiI6MTc0MDgxODI1MywicGF0aCI6Ii85MjQ1MTEwLzQxODI2MDQwMy03NzI5YWI3MS04MWY4LTRkMjAtYmY0MS1kY2EzYzBhODJkZWQuZ2lmP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDMwMSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTAzMDFUMDgzNzMzWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9ODc3ZDIwNDE0YWQxY2ZjMTU4YTM5NmQwODZlMjY1ODg2YWRmYzVhNGI2ZDBmMmQzMzhhZTBjYjQxNmYzZGU5NSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.NmD945P7bEtWxBUFo3dx4Fq71N10AI7rh-MoADaCqSo)
+![screenshot1.gif](https://static.1991421.cn/2025/418260403-7729ab71-81f8-4d20-bf41-dca3c0a82ded.gif)
 
 ## Features
 
