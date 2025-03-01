@@ -17,11 +17,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 在扩展激活时检测项目
 	detectGitRepository();
-
 	// Register the "Open in GitHub" command
-	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri) => {
+	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri: vscode.Uri, context?: vscode.Uri) => {
 		try {
-			const gitUrl = await getGitUrl(uri);
+			// 判断命令来源
+			const source = getCommandSource(context);
+			console.log("Command source:", source);
+
+			const gitUrl = await getGitUrl(uri, source);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -35,9 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	// Register the "Copy GitHub Link" command
-	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri?: vscode.Uri) => {
+	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri: vscode.Uri, context?: vscode.Uri) => {
 		try {
-			const gitUrl = await getGitUrl(uri);
+			const source = getCommandSource(context);
+			console.log("Command source:", source);
+			const gitUrl = await getGitUrl(uri, source);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -169,19 +174,32 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
-	// Get the current file path
-	let filePath: string;
-	if (uri) {
-		filePath = uri.fsPath;
-	} else {
-		const activeEditor = vscode.window.activeTextEditor;
-		if (!activeEditor) {
-			vscode.window.showErrorMessage('No file is currently open');
-			return null;
-		}
-		filePath = activeEditor.document.uri.fsPath;
+async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'): Promise<string | null> {
+	// Get the current file path and selected lines
+	let filePath = commandSource === 'explorer' ? uri.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
+	if (!filePath) {
+		vscode.window.showErrorMessage('GitLink: No file is currently open');
+		return null;
 	}
+	let lineStart: number | undefined;
+	let lineEnd: number | undefined;
+	const activeEditor = vscode.window.activeTextEditor;
+
+	if (activeEditor) {
+		// Get the current selection or cursor position
+		const selection = activeEditor.selection;
+		if (!selection.isEmpty) {
+			// User has selected a range of lines
+			lineStart = selection.start.line + 1; // VSCode is 0-based, most platforms are 1-based
+			lineEnd = selection.end.line + 1;
+		} else {
+			// User has just positioned the cursor
+			lineStart = selection.active.line + 1;
+			lineEnd = lineStart;
+		}
+		console.log(`Selected lines: ${lineStart}-${lineEnd}`);
+	}
+
 
 	// Get the git repository root
 	const gitRootPath = await getGitRootPath(filePath);
@@ -243,7 +261,18 @@ async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 	}
 
 	// Construct the URL using the platform's template
-	const gitUrl = constructGitUrl(platform, repoPath, branch, relativePath, fileName, fileDirPath, domainResult.domain, domainResult.pathSegments);
+	const gitUrl = constructGitUrl({
+		platform,
+		repoPath,
+		branch,
+		filePath: relativePath,
+		fileName,
+		fileDirPath,
+		lineStart,
+		lineEnd,
+		domainResult,
+		commandSource
+	});
 	if (!gitUrl) {
 		vscode.window.showErrorMessage('Failed to construct Git URL');
 		return null;
@@ -275,9 +304,32 @@ function extractRepoPath(remoteUrl: string): string | null {
 }
 
 // 使用平台模板构建 Git URL
-function constructGitUrl(platform: Platform, repoPath: string, branch: string, filePath: string, fileName: string, fileDirPath: string, domain: string, pathSegments?: string[]): string | null {
+function constructGitUrl({
+	platform,
+	repoPath,
+	branch,
+	filePath,
+	fileName,
+	fileDirPath,
+	lineStart,
+	lineEnd,
+	domainResult,
+	commandSource
+}: {
+	platform: Platform;
+	repoPath: string;
+	branch: string;
+	filePath: string;
+	fileName: string;
+	fileDirPath: string;
+	lineStart?: number;
+	lineEnd?: number;
+	domainResult: DomainResult;
+	commandSource: 'editor' | 'explorer';
+}): string | null {
 	try {
 		let url = platform.urlTemplate;
+		const { domain, pathSegments } = domainResult;
 
 		// 替换模板中的变量
 		url = url.replace(/{repo:path}/g, repoPath);
@@ -286,6 +338,22 @@ function constructGitUrl(platform: Platform, repoPath: string, branch: string, f
 		url = url.replace(/{file:name}/g, fileName);
 		url = url.replace(/{file:dir}/g, fileDirPath);
 		url = url.replace(/{remote:url}/g, domain);
+
+		// 处理行号
+		if (commandSource === 'editor' && lineStart !== undefined && lineEnd !== undefined) {
+			// 来自编辑器且有行号信息，直接替换变量
+			url = url.replace(/{line:start}/g, lineStart.toString());
+			url = url.replace(/{line:end}/g, lineEnd.toString());
+		} else {
+			// 来自资源管理器或没有行号信息，清理整个行号部分
+			// 先尝试替换常见的行号模式（如 #L{line:start}-L{line:end}）
+			url = url.replace(/#L{line:start}[-~]?L?{line:end}/g, '');
+			url = url.replace(/#L{line:start}/g, '');
+
+			// 清理任何剩余的行号标记
+			url = url.replace(/{line:start}/g, '');
+			url = url.replace(/{line:end}/g, '');
+		}
 
 		// 替换路径段变量 {remote:url:path:n}
 		if (pathSegments && pathSegments.length > 0) {
@@ -322,7 +390,7 @@ async function getGitRootPath(filePath: string): Promise<string | null> {
 	try {
 		console.log('gitlink: getGitRootPath start', filePath);
 		// 如果是文件则使用其所在目录作为cwd，如果是目录则直接使用该目录
-		const cwd = (await vscode.workspace.fs.stat(vscode.Uri.file(filePath))).type === vscode.FileType.File 
+		const cwd = (await vscode.workspace.fs.stat(vscode.Uri.file(filePath))).type === vscode.FileType.File
 			? path.dirname(filePath)
 			: filePath;
 		console.log('gitlink: getGitRootPath cwd', cwd);
@@ -354,5 +422,14 @@ async function getCurrentBranch(gitRootPath: string): Promise<string | null> {
 	}
 }
 
+function getCommandSource(context?: vscode.Uri): 'explorer' | 'editor' {
+	// 判断命令来源
+	let source = "explorer";
+	if (!context && vscode.window.activeTextEditor) {
+		source = "editor";
+	}
+	return source as 'explorer' | 'editor';
+}
+
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

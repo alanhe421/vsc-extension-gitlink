@@ -11,7 +11,7 @@ export interface Platform {
 	 */
 	name: string;
 	/**
-	 * 平台URL模板，比如https://github.com/{repo:path}/blob/{branch}/{file:path}
+	 * 平台URL模板，比如https://github.com/{repo:path}/blob/{branch}/{file:path}#L{line:start}-L{line:end}
 	 * 支持的变量：
 	 * {repo:path}：仓库路径，比如username/repo
 	 * {branch}：分支，比如main
@@ -21,9 +21,12 @@ export interface Platform {
 	 * {remote:url}：远程仓库域名，比如github.com
 	 * {remote:url:path:n}：远程URL路径的第n个段（索引从0开始），比如对于git@github.com:alanhe421/alfred-workflows.git，
 	 *                      {remote:url:path:0}为alanhe421，{remote:url:path:1}为alfred-workflows
+	 * {line:start}：选择的起始行号
+	 * {line:end}：选择的结束行号
 	 * {user}：用户名或组织名（已废弃，请使用{remote:url:path:0}代替）
 	 */
 	urlTemplate: string;
+	
 }
 
 /**

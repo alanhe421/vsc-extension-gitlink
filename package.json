@@ -64,15 +64,19 @@
           "default": [
             {
               "name": "GitHub",
-              "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}"
+              "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}#L{line:start}-L{line:end}"
             },
             {
               "name": "Coding",
-              "urlTemplate": "https://{remote:url:path:0}.coding.net/p/{remote:url:path:1}/d/{remote:url:path:2}/git/tree/{branch}/{file:path}"
+              "urlTemplate": "https://{remote:url:path:0}.coding.net/p/{remote:url:path:1}/d/{remote:url:path:2}/git/tree/{branch}/{file:path}#L{line:start}-L{line:end}"
             },
             {
               "name": "GitLab",
-              "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
+              "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}#L{line:start}-L{line:end}"
+            },
+            {
+              "name": "TGit",
+              "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}#L{line:start}"
             }
           ],
           "description": "Custom Git hosting platforms configuration",
@@ -103,11 +107,11 @@
             },
             {
               "domain": "git.code.tencent.com",
-              "platform": "GitHub"
+              "platform": "TGit"
             },
             {
               "domain": "git.woa.com",
-              "platform": "GitHub"
+              "platform": "TGit"
             },
             {
               "domain": "gitlab.com",
