@@ -60,7 +60,35 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'gitlink');
 	});
 
-	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable);
+	// Register the "Copy GitHub Markdown Link" command
+	const copyGitHubMarkdownLinkDisposable = vscode.commands.registerCommand(
+		'gitlink.copyGitHubMarkdownLink',
+		async (uri: vscode.Uri, context: vscode.Uri) => {
+			try {
+				// 获取普通链接
+				const gitUrl = await getGitUrl(uri, getCommandSource(context));
+				if (!gitUrl) {
+					return;
+				}
+				
+				// 如果没有合适的文本，使用文件名
+				const linkText = path.basename(uri?.fsPath || 
+								vscode.window.activeTextEditor?.document.uri.fsPath || 
+								'Link');
+				
+				// 格式化 Markdown 链接
+				const markdownLink = `[${linkText}](${gitUrl})`;
+				
+				// 复制到剪贴板
+				await vscode.env.clipboard.writeText(markdownLink);
+				vscode.window.showInformationMessage('Markdown link copied to clipboard');
+			} catch (error) {
+				vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
+			}
+		}
+	);
+
+	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable, copyGitHubMarkdownLinkDisposable);
 }
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台

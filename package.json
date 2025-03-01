@@ -32,6 +32,10 @@
       {
         "command": "gitlink.openSettings",
         "title": "Open GitLink Settings"
+      },
+      {
+        "command": "gitlink.copyGitHubMarkdownLink",
+        "title": "Copy GitHub Markdown Link"
       }
     ],
     "menus": {
@@ -42,6 +46,10 @@
         },
         {
           "command": "gitlink.copyGitHubLink",
+          "group": "gitlink"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
           "group": "gitlink"
         }
       ],
