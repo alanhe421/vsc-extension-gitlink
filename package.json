@@ -61,6 +61,10 @@
         {
           "command": "gitlink.copyGitHubLink",
           "group": "gitlink"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "group": "gitlink"
         }
       ]
     },
