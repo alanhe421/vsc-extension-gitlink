@@ -238,11 +238,12 @@ async function getGitUrl(uri?: vscode.Uri): Promise<string | null> {
 	// 根据域名获取匹配的平台
 	const platform = getPlatformForDomain(domainResult.domain);
 	if (!platform) {
-		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.');
+		const message = `GitLink could not detect which platform you use for remote URL "${remoteUrl}". You can configure custom platforms in settings.`;
+		vscode.window.showErrorMessage(message);
 
 		// 提供按钮引导到配置部分
 		const openSettings = 'Open Settings';
-		vscode.window.showErrorMessage('GitLink could not detect which platform you use. You can configure custom platforms in settings.', openSettings).then(selection => {
+		vscode.window.showErrorMessage(message, openSettings).then(selection => {
 			if (selection === openSettings) {
 				vscode.commands.executeCommand('gitlink.openSettings');
 			}
