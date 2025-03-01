@@ -31,9 +31,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// Open the URL in the default browser
 			vscode.env.openExternal(vscode.Uri.parse(gitUrl));
-			vscode.window.showInformationMessage(`Opening ${gitUrl}`);
+			showMessage(`Opening ${gitUrl}`);
 		} catch (error) {
-			vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
+			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		}
 	});
 
@@ -49,9 +49,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// Copy the URL to clipboard
 			await vscode.env.clipboard.writeText(gitUrl);
-			vscode.window.showInformationMessage(`Git link copied to clipboard: ${gitUrl}`);
+			showMessage(`Git link copied to clipboard: ${gitUrl}`);
 		} catch (error) {
-			vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
+			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		}
 	});
 
@@ -70,25 +70,90 @@ export function activate(context: vscode.ExtensionContext) {
 				if (!gitUrl) {
 					return;
 				}
-				
+
 				// 如果没有合适的文本，使用文件名
-				const linkText = path.basename(uri?.fsPath || 
-								vscode.window.activeTextEditor?.document.uri.fsPath || 
+				const linkText = path.basename(uri?.fsPath ||
+								vscode.window.activeTextEditor?.document.uri.fsPath ||
 								'Link');
-				
+
 				// 格式化 Markdown 链接
 				const markdownLink = `[${linkText}](${gitUrl})`;
-				
+
 				// 复制到剪贴板
 				await vscode.env.clipboard.writeText(markdownLink);
-				vscode.window.showInformationMessage('Markdown link copied to clipboard');
+				showMessage('Markdown link copied to clipboard');
 			} catch (error) {
-				vscode.window.showErrorMessage(`Error: ${error instanceof Error ? error.message : String(error)}`);
+				showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 			}
 		}
 	);
 
-	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable, copyGitHubMarkdownLinkDisposable);
+	// Register the "Copy GitHub Markdown Snippet" command
+	const copyGitHubMarkdownSnippetDisposable = vscode.commands.registerCommand('gitlink.copyGitHubMarkdownSnippet', async (uri: vscode.Uri, context?: vscode.Uri) => {
+		try {
+			const source = getCommandSource(context);
+			console.log("Command source for snippet:", source);
+			const gitUrl = await getGitUrl(uri, source);
+			if (!gitUrl) {
+				return; // Error messages are already shown in getGitUrl
+			}
+
+			let clipboardContent = "";
+
+			const linkText = path.basename(uri?.fsPath ||
+				vscode.window.activeTextEditor?.document.uri.fsPath ||
+				'Link');
+
+			// 只有当命令来源是编辑器时，才添加代码块
+			if (source === 'editor') {
+				const activeEditor = vscode.window.activeTextEditor;
+				if (activeEditor && activeEditor.document.uri.fsPath === uri.fsPath) {
+					// 获取选中的代码
+					const selection = activeEditor.selection;
+					let codeContent = "";
+					let language = "";
+
+					if (!selection.isEmpty) {
+						// 有选中的代码
+						codeContent = activeEditor.document.getText(selection);
+
+						// 从文件扩展名获取语言
+						const fileName = activeEditor.document.fileName;
+						language = path.extname(fileName).substring(1); // 去掉点号
+
+						// 映射一些常见语言的文件扩展名
+						language = mapLanguageExtension(language);
+
+						// 构建 Markdown 代码块格式，使用文件名作为链接文本
+						clipboardContent = `[${linkText}](${gitUrl})\n\n\`\`\`${language}\n${codeContent}\n\`\`\``;
+					} else {
+						// 无选中代码，只复制链接
+						clipboardContent = gitUrl;
+					}
+				} else {
+					// 编辑器打开的不是当前文件
+					clipboardContent = `[${linkText}](${gitUrl})`;
+				}
+			} else {
+				// 非编辑器来源，只复制链接
+				clipboardContent = `[${linkText}](${gitUrl})`;
+			}
+
+			// 复制内容到剪贴板
+			await vscode.env.clipboard.writeText(clipboardContent);
+
+			// 根据复制的内容类型显示不同的消息
+			if (clipboardContent === gitUrl) {
+				showMessage(`Git link copied to clipboard: ${gitUrl}`);
+			} else {
+				showMessage(`Markdown code snippet copied to clipboard`);
+			}
+		} catch (error) {
+			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
+		}
+	});
+
+	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable, copyGitHubMarkdownLinkDisposable, copyGitHubMarkdownSnippetDisposable);
 }
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
@@ -106,7 +171,7 @@ async function detectGitRepository() {
 		// 检查是否为 Git 仓库
 		const gitRootPath = await getGitRootPath(workspaceRoot);
 		if (!gitRootPath) {
-			vscode.window.showWarningMessage('GitLink: Not a Git repository');
+			showMessage('GitLink: Not a Git repository', 'warning');
 			return; // 不是 Git 仓库，不显示提示
 		}
 	} catch (error) {
@@ -178,7 +243,7 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	// Get the current file path and selected lines
 	let filePath = commandSource === 'explorer' ? uri.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
 	if (!filePath) {
-		vscode.window.showErrorMessage('GitLink: No file is currently open');
+		showMessage('GitLink: No file is currently open', 'error');
 		return null;
 	}
 	let lineStart: number | undefined;
@@ -204,21 +269,21 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	// Get the git repository root
 	const gitRootPath = await getGitRootPath(filePath);
 	if (!gitRootPath) {
-		vscode.window.showErrorMessage('This file is not under Git version control');
+		showMessage('This file is not under Git version control', 'error');
 		return null;
 	}
 
 	// Get the remote URL
 	const remoteUrl = await getGitRemoteUrl(gitRootPath);
 	if (!remoteUrl) {
-		vscode.window.showErrorMessage('No Git remote URL found');
+		showMessage('No Git remote URL found', 'error');
 		return null;
 	}
 
 	// 从远程 URL 中提取域名
 	const domainResult = extractRepoInfoFromRemoteUrl(remoteUrl);
 	if (!domainResult.domain) {
-		vscode.window.showErrorMessage('Failed to extract domain from remote URL');
+		showMessage('Failed to extract domain from remote URL', 'error');
 		return null;
 	}
 
@@ -228,11 +293,11 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	const platform = getPlatformForDomain(domainResult.domain);
 	if (!platform) {
 		const message = `GitLink could not detect which platform you use for remote URL "${remoteUrl}". You can configure custom platforms in settings.`;
-		vscode.window.showErrorMessage(message);
+		showMessage(message, 'error');
 
 		// 提供按钮引导到配置部分
 		const openSettings = 'Open Settings';
-		vscode.window.showErrorMessage(message, openSettings).then(selection => {
+		showMessage(message, 'error', openSettings).then(selection => {
 			if (selection === openSettings) {
 				vscode.commands.executeCommand('gitlink.openSettings');
 			}
@@ -244,7 +309,7 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	// Get the current branch or commit
 	const branch = await getCurrentBranch(gitRootPath);
 	if (!branch) {
-		vscode.window.showErrorMessage('Failed to get current branch');
+		showMessage('Failed to get current branch', 'error');
 		return null;
 	}
 
@@ -256,7 +321,7 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 	// Extract repository path from remote URL
 	const repoPath = extractRepoPath(remoteUrl);
 	if (!repoPath) {
-		vscode.window.showErrorMessage('Failed to extract repository path from remote URL');
+		showMessage('Failed to extract repository path from remote URL', 'error');
 		return null;
 	}
 
@@ -274,7 +339,7 @@ async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'):
 		commandSource
 	});
 	if (!gitUrl) {
-		vscode.window.showErrorMessage('Failed to construct Git URL');
+		showMessage('Failed to construct Git URL', 'error');
 		return null;
 	}
 
@@ -418,13 +483,13 @@ async function getGitRemoteUrl(gitRootPath: string): Promise<string | null> {
 	try {
 		// 获取所有远程仓库
 		const remotes = await getGitRemotes(gitRootPath);
-		
+
 		if (remotes.length === 0) {
 			return null;
 		}
-		
+
 		let selectedRemote: string | undefined;
-		
+
 		// 如果只有一个远程仓库，直接使用它
 		if (remotes.length === 1) {
 			selectedRemote = remotes[0];
@@ -434,21 +499,21 @@ async function getGitRemoteUrl(gitRootPath: string): Promise<string | null> {
 				placeHolder: 'Select a git remote',
 				canPickMany: false
 			};
-			
+
 			selectedRemote = await vscode.window.showQuickPick(remotes, quickPickOptions);
-			
+
 			// 如果用户取消了选择，返回 null
 			if (!selectedRemote) {
 				return null;
 			}
 		}
-		
+
 		// 获取选定远程仓库的 URL
 		const { stdout } = await execAsync(`git remote get-url ${selectedRemote}`, { cwd: gitRootPath });
 		return stdout.trim();
 	} catch (error) {
 		console.error('Error getting git remote URL:', error);
-		vscode.window.showErrorMessage(`Error getting git remote URL: ${error instanceof Error ? error.message : String(error)}`);
+		showMessage(`Error getting git remote URL: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		return null;
 	}
 }
@@ -470,6 +535,54 @@ function getCommandSource(context?: vscode.Uri): 'explorer' | 'editor' {
 		source = "editor";
 	}
 	return source as 'explorer' | 'editor';
+}
+
+// 添加语言扩展名映射函数
+function mapLanguageExtension(extension: string): string {
+	const mapping: Record<string, string> = {
+		'js': 'javascript',
+		'jsx': 'jsx',
+		'ts': 'typescript',
+		'tsx': 'tsx',
+		'py': 'python',
+		'rb': 'ruby',
+		'cs': 'csharp',
+		'go': 'go',
+		'java': 'java',
+		'php': 'php',
+		'sh': 'bash',
+		'c': 'c',
+		'cpp': 'cpp',
+		'h': 'c',
+		'hpp': 'cpp',
+		'md': 'markdown',
+		'json': 'json',
+		'yaml': 'yaml',
+		'yml': 'yaml',
+		'xml': 'xml',
+		'html': 'html',
+		'css': 'css',
+		'scss': 'scss',
+		'rs': 'rust',
+		'': 'text'  // 默认为纯文本
+	};
+
+	return mapping[extension.toLowerCase()] || extension;
+}
+
+/**
+ * 显示消息
+ * @param message 消息内容
+ * @param level
+ * @param others
+ */
+function showMessage(message: string, level: 'info' | 'error' | 'warning' = 'info', ...others	) {
+	const method = {
+		'info': 'showInformationMessage',
+		'warning': 'showWarningMessage',
+		'error': 'showErrorMessage'
+	}[level];
+	return (vscode.window[method as keyof typeof vscode.window] as (message: string) => void)('GitLink: ' + message, ...others);
 }
 
 // This method is called when your extension is deactivated
