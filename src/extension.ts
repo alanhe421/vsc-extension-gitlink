@@ -73,8 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 				// 如果没有合适的文本，使用文件名
 				const linkText = path.basename(uri?.fsPath ||
-								vscode.window.activeTextEditor?.document.uri.fsPath ||
-								'Link');
+					vscode.window.activeTextEditor?.document.uri.fsPath ||
+					'Link');
 
 				// 格式化 Markdown 链接
 				const markdownLink = `[${linkText}](${gitUrl})`;
@@ -576,13 +576,13 @@ function mapLanguageExtension(extension: string): string {
  * @param level
  * @param others
  */
-function showMessage(message: string, level: 'info' | 'error' | 'warning' = 'info', ...others	) {
+function showMessage(message: string, level: 'info' | 'error' | 'warning' = 'info', ...others: any[]) {
 	const method = {
-		'info': 'showInformationMessage',
-		'warning': 'showWarningMessage',
-		'error': 'showErrorMessage'
+		'info': vscode.window.showInformationMessage,
+		'warning': vscode.window.showWarningMessage,
+		'error': vscode.window.showErrorMessage
 	}[level];
-	return (vscode.window[method as keyof typeof vscode.window] as (message: string) => void)('GitLink: ' + message, ...others);
+	return method('GitLink: ' + message, ...others);
 }
 
 // This method is called when your extension is deactivated
