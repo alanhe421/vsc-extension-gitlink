@@ -14,7 +14,8 @@
   "keywords": [
     "git",
     "github",
-    "gitlab"
+    "gitlab",
+    "gitee"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -160,6 +161,10 @@
             {
               "domain": "gitlab.com",
               "platform": "GitLab"
+            },
+            {
+              "domain": "gitee.com",
+              "platform": "GitHub"
             }
           ],
           "description": "Domain to platform mapping",
