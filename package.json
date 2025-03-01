@@ -126,6 +126,7 @@
             }
           ],
           "description": "Custom Git hosting platforms configuration",
+          "markdownDescription": "Currently supported Git hosting platforms: GitHub, Coding, GitLab, TGit. You can customize the URL template for each platform. Available template variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} (where n is the position of path segment, starting from 0)",
           "items": {
             "type": "object",
             "properties": {
@@ -135,7 +136,7 @@
               },
               "urlTemplate": {
                 "type": "string",
-                "description": "URL template for the platform. Available variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} (where n is the position of path segment, starting from 0), {user} (deprecated, use {remote:url:path:0} instead)"
+                "description": "URL template for the platform. Available variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} etc."
               }
             }
           }
@@ -169,6 +170,7 @@
             }
           ],
           "description": "Domain to platform mapping",
+          "markdownDescription": "Currently supported domains: github.com, gitlab.com, gitee.com, e.coding.net etc.",
           "items": {
             "type": "object",
             "properties": {
