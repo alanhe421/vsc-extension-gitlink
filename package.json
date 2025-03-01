@@ -11,6 +11,11 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "git",
+    "github",
+    "gitlab"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
