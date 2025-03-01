@@ -102,6 +102,10 @@
               "platform": "GitHub"
             },
             {
+              "domain": "git.woa.com",
+              "platform": "GitHub"
+            },
+            {
               "domain": "gitlab.com",
               "platform": "GitLab"
             }
