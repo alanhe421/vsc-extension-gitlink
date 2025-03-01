@@ -91,6 +91,10 @@
             {
               "domain": "e.coding.net",
               "platform": "Coding"
+            },
+            {
+              "domain": "git.code.tencent.com",
+              "platform": "GitHub"
             }
           ],
           "description": "Domain to platform mapping",
