@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
 
-			const gitUrl = await getGitUrl(source, uri);
+			const gitUrl = await getGitUrl(source, allUris);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
-			const gitUrl = await getGitUrl(source, uri);
+			const gitUrl = await getGitUrl(source, allUris);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -66,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
 		async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 			try {
 				// 获取普通链接
-				const gitUrl = await getGitUrl(getCommandSource(allUris), uri);
+				const gitUrl = await getGitUrl(getCommandSource(allUris), allUris);
 				if (!gitUrl) {
 					return;
 				}
@@ -93,7 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source for snippet:", source);
-			const gitUrl = await getGitUrl(source, uri);
+			const gitUrl = await getGitUrl(source, allUris);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -233,9 +233,9 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(commandSource: 'explorer' | 'editor',uri?: vscode.Uri): Promise<string | null> {
+async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.Uri[]): Promise<string | null> {
 	// Get the current file path and selected lines
-	let filePath = commandSource === 'explorer' ? uri?.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
+	let filePath = commandSource === 'explorer' ? allUris?.[0]?.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
 	if (!filePath) {
 		showMessage('No file is currently open', 'error');
 		return null;
