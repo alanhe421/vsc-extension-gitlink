@@ -18,13 +18,13 @@ export function activate(context: vscode.ExtensionContext) {
 	// 在扩展激活时检测项目
 	detectGitRepository();
 	// Register the "Open in GitHub" command
-	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri: vscode.Uri, context?: vscode.Uri) => {
+	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 		try {
 			// 判断命令来源
-			const source = getCommandSource(context);
+			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
 
-			const gitUrl = await getGitUrl(uri, source);
+			const gitUrl = await getGitUrl(source, uri);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -38,11 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	// Register the "Copy GitHub Link" command
-	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri: vscode.Uri, context?: vscode.Uri) => {
+	const copyGitHubLinkDisposable = vscode.commands.registerCommand('gitlink.copyGitHubLink', async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 		try {
-			const source = getCommandSource(context);
+			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
-			const gitUrl = await getGitUrl(uri, source);
+			const gitUrl = await getGitUrl(source, uri);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -63,10 +63,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register the "Copy GitHub Markdown Link" command
 	const copyGitHubMarkdownLinkDisposable = vscode.commands.registerCommand(
 		'gitlink.copyGitHubMarkdownLink',
-		async (uri: vscode.Uri, context: vscode.Uri) => {
+		async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 			try {
 				// 获取普通链接
-				const gitUrl = await getGitUrl(uri, getCommandSource(context));
+				const gitUrl = await getGitUrl(getCommandSource(allUris), uri);
 				if (!gitUrl) {
 					return;
 				}
@@ -89,11 +89,11 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	// Register the "Copy GitHub Markdown Snippet" command
-	const copyGitHubMarkdownSnippetDisposable = vscode.commands.registerCommand('gitlink.copyGitHubMarkdownSnippet', async (uri: vscode.Uri, context?: vscode.Uri) => {
+	const copyGitHubMarkdownSnippetDisposable = vscode.commands.registerCommand('gitlink.copyGitHubMarkdownSnippet', async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 		try {
-			const source = getCommandSource(context);
+			const source = getCommandSource(allUris);
 			console.log("Command source for snippet:", source);
-			const gitUrl = await getGitUrl(uri, source);
+			const gitUrl = await getGitUrl(source, uri);
 			if (!gitUrl) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -107,7 +107,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// 只有当命令来源是编辑器时，才添加代码块
 			if (source === 'editor') {
 				const activeEditor = vscode.window.activeTextEditor;
-				if (activeEditor && activeEditor.document.uri.fsPath === uri.fsPath) {
+				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
 					let codeContent = "";
@@ -233,9 +233,9 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(uri: vscode.Uri, commandSource: 'explorer' | 'editor'): Promise<string | null> {
+async function getGitUrl(commandSource: 'explorer' | 'editor',uri?: vscode.Uri): Promise<string | null> {
 	// Get the current file path and selected lines
-	let filePath = commandSource === 'explorer' ? uri.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
+	let filePath = commandSource === 'explorer' ? uri?.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
 	if (!filePath) {
 		showMessage('No file is currently open', 'error');
 		return null;
@@ -519,47 +519,18 @@ async function getCurrentBranch(gitRootPath: string): Promise<string | null> {
 		return null;
 	}
 }
-
-function getCommandSource(context?: vscode.Uri): 'explorer' | 'editor' {
-	// 判断命令来源
+/**
+ *
+ * // 判断命令来源
+ * 如果 uri 存在，则认为是编辑器来源
+ * 如果 uri 不存在，则认为是资源管理器/直接命令来源
+ */
+function getCommandSource(allUris?: vscode.Uri[]): 'explorer' | 'editor' {
 	let source = "explorer";
-	if (!context && vscode.window.activeTextEditor) {
+	if (!allUris?.length && vscode.window.activeTextEditor) {
 		source = "editor";
 	}
 	return source as 'explorer' | 'editor';
-}
-
-// 添加语言扩展名映射函数
-function mapLanguageExtension(extension: string): string {
-	const mapping: Record<string, string> = {
-		'js': 'javascript',
-		'jsx': 'jsx',
-		'ts': 'typescript',
-		'tsx': 'tsx',
-		'py': 'python',
-		'rb': 'ruby',
-		'cs': 'csharp',
-		'go': 'go',
-		'java': 'java',
-		'php': 'php',
-		'sh': 'bash',
-		'c': 'c',
-		'cpp': 'cpp',
-		'h': 'c',
-		'hpp': 'cpp',
-		'md': 'markdown',
-		'json': 'json',
-		'yaml': 'yaml',
-		'yml': 'yaml',
-		'xml': 'xml',
-		'html': 'html',
-		'css': 'css',
-		'scss': 'scss',
-		'rs': 'rust',
-		'': 'text'  // 默认为纯文本
-	};
-
-	return mapping[extension.toLowerCase()] || extension;
 }
 
 /**
