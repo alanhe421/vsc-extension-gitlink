@@ -24,14 +24,16 @@ export function activate(context: vscode.ExtensionContext) {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
 
-			const gitUrl = await getGitUrl(source, allUris);
-			if (!gitUrl) {
+			const gitUrls = await getGitUrl(source, allUris);
+			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
 
 			// Open the URL in the default browser
-			vscode.env.openExternal(vscode.Uri.parse(gitUrl));
-			showMessage(`Opening ${gitUrl}`);
+			gitUrls.forEach(gitUrl => {
+				vscode.env.openExternal(vscode.Uri.parse(gitUrl.url));
+			});
+			showMessage(`Opening ${gitUrls.join(', ')}`);
 		} catch (error) {
 			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		}
@@ -42,14 +44,14 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
-			const gitUrl = await getGitUrl(source, allUris);
-			if (!gitUrl) {
+			const gitUrls = await getGitUrl(source, allUris);
+			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
 
 			// Copy the URL to clipboard
-			await vscode.env.clipboard.writeText(gitUrl);
-			showMessage(`Git link copied to clipboard: ${gitUrl}`);
+			await vscode.env.clipboard.writeText(gitUrls.map(gitUrl => gitUrl.url).join('\n'));
+			showMessage(`Git link copied to clipboard: ${gitUrls.map(gitUrl => gitUrl.url).join(', ')}`);
 		} catch (error) {
 			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		}
@@ -66,21 +68,22 @@ export function activate(context: vscode.ExtensionContext) {
 		async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 			try {
 				// 获取普通链接
-				const gitUrl = await getGitUrl(getCommandSource(allUris), allUris);
-				if (!gitUrl) {
+				const gitUrls = await getGitUrl(getCommandSource(allUris), allUris);
+				if (!gitUrls?.length) {
 					return;
 				}
 
-				// 如果没有合适的文本，使用文件名
-				const linkText = path.basename(uri?.fsPath ||
-					vscode.window.activeTextEditor?.document.uri.fsPath ||
-					'Link');
+				let markdownLinks = '';
+				gitUrls.forEach(gitUrl => {
+					// 如果没有合适的文本，使用文件名
+					const linkText = gitUrl.fileName || 'Link';
 
-				// 格式化 Markdown 链接
-				const markdownLink = `[${linkText}](${gitUrl})`;
-
+					// 格式化 Markdown 链接
+					const markdownLink = `[${linkText}](${gitUrl.url})`;
+					markdownLinks += markdownLink + '\n';
+				});
 				// 复制到剪贴板
-				await vscode.env.clipboard.writeText(markdownLink);
+				await vscode.env.clipboard.writeText(markdownLinks);
 				showMessage('Markdown link copied to clipboard');
 			} catch (error) {
 				showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
@@ -93,20 +96,17 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source for snippet:", source);
-			const gitUrl = await getGitUrl(source, allUris);
-			if (!gitUrl) {
+			const gitUrls = await getGitUrl(source, allUris);
+			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
 
 			let clipboardContent = "";
 
-			const linkText = path.basename(uri?.fsPath ||
-				vscode.window.activeTextEditor?.document.uri.fsPath ||
-				'Link');
-
 			// 只有当命令来源是编辑器时，才添加代码块
 			if (source === 'editor') {
 				const activeEditor = vscode.window.activeTextEditor;
+				let { url: gitUrl, fileName: linkText } = gitUrls[0];
 				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
@@ -129,18 +129,23 @@ export function activate(context: vscode.ExtensionContext) {
 					clipboardContent = `[${linkText}](${gitUrl})`;
 				}
 			} else {
-				// 非编辑器来源，只复制链接
-				clipboardContent = `[${linkText}](${gitUrl})`;
+				gitUrls?.forEach(gitUrl=>{
+					let { url, fileName: linkText } = gitUrl;
+					if(linkText){
+						// 非编辑器来源，只复制链接
+						clipboardContent += `[${linkText}](${url})\n`;
+					}
+				})
 			}
 
 			// 复制内容到剪贴板
 			await vscode.env.clipboard.writeText(clipboardContent);
 
 			// 根据复制的内容类型显示不同的消息
-			if (clipboardContent === gitUrl) {
-				showMessage(`Git link copied to clipboard: ${gitUrl}`);
-			} else {
+			if (source === 'editor') {
 				showMessage(`Markdown code snippet copied to clipboard`);
+			} else {
+				showMessage(`Git link copied to clipboard: ${gitUrls.map(gitUrl => gitUrl.url).join(', ')}`);
 			}
 		} catch (error) {
 			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
@@ -233,13 +238,14 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.Uri[]): Promise<string | null> {
+async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.Uri[]): Promise<{ url: string; fileName: string }[] | null> {
 	// Get the current file path and selected lines
-	let filePath = commandSource === 'explorer' ? allUris?.[0]?.fsPath : vscode.window.activeTextEditor?.document.uri.fsPath;
-	if (!filePath) {
+	let allFilePaths = commandSource === 'explorer' ? allUris?.map(uri => uri.fsPath) : [vscode.window.activeTextEditor?.document.uri.fsPath] as string[];
+	if (!allFilePaths?.length) {
 		showMessage('No file is currently open', 'error');
 		return null;
 	}
+	let firstFilePath = allFilePaths[0];
 	let lineStart: number | undefined;
 	let lineEnd: number | undefined;
 	const activeEditor = vscode.window.activeTextEditor;
@@ -261,7 +267,7 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.
 
 
 	// Get the git repository root
-	const gitRootPath = await getGitRootPath(filePath);
+	const gitRootPath = await getGitRootPath(firstFilePath);
 	if (!gitRootPath) {
 		showMessage('This file is not under Git version control', 'error');
 		return null;
@@ -305,11 +311,6 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.
 		return null;
 	}
 
-	// Get the relative path from the git root
-	const relativePath = path.relative(gitRootPath, filePath).replace(/\\/g, '/');
-	const fileName = path.basename(filePath);
-	const fileDirPath = path.dirname(relativePath);
-
 	// Extract repository path from remote URL
 	const repoPath = extractRepoPath(remoteUrl);
 	if (!repoPath) {
@@ -317,25 +318,38 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.
 		return null;
 	}
 
-	// Construct the URL using the platform's template
-	const gitUrl = constructGitUrl({
-		platform,
-		repoPath,
-		branch,
-		filePath: relativePath,
-		fileName,
-		fileDirPath,
-		lineStart,
-		lineEnd,
-		domainResult,
-		commandSource
-	});
-	if (!gitUrl) {
-		showMessage('Failed to construct Git URL', 'error');
-		return null;
+	const gitUrls: { url: string; fileName: string }[] = [];
+	for (const fp of allFilePaths) {
+		// Get the relative path from the git root
+		const relativePath = path.relative(gitRootPath, fp).replace(/\\/g, '/');
+		const fileName = path.basename(fp);
+		const fileDirPath = path.dirname(relativePath);
+
+		// Construct the URL using the platform's template
+		const gitUrl = constructGitUrl({
+			platform,
+			repoPath,
+			branch,
+			filePath: relativePath,
+			fileName,
+			fileDirPath,
+			lineStart,
+			lineEnd,
+			domainResult,
+			commandSource
+		});
+		if (!gitUrl) {
+			showMessage('Failed to construct Git URL', 'error');
+			return null;
+		}
+		gitUrls.push({
+			url: gitUrl,
+			fileName,
+		});
 	}
 
-	return gitUrl;
+	return gitUrls;
+
 }
 
 // 从远程 URL 中提取仓库路径

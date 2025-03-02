@@ -23,6 +23,7 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 - Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard
 - Right-click on a file in the explorer and select "Copy GitHub Markdown" to copy the markdown link to your clipboard
 - Right-click on a file in the explorer and select "Copy GitHub Markdown Snippet" to copy the markdown snippet to your clipboard
+- Support multi-file copy in explorer
 - Supports both SSH and HTTPS remote URL formats
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
@@ -47,33 +48,6 @@ This extension provides the following settings:
 * `gitlink.domainRegistry`: Domain-to-platform mapping configuration, with the following fields:
   * `domain`: Domain (e.g., github.com, gitlab.com)
   * `platform`: Platform name, must match a platform name defined in `gitlink.platforms`
-
-### Configuration Example
-
-```json
-{
-  "gitlink.platforms": [
-    {
-      "name": "GitHub",
-      "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}"
-    },
-    {
-      "name": "GitLab",
-      "urlTemplate": "https://{remote:url}/{repo:path}/-/blob/{branch}/{file:path}"
-    }
-  ],
-  "gitlink.domainRegistry": [
-    {
-      "domain": "github.com",
-      "platform": "GitHub"
-    },
-    {
-      "domain": "gitlab.com",
-      "platform": "GitLab"
-    }
-  ]
-}
-```
 
 ## Sponsor
 
