@@ -404,7 +404,7 @@ function constructGitUrl({
 
 		// 替换模板中的变量
 		url = url.replace(/{repo:path}/g, repoPath);
-		url = url.replace(/{branch}/g, branch);
+		url = url.replace(/{branch}/g, encodeURIComponent(branch)); // 一些git服务，比如coding，对于包含/的分支名会有问题，这里直接编码
 		url = url.replace(/{file:path}/g, filePath);
 		url = url.replace(/{file:name}/g, fileName);
 		url = url.replace(/{file:dir}/g, fileDirPath);
