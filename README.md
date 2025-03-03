@@ -14,6 +14,7 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
 ![screenshot1.gif](https://static.1991421.cn/2025/418260403-7729ab71-81f8-4d20-bf41-dca3c0a82ded.gif)
+![2025-03-02-110100.jpeg](https://static.1991421.cn/2025/2025-03-02-110100.jpeg)
 
 ## Features
 
