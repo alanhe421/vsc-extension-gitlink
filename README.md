@@ -50,6 +50,9 @@ This extension provides the following settings:
   * `domain`: Domain (e.g., github.com, gitlab.com)
   * `platform`: Platform name, must match a platform name defined in `gitlink.platforms`
 
+* `gitlink.useCompactMenu`: Whether to use compact menu style. When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu. Default is false.
+
+
 ## Sponsor
 
 - [PayPal ](https://www.paypal.com/paypalme/alanhe421)
