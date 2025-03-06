@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 			gitUrls.forEach(gitUrl => {
 				vscode.env.openExternal(vscode.Uri.parse(gitUrl.url));
 			});
-			showMessage(`Opening ${gitUrls.join(', ')}`);
+			showMessage(`Opening ${gitUrls.map(gitUrl => gitUrl.url).join(', ')}`);
 		} catch (error) {
 			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
 		}
