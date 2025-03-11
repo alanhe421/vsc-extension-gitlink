@@ -35,6 +35,7 @@ A VS Code extension that allows you to open the web version of files in your Git
 - [腾讯工蜂](https://git.code.tencent.com)
 - [Gitee](https://gitee.com)
 - [微信开发者代码管理](https://git.weixin.qq.com)
+- [阿里云Codeup](https://codeup.aliyun.com)
 
 you can also add your own platform by configuring the `gitlink.platforms` and `gitlink.domainRegistry` settings.
 

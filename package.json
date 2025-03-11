@@ -204,6 +204,10 @@
             {
               "domain": "git.weixin.qq.com",
               "platform": "TGit"
+            },
+            {
+              "domain": "codeup.aliyun.com",
+              "platform": "TGit"
             }
           ],
           "description": "Domain to platform mapping",
