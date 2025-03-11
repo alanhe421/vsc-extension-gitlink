@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v0.1.9...v1.0.0) (2025-03-11)
+
+
+### Features
+
+* add support for Aliyun Codeup Git platform (codeup.aliyun.com) ([8ebbcac](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/8ebbcacc511bfa3c8a5581b2575b7042e3d39c05))
+* add support for WeChat Git platform (git.weixin.qq.com) ([fbe0348](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/fbe03489553b758f97a1ff5568504241ed71fdc5))
+
 ### 0.1.9 (2025-03-06)
 
 
