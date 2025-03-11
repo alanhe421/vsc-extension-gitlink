@@ -200,6 +200,10 @@
             {
               "domain": "gitee.com",
               "platform": "GitHub"
+            },
+            {
+              "domain": "git.weixin.qq.com",
+              "platform": "TGit"
             }
           ],
           "description": "Domain to platform mapping",

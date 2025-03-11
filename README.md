@@ -9,8 +9,6 @@ A VS Code extension that allows you to open the web version of files in your Git
 
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/AlanHe.cn-alanhe-gitlink)](https://marketplace.visualstudio.com/items?itemName=AlanHe.cn-alanhe-gitlink)
 
-Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [Tencent Coding.net](https://coding.net), [腾讯工蜂](https://git.code.tencent.com), [Gitee](https://gitee.com), and other Git hosting platforms through custom configuration.
-
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
 ![screenshot1.gif](https://static.1991421.cn/2025/418260403-7729ab71-81f8-4d20-bf41-dca3c0a82ded.gif)
@@ -28,6 +26,17 @@ Currently supports [GitHub](https://github.com), [GitLab](https://gitlab.com), [
 - Supports both SSH and HTTPS remote URL formats
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
+
+## Built-in Supported Platforms
+
+- [GitHub](https://github.com)
+- [GitLab](https://gitlab.com)
+- [腾讯Coding.net](https://coding.net)
+- [腾讯工蜂](https://git.code.tencent.com)
+- [Gitee](https://gitee.com)
+- [微信开发者代码管理](https://git.weixin.qq.com)
+
+you can also add your own platform by configuring the `gitlink.platforms` and `gitlink.domainRegistry` settings.
 
 ## Extension Settings
 
