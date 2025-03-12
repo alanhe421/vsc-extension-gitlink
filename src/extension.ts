@@ -5,6 +5,7 @@ import * as path from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { Platform, DomainMapping, DomainResult } from './types';
+import { SessionState } from './session-state';
 
 const execAsync = promisify(exec);
 
@@ -14,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "gitlink" is now active!');
-
+	const sessionState = new SessionState();
 	// 在扩展激活时检测项目
 	detectGitRepository();
 	// Register the "Open in GitHub" command
@@ -24,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
 
-			const gitUrls = await getGitUrl(source, context, allUris);
+			const gitUrls = await getGitUrl(source, sessionState, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -44,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
-			const gitUrls = await getGitUrl(source, context, allUris);
+			const gitUrls = await getGitUrl(source, sessionState, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -68,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 		async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 			try {
 				// 获取普通链接
-				const gitUrls = await getGitUrl(getCommandSource(allUris), context, allUris);
+				const gitUrls = await getGitUrl(getCommandSource(allUris), sessionState, allUris);
 				if (!gitUrls?.length) {
 					return;
 				}
@@ -96,7 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source for snippet:", source);
-			const gitUrls = await getGitUrl(source, context, allUris);
+			const gitUrls = await getGitUrl(source, sessionState, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -135,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
 						// 非编辑器来源，只复制链接
 						clipboardContent += `[${linkText}](${url})\n`;
 					}
-				})
+				});
 			}
 
 			// 复制内容到剪贴板
@@ -238,7 +239,7 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(commandSource: 'explorer' | 'editor', context: vscode.ExtensionContext, allUris?: vscode.Uri[]): Promise<{
+async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: SessionState, allUris?: vscode.Uri[]): Promise<{
 	url: string;
 	fileName: string
 }[] | null> {
@@ -277,7 +278,7 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', context: vscode.E
 	}
 
 	// Get the remote URL
-	const remoteUrl = await getGitRemoteUrl(gitRootPath,context);
+	const remoteUrl = await getGitRemoteUrl(gitRootPath,sessionState);
 	if (!remoteUrl) {
 		showMessage('No Git remote URL found', 'error');
 		return null;
@@ -488,7 +489,7 @@ async function getGitRemotes(gitRootPath: string): Promise<string[]> {
 }
 
 // 改造后的函数
-async function getGitRemoteUrl(gitRootPath: string,context: vscode.ExtensionContext): Promise<string | null> {
+async function getGitRemoteUrl(gitRootPath: string,sessionState: SessionState): Promise<string | null> {
 	try {
 		// 获取所有远程仓库
 		const remotes = await getGitRemotes(gitRootPath);
@@ -506,7 +507,7 @@ async function getGitRemoteUrl(gitRootPath: string,context: vscode.ExtensionCont
 			const config = vscode.workspace.getConfiguration('gitlink');
 			const rememberRemoteSelection = config.get('rememberRemoteSelection');
 			// 从会话存储中获取之前选择的远程仓库
-			const sessionSelectedRemote = context.workspaceState.get<string>('selectedRemote');
+			const sessionSelectedRemote = sessionState.getSelectedRemote();
 
 			// 如果启用了记住远程选择，并且会话中有保存的选择，则使用它
 			if (rememberRemoteSelection && sessionSelectedRemote && remotes.includes(sessionSelectedRemote)) {
@@ -527,7 +528,7 @@ async function getGitRemoteUrl(gitRootPath: string,context: vscode.ExtensionCont
 
 				// 如果启用了记住远程选择，则将选择保存到会话存储中
 				if (rememberRemoteSelection) {
-					context.workspaceState.update('selectedRemote', selectedRemote);
+					sessionState.setSelectedRemote(selectedRemote);
 				}
 			}
 			// 如果用户取消了选择，返回 null
