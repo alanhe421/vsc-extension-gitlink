@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
 
-			const gitUrls = await getGitUrl(source, allUris);
+			const gitUrls = await getGitUrl(source, context, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -44,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source:", source);
-			const gitUrls = await getGitUrl(source, allUris);
+			const gitUrls = await getGitUrl(source, context, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -68,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
 		async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
 			try {
 				// 获取普通链接
-				const gitUrls = await getGitUrl(getCommandSource(allUris), allUris);
+				const gitUrls = await getGitUrl(getCommandSource(allUris), context, allUris);
 				if (!gitUrls?.length) {
 					return;
 				}
@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const source = getCommandSource(allUris);
 			console.log("Command source for snippet:", source);
-			const gitUrls = await getGitUrl(source, allUris);
+			const gitUrls = await getGitUrl(source, context, allUris);
 			if (!gitUrls?.length) {
 				return; // Error messages are already shown in getGitUrl
 			}
@@ -238,7 +238,10 @@ function getPlatformForDomain(domain: string): Platform | null {
 }
 
 // Common function to get Git URL for both commands
-async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.Uri[]): Promise<{ url: string; fileName: string }[] | null> {
+async function getGitUrl(commandSource: 'explorer' | 'editor', context: vscode.ExtensionContext, allUris?: vscode.Uri[]): Promise<{
+	url: string;
+	fileName: string
+}[] | null> {
 	// Get the current file path and selected lines
 	let allFilePaths = commandSource === 'explorer' ? allUris?.map(uri => uri.fsPath) : [vscode.window.activeTextEditor?.document.uri.fsPath] as string[];
 	if (!allFilePaths?.length) {
@@ -274,7 +277,7 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', allUris?: vscode.
 	}
 
 	// Get the remote URL
-	const remoteUrl = await getGitRemoteUrl(gitRootPath);
+	const remoteUrl = await getGitRemoteUrl(gitRootPath,context);
 	if (!remoteUrl) {
 		showMessage('No Git remote URL found', 'error');
 		return null;
@@ -485,7 +488,7 @@ async function getGitRemotes(gitRootPath: string): Promise<string[]> {
 }
 
 // 改造后的函数
-async function getGitRemoteUrl(gitRootPath: string): Promise<string | null> {
+async function getGitRemoteUrl(gitRootPath: string,context: vscode.ExtensionContext): Promise<string | null> {
 	try {
 		// 获取所有远程仓库
 		const remotes = await getGitRemotes(gitRootPath);
@@ -500,14 +503,33 @@ async function getGitRemoteUrl(gitRootPath: string): Promise<string | null> {
 		if (remotes.length === 1) {
 			selectedRemote = remotes[0];
 		} else {
-			// 有多个远程仓库，显示选择框
-			const quickPickOptions: vscode.QuickPickOptions = {
-				placeHolder: 'Select a git remote',
-				canPickMany: false
-			};
+			const config = vscode.workspace.getConfiguration('gitlink');
+			const rememberRemoteSelection = config.get('rememberRemoteSelection');
+			// 从会话存储中获取之前选择的远程仓库
+			const sessionSelectedRemote = context.workspaceState.get<string>('selectedRemote');
 
-			selectedRemote = await vscode.window.showQuickPick(remotes, quickPickOptions);
+			// 如果启用了记住远程选择，并且会话中有保存的选择，则使用它
+			if (rememberRemoteSelection && sessionSelectedRemote && remotes.includes(sessionSelectedRemote)) {
+				selectedRemote = sessionSelectedRemote;
+			} else {
+				// 有多个远程仓库，显示选择框
+				const quickPickOptions: vscode.QuickPickOptions = {
+					placeHolder: 'Select a git remote',
+					canPickMany: false
+				};
 
+				selectedRemote = await vscode.window.showQuickPick(remotes, quickPickOptions);
+
+				// 如果用户取消了选择，返回 null
+				if (!selectedRemote) {
+					return null;
+				}
+
+				// 如果启用了记住远程选择，则将选择保存到会话存储中
+				if (rememberRemoteSelection) {
+					context.workspaceState.update('selectedRemote', selectedRemote);
+				}
+			}
 			// 如果用户取消了选择，返回 null
 			if (!selectedRemote) {
 				return null;
