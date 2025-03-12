@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.0.0...v1.1.0) (2025-03-12)
+
+
+### Features
+
+* add remote selection memory configuration option ([56b66b2](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/56b66b219f103be27434878ef5f589ce263214a0))
+* implement SessionState class for managing remote selection ([560e28d](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/560e28d4e3801fae39c3c20d3c511d7a217e65d2))
+
 ## [1.0.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v0.1.9...v1.0.0) (2025-03-11)
 
 
