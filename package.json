@@ -34,27 +34,27 @@
     "commands": [
       {
         "command": "gitlink.openInGitHub",
-        "title": "Open in GitHub"
+        "title": "%command.openInGitHub.title%"
       },
       {
         "command": "gitlink.copyGitHubLink",
-        "title": "Copy GitHub Link"
+        "title": "%command.copyGitHubLink.title%"
       },
       {
         "command": "gitlink.openSettings",
-        "title": "Open GitLink Settings"
+        "title": "%command.openSettings.title%"
       },
       {
         "command": "gitlink.copyGitHubMarkdownLink",
-        "title": "Copy GitHub Markdown Link"
+        "title": "%command.copyGitHubMarkdownLink.title%"
       },
       {
         "command": "gitlink.copyGitHubMarkdownSnippet",
-        "title": "Copy GitHub Markdown Snippet"
+        "title": "%command.copyGitHubMarkdownSnippet.title%"
       },
       {
         "command": "gitlink.copyGitHubSnippetImage",
-        "title": "Create GitHub Snippet Image"
+        "title": "%command.copyGitHubSnippetImage.title%"
       }
     ],
     "menus": {
@@ -139,11 +139,11 @@
     "submenus": [
       {
         "id": "gitlink.submenu.others",
-        "label": "GitLink Others"
+        "label": "%submenu.others.label%"
       },
       {
         "id": "gitlink.submenu.all",
-        "label": "GitLink"
+        "label": "%submenu.all.label%"
       }
     ],
     "configuration": {
@@ -169,18 +169,18 @@
               "urlTemplate": "https://{remote:url}/{repo:path}/blob/{branch}/{file:path}#L{line:start}"
             }
           ],
-          "description": "Custom Git hosting platforms configuration",
-          "markdownDescription": "Currently supported Git hosting platforms: GitHub, Coding, GitLab, TGit. You can customize the URL template for each platform. Available template variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} (where n is the position of path segment, starting from 0)",
+          "description": "%config.platforms.description%",
+          "markdownDescription": "%config.platforms.markdownDescription%",
           "items": {
             "type": "object",
             "properties": {
               "name": {
                 "type": "string",
-                "description": "User-defined name for the platform"
+                "description": "%config.platforms.items.name.description%"
               },
               "urlTemplate": {
                 "type": "string",
-                "description": "URL template for the platform. Available variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} etc."
+                "description": "%config.platforms.items.urlTemplate.description%"
               }
             }
           }
@@ -221,18 +221,18 @@
               "platform": "TGit"
             }
           ],
-          "description": "Domain to platform mapping",
-          "markdownDescription": "Currently supported domains: github.com, gitlab.com, gitee.com, e.coding.net etc.",
+          "description": "%config.domainRegistry.description%",
+          "markdownDescription": "%config.domainRegistry.markdownDescription%",
           "items": {
             "type": "object",
             "properties": {
               "domain": {
                 "type": "string",
-                "description": "Domain name (e.g., github.com, gitlab.com)"
+                "description": "%config.domainRegistry.items.domain.description%"
               },
               "platform": {
                 "type": "string",
-                "description": "Platform name that matches one of the defined platforms"
+                "description": "%config.domainRegistry.items.platform.description%"
               }
             }
           }
@@ -240,14 +240,14 @@
         "gitlink.useCompactMenu": {
           "type": "boolean",
           "default": false,
-          "description": "Use compact menu style",
-          "markdownDescription": "When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu."
+          "description": "%config.useCompactMenu.description%",
+          "markdownDescription": "%config.useCompactMenu.markdownDescription%"
         },
         "gitlink.rememberRemoteSelection": {
           "type": "boolean",
           "default": false,
-          "description": "Remember remote selection",
-          "markdownDescription": "When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time."
+          "description": "%config.rememberRemoteSelection.description%",
+          "markdownDescription": "%config.rememberRemoteSelection.markdownDescription%"
         }
       }
     }
