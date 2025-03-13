@@ -51,6 +51,10 @@
       {
         "command": "gitlink.copyGitHubMarkdownSnippet",
         "title": "Copy GitHub Markdown Snippet"
+      },
+      {
+        "command": "gitlink.copyGitHubSnippetImage",
+        "title": "Create GitHub Snippet Image"
       }
     ],
     "menus": {
@@ -104,6 +108,9 @@
         },
         {
           "command": "gitlink.copyGitHubMarkdownSnippet"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage"
         }
       ],
       "gitlink.submenu.all": [
@@ -122,6 +129,10 @@
         {
           "command": "gitlink.copyGitHubMarkdownSnippet",
           "group": "gitlink@4"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "group": "gitlink@5"
         }
       ]
     },

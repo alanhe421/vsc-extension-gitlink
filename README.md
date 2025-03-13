@@ -16,14 +16,15 @@ A VS Code extension that allows you to open the web version of files in your Git
 
 ## Features
 
-- Right-click on a file in the editor and select "Open in GitHub" to open the file in your browser
-- Right-click on a file in the editor and select "Copy GitHub Link" to copy the link to your clipboard
-- Right-click on a file in the explorer and select "Open in GitHub" to open the file in your browser
-- Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard
-- Right-click on a file in the explorer and select "Copy GitHub Markdown" to copy the markdown link to your clipboard
-- Right-click on a file in the explorer and select "Copy GitHub Markdown Snippet" to copy the markdown snippet to your clipboard
-- Support multi-file copy in explorer
-- Supports both SSH and HTTPS remote URL formats
+- Right-click on a file in the editor and select "Open in GitHub" to open the file in your browser.
+- Right-click on a file in the editor and select "Copy GitHub Link" to copy the link to your clipboard.
+- Right-click on a file in the explorer and select "Open in GitHub" to open the file in your browser.
+- Right-click on a file in the explorer and select "Copy GitHub Link" to copy the link to your clipboard.
+- Right-click on a file in the explorer and select "Copy GitHub Markdown" to copy the markdown link to your clipboard.
+- Right-click on a file in the explorer and select "Copy GitHub Markdown Snippet" to copy the markdown snippet to your clipboard.
+- Right-click on a file in the explorer and select "Create GitHub Snippet Image" to open ray.so and create a Code Snippet Image.
+- Support multi-file copy in explorer.
+- Supports both SSH and HTTPS remote URL formats.
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
 - Supports custom Git hosting platforms and URL templates
 
@@ -62,6 +63,7 @@ This extension provides the following settings:
 
 * `gitlink.useCompactMenu`: Whether to use compact menu style. When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu. Default is false.
 
+* `gitlink.rememberRemoteSelection`: Whether to remember the remote selection for the current session. When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time. Default is false.
 
 ## Sponsor
 

@@ -130,9 +130,9 @@ export function activate(context: vscode.ExtensionContext) {
 					clipboardContent = `[${linkText}](${gitUrl})`;
 				}
 			} else {
-				gitUrls?.forEach(gitUrl=>{
+				gitUrls?.forEach(gitUrl => {
 					let { url, fileName: linkText } = gitUrl;
-					if(linkText){
+					if (linkText) {
 						// 非编辑器来源，只复制链接
 						clipboardContent += `[${linkText}](${url})\n`;
 					}
@@ -153,7 +153,38 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable, copyGitHubMarkdownLinkDisposable, copyGitHubMarkdownSnippetDisposable);
+	// Register the "Copy GitHub Snippet Image" command
+	const copyGitHubSnippetImageDisposable = vscode.commands.registerCommand('gitlink.copyGitHubSnippetImage', async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {
+		try {
+			const source = getCommandSource(allUris);
+			console.log("Command source for snippet:", source);
+			// 只有当命令来源是编辑器时，才添加代码块
+			if (source === 'editor') {
+				const activeEditor = vscode.window.activeTextEditor;
+				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
+					// 获取选中的代码
+					const selection = activeEditor.selection;
+					let codeContent = "";
+					if (!selection.isEmpty) {
+						codeContent = activeEditor.document.getText(selection);
+						const base64Content = Buffer.from(codeContent).toString('base64');
+						const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}`;
+						// 使用VSCode的命令打开URL
+						vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
+							showMessage('Carbon snippet opened in browser');
+						}, (error) => {
+							showMessage(`Error opening Carbon: ${error}`, 'error');
+						});
+					}
+				}
+			}
+		} catch (error) {
+			showMessage(`Error: ${error instanceof Error ? error.message : String(error)}`, 'error');
+		}
+	});
+
+	context.subscriptions.push(openInGitHubDisposable, copyGitHubLinkDisposable, openSettingsDisposable, 
+		copyGitHubMarkdownLinkDisposable, copyGitHubMarkdownSnippetDisposable, copyGitHubSnippetImageDisposable);
 }
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
@@ -278,7 +309,7 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: Ses
 	}
 
 	// Get the remote URL
-	const remoteUrl = await getGitRemoteUrl(gitRootPath,sessionState);
+	const remoteUrl = await getGitRemoteUrl(gitRootPath, sessionState);
 	if (!remoteUrl) {
 		showMessage('No Git remote URL found', 'error');
 		return null;
@@ -489,7 +520,7 @@ async function getGitRemotes(gitRootPath: string): Promise<string[]> {
 }
 
 // 改造后的函数
-async function getGitRemoteUrl(gitRootPath: string,sessionState: SessionState): Promise<string | null> {
+async function getGitRemoteUrl(gitRootPath: string, sessionState: SessionState): Promise<string | null> {
 	try {
 		// 获取所有远程仓库
 		const remotes = await getGitRemotes(gitRootPath);
