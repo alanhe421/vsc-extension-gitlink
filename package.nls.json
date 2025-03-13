@@ -13,8 +13,8 @@
   "error.copying.link": "Error copying link: {0}",
   "error.copying.markdown.link": "Error copying Markdown link: {0}",
   "error.copying.markdown.snippet": "Error copying Markdown snippet: {0}",
-  "error.copying.carbon.snippet": "Error copying Carbon snippet: {0}",
-  "error.opening.carbon": "Error opening Carbon: {0}",
+  "error.copying.carbon.snippet": "Error opening Code snippet: {0}",
+  "error.opening.carbon": "Error opening Code: {0}",
 
   "button.open.settings": "Open Settings",
   "quickpick.select.remote": "Select a git remote",
@@ -24,8 +24,7 @@
   "status.link.copied": "Git link copied to clipboard: {0}",
   "status.markdown.link.copied": "Markdown link copied to clipboard",
   "status.markdown.snippet.copied": "Markdown code snippet copied to clipboard",
-  "status.carbon.opened": "Carbon snippet opened in browser",
-  "status.carbon.error": "Error opening Carbon: {0}",
+  "status.carbon.opened": "Code snippet opened in browser",
 
   "command.openInGitHub.title": "Open in GitHub",
   "command.copyGitHubLink.title": "Copy GitHub Link",
