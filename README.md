@@ -9,6 +9,8 @@ A VS Code extension that allows you to open the web version of files in your Git
 
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/AlanHe.cn-alanhe-gitlink)](https://marketplace.visualstudio.com/items?itemName=AlanHe.cn-alanhe-gitlink)
 
+![Localization Status](https://img.shields.io/badge/i18n-English%20%7C%20简体中文-blue)
+
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
 ![screenshot1.gif](https://static.1991421.cn/2025/418260403-7729ab71-81f8-4d20-bf41-dca3c0a82ded.gif)
@@ -64,6 +66,15 @@ This extension provides the following settings:
 * `gitlink.useCompactMenu`: Whether to use compact menu style. When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu. Default is false.
 
 * `gitlink.rememberRemoteSelection`: Whether to remember the remote selection for the current session. When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time. Default is false.
+
+## Internationalization
+
+GitLink supports multiple languages:
+
+- English
+- 简体中文 (Simplified Chinese)
+
+The extension automatically detects your VS Code language setting and displays the interface in the appropriate language.
 
 ## Sponsor
 
