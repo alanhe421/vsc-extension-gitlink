@@ -1,0 +1,55 @@
+{
+  "extension.activated": "Congratulations, your extension \"GitLink\" is now active!",
+  "error.no.file.open": "No file is currently open",
+  "error.not.git.repo": "This file is not under Git version control",
+  "error.no.git.remote": "No Git remote URL found",
+  "error.extract.domain": "Failed to extract domain from remote URL",
+  "error.platform.not.detected": "GitLink could not detect which platform you use for remote URL \"{0}\". You can configure custom platforms in settings.",
+  "error.get.branch": "Failed to get current branch",
+  "error.extract.repo.path": "Failed to extract repository path from remote URL",
+  "error.construct.url": "Failed to construct Git URL",
+  "error.get.remote.url": "Error getting git remote URL: {0}",
+  "error.opening.url": "Error opening URL: {0}",
+  "error.copying.link": "Error copying link: {0}",
+  "error.copying.markdown.link": "Error copying Markdown link: {0}",
+  "error.copying.markdown.snippet": "Error copying Markdown snippet: {0}",
+  "error.copying.carbon.snippet": "Error copying Carbon snippet: {0}",
+  "error.opening.carbon": "Error opening Carbon: {0}",
+
+  "button.open.settings": "Open Settings",
+  "quickpick.select.remote": "Select a git remote",
+
+  "status.not.git.repo": "Not a Git repository",
+  "status.opening.url": "Opening {0}",
+  "status.link.copied": "Git link copied to clipboard: {0}",
+  "status.markdown.link.copied": "Markdown link copied to clipboard",
+  "status.markdown.snippet.copied": "Markdown code snippet copied to clipboard",
+  "status.carbon.opened": "Carbon snippet opened in browser",
+  "status.carbon.error": "Error opening Carbon: {0}",
+
+  "command.openInGitHub.title": "Open in GitHub",
+  "command.copyGitHubLink.title": "Copy GitHub Link",
+  "command.openSettings.title": "Open GitLink Settings",
+  "command.copyGitHubMarkdownLink.title": "Copy GitHub Markdown Link",
+  "command.copyGitHubMarkdownSnippet.title": "Copy GitHub Markdown Snippet",
+  "command.copyGitHubSnippetImage.title": "Create GitHub Snippet Image",
+
+  "submenu.others.label": "GitLink Others",
+  "submenu.all.label": "GitLink",
+
+  "config.platforms.description": "Custom Git hosting platforms configuration",
+  "config.platforms.markdownDescription": "Currently supported Git hosting platforms: GitHub, Coding, GitLab, TGit. You can customize the URL template for each platform. Available template variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} (where n is the position of path segment, starting from 0)",
+  "config.platforms.items.name.description": "User-defined name for the platform",
+  "config.platforms.items.urlTemplate.description": "URL template for the platform. Available variables: {repo:path}, {branch}, {file:path}, {file:name}, {file:dir}, {remote:url}, {remote:url:path:n} etc.",
+
+  "config.domainRegistry.description": "Domain to platform mapping",
+  "config.domainRegistry.markdownDescription": "Currently supported domains: github.com, gitlab.com, gitee.com, e.coding.net etc.",
+  "config.domainRegistry.items.domain.description": "Domain name (e.g., github.com, gitlab.com)",
+  "config.domainRegistry.items.platform.description": "Platform name that matches one of the defined platforms",
+
+  "config.useCompactMenu.description": "Use compact menu style",
+  "config.useCompactMenu.markdownDescription": "When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu.",
+
+  "config.rememberRemoteSelection.description": "Remember remote selection",
+  "config.rememberRemoteSelection.markdownDescription": "When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time."
+}
