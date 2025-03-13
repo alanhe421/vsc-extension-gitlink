@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.1.0...v1.3.0) (2025-03-13)
+
+
+### Features
+
+* add "Create GitHub Snippet Image" command and update README with new feature ([4ffba75](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/4ffba75ab929e177013d6faee66af75a60476562))
+* localize extension messages and commands for better user experience ([93be06d](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/93be06d58e8b4266ffc0a00a78b9a5b5711b931f))
+
+
+### Bug Fixes
+
+* update error messages for carbon snippets to use "code snippets" for clarity in English and Chinese localization ([d387996](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/d3879963ce0db9fbb49806ee40e7af3354102c3f))
+
 ## [1.2.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.1.0...v1.2.0) (2025-03-13)
 
 
