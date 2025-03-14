@@ -14,7 +14,7 @@ const execAsync = promisify(exec);
 export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log(vscode.l10n.t('extension.activated'));
+	console.log(vscode.l10n.t('Congratulations, your extension "GitLink" is now active!'));
 	const sessionState = new SessionState();
 	// 在扩展激活时检测项目
 	detectGitRepository();
@@ -35,9 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
 			gitUrls.forEach(gitUrl => {
 				vscode.env.openExternal(vscode.Uri.parse(gitUrl.url));
 			});
-			showMessage(vscode.l10n.t('status.opening.url', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
+			showMessage(vscode.l10n.t('Opening {0}', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
 		} catch (error) {
-			showMessage(vscode.l10n.t('error.opening.url', error instanceof Error ? error.message : String(error)), 'error');
+			showMessage(vscode.l10n.t('Error opening URL: {0}', error instanceof Error ? error.message : String(error)), 'error');
 		}
 	});
 
@@ -53,9 +53,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// Copy the URL to clipboard
 			await vscode.env.clipboard.writeText(gitUrls.map(gitUrl => gitUrl.url).join('\n'));
-			showMessage(vscode.l10n.t('status.link.copied', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
+			showMessage(vscode.l10n.t('Git link copied to clipboard: {0}', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
 		} catch (error) {
-			showMessage(vscode.l10n.t('error.copying.link', error instanceof Error ? error.message : String(error)), 'error');
+			showMessage(vscode.l10n.t('Error copying link: {0}', error instanceof Error ? error.message : String(error)), 'error');
 		}
 	});
 
@@ -86,9 +86,9 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 				// 复制到剪贴板
 				await vscode.env.clipboard.writeText(markdownLinks);
-				showMessage(vscode.l10n.t('status.markdown.link.copied'));
+				showMessage(vscode.l10n.t('Markdown link copied to clipboard'));
 			} catch (error) {
-				showMessage(vscode.l10n.t('error.copying.markdown.link', error instanceof Error ? error.message : String(error)), 'error');
+				showMessage(vscode.l10n.t('Error copying Markdown link: {0}', error instanceof Error ? error.message : String(error)), 'error');
 			}
 		}
 	);
@@ -145,12 +145,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// 根据复制的内容类型显示不同的消息
 			if (source === 'editor') {
-				showMessage(vscode.l10n.t('status.markdown.snippet.copied'));
+				showMessage(vscode.l10n.t('Markdown code snippet copied to clipboard'));
 			} else {
-				showMessage(vscode.l10n.t('status.link.copied', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
+				showMessage(vscode.l10n.t('Git link copied to clipboard: {0}', gitUrls.map(gitUrl => gitUrl.url).join(', ')));
 			}
 		} catch (error) {
-			showMessage(vscode.l10n.t('error.copying.markdown.snippet', error instanceof Error ? error.message : String(error)), 'error');
+			showMessage(vscode.l10n.t('Error copying Markdown snippet: {0}', error instanceof Error ? error.message : String(error)), 'error');
 		}
 	});
 
@@ -172,15 +172,15 @@ export function activate(context: vscode.ExtensionContext) {
 						const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}`;
 						// 使用VSCode的命令打开URL
 						vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
-							showMessage(vscode.l10n.t('status.carbon.opened'));
+							showMessage(vscode.l10n.t('Code snippet opened in browser'));
 						}, (error) => {
-							showMessage(vscode.l10n.t('error.opening.carbon', error instanceof Error ? error.message : String(error)), 'error');
+							showMessage(vscode.l10n.t('Error opening Code: {0}', error instanceof Error ? error.message : String(error)), 'error');
 						});
 					}
 				}
 			}
 		} catch (error) {
-			showMessage(vscode.l10n.t('error.copying.carbon.snippet', error instanceof Error ? error.message : String(error)), 'error');
+			showMessage(vscode.l10n.t('Error opening Code snippet: {0}', error instanceof Error ? error.message : String(error)), 'error');
 		}
 	});
 
@@ -203,7 +203,7 @@ async function detectGitRepository() {
 		// 检查是否为 Git 仓库
 		const gitRootPath = await getGitRootPath(workspaceRoot);
 		if (!gitRootPath) {
-			showMessage(vscode.l10n.t('status.not.git.repo'), 'warning');
+			showMessage(vscode.l10n.t('Not a Git repository'), 'warning');
 			return; // 不是 Git 仓库，不显示提示
 		}
 	} catch (error) {
@@ -278,7 +278,7 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: Ses
 	// Get the current file path and selected lines
 	let allFilePaths = commandSource === 'explorer' ? allUris?.map(uri => uri.fsPath) : [vscode.window.activeTextEditor?.document.uri.fsPath] as string[];
 	if (!allFilePaths?.length) {
-		showMessage(vscode.l10n.t('error.no.file.open'), 'error');
+		showMessage(vscode.l10n.t('No file is currently open'), 'error');
 		return null;
 	}
 	let firstFilePath = allFilePaths[0];
@@ -305,21 +305,21 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: Ses
 	// Get the git repository root
 	const gitRootPath = await getGitRootPath(firstFilePath);
 	if (!gitRootPath) {
-		showMessage(vscode.l10n.t('error.not.git.repo'), 'error');
+		showMessage(vscode.l10n.t('This file is not under Git version control'), 'error');
 		return null;
 	}
 
 	// Get the remote URL
 	const remoteUrl = await getGitRemoteUrl(gitRootPath, sessionState);
 	if (!remoteUrl) {
-		showMessage(vscode.l10n.t('error.no.git.remote'), 'error');
+		showMessage(vscode.l10n.t('No Git remote URL found'), 'error');
 		return null;
 	}
 
 	// 从远程 URL 中提取域名
 	const domainResult = extractRepoInfoFromRemoteUrl(remoteUrl);
 	if (!domainResult.domain) {
-		showMessage(vscode.l10n.t('error.extract.domain'), 'error');
+		showMessage(vscode.l10n.t('Failed to extract domain from remote URL'), 'error');
 		return null;
 	}
 
@@ -328,8 +328,8 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: Ses
 	// 根据域名获取匹配的平台
 	const platform = getPlatformForDomain(domainResult.domain);
 	if (!platform) {
-		const message = vscode.l10n.t('error.platform.not.detected', remoteUrl);
-		const openSettings = vscode.l10n.t('button.open.settings');
+		const message = vscode.l10n.t('GitLink could not detect which platform you use for remote URL "{0}". You can configure custom platforms in settings.', remoteUrl);
+		const openSettings = vscode.l10n.t('Open Settings');
 		showMessage(message, 'error', openSettings).then(selection => {
 			if (selection === openSettings) {
 				vscode.commands.executeCommand('gitlink.openSettings');
@@ -341,14 +341,14 @@ async function getGitUrl(commandSource: 'explorer' | 'editor', sessionState: Ses
 	// Get the current branch or commit
 	const branch = await getCurrentBranch(gitRootPath);
 	if (!branch) {
-		showMessage(vscode.l10n.t('error.get.branch'), 'error');
+		showMessage(vscode.l10n.t('Failed to get current branch'), 'error');
 		return null;
 	}
 
 	// Extract repository path from remote URL
 	const repoPath = extractRepoPath(remoteUrl);
 	if (!repoPath) {
-		showMessage(vscode.l10n.t('error.extract.repo.path'), 'error');
+		showMessage(vscode.l10n.t('Failed to extract repository path from remote URL'), 'error');
 		return null;
 	}
 
@@ -543,7 +543,7 @@ async function getGitRemoteUrl(gitRootPath: string, sessionState: SessionState):
 			} else {
 				// 有多个远程仓库，显示选择框
 				const quickPickOptions: vscode.QuickPickOptions = {
-					placeHolder: vscode.l10n.t('quickpick.select.remote'),
+					placeHolder: vscode.l10n.t('Select a git remote'),
 					canPickMany: false
 				};
 
@@ -570,7 +570,7 @@ async function getGitRemoteUrl(gitRootPath: string, sessionState: SessionState):
 		return stdout.trim();
 	} catch (error) {
 		console.error('Error getting git remote URL:', error);
-		showMessage(vscode.l10n.t('error.get.remote.url', error instanceof Error ? error.message : String(error)), 'error');
+		showMessage(vscode.l10n.t('Error getting git remote URL: {0}', error instanceof Error ? error.message : String(error)), 'error');
 		return null;
 	}
 }

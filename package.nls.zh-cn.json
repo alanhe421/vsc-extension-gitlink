@@ -1,41 +1,12 @@
 {
-  "extension.activated": "恭喜，您的扩展 \"GitLink\" 已激活！",
-  "error.no.file.open": "当前没有打开的文件",
-  "error.not.git.repo": "此文件不在 Git 版本控制下",
-  "error.no.git.remote": "未找到 Git 远程 URL",
-  "error.extract.domain": "无法从远程 URL 提取域名",
-  "error.platform.not.detected": "GitLink 无法检测到您使用的远程 URL \"{0}\" 对应的平台。您可以在设置中配置自定义平台。",
-  "error.get.branch": "获取当前分支失败",
-  "error.extract.repo.path": "从远程 URL 提取仓库路径失败",
-  "error.construct.url": "构建 Git URL 失败",
-  "error.get.remote.url": "获取 git 远程 URL 错误: {0}",
-  "error.opening.url": "打开 URL 时出错: {0}",
-  "error.copying.link": "复制链接时出错: {0}",
-  "error.copying.markdown.link": "复制 Markdown 链接时出错: {0}",
-  "error.copying.markdown.snippet": "复制 Markdown 代码片段时出错: {0}",
-  "error.copying.carbon.snippet": "复制代码片段时出错: {0}",
-  "error.opening.carbon": "打开代码片段时出错: {0}",
-
-  "button.open.settings": "打开设置",
-  "quickpick.select.remote": "选择一个 git 远程仓库",
-
-  "status.not.git.repo": "不是 Git 仓库",
-  "status.opening.url": "正在打开 {0}",
-  "status.link.copied": "Git 链接已复制到剪贴板：{0}",
-  "status.markdown.link.copied": "Markdown 链接已复制到剪贴板",
-  "status.markdown.snippet.copied": "Markdown 代码片段已复制到剪贴板",
-  "status.carbon.opened": "代码片段已在浏览器中打开",
-
   "command.openInGitHub.title": "在 GitHub 中打开",
   "command.copyGitHubLink.title": "复制 GitHub 链接",
   "command.openSettings.title": "打开 GitLink 设置",
   "command.copyGitHubMarkdownLink.title": "复制 GitHub Markdown 链接",
   "command.copyGitHubMarkdownSnippet.title": "复制 GitHub Markdown 代码片段",
   "command.copyGitHubSnippetImage.title": "创建 GitHub 代码片段图片",
-
   "submenu.others.label": "GitLink 其他",
   "submenu.all.label": "GitLink",
-
   "config.platforms.description": "自定义 Git 托管平台配置",
   "config.platforms.markdownDescription": "当前支持的 Git 托管平台：GitHub、Coding、GitLab、TGit。您可以为每个平台自定义 URL 模板。可用的模板变量：{repo:path}、{branch}、{file:path}、{file:name}、{file:dir}、{remote:url}、{remote:url:path:n}（其中 n 是路径段的位置，从 0 开始）",
   "config.platforms.items.name.description": "平台的自定义名称",
@@ -51,4 +22,5 @@
 
   "config.rememberRemoteSelection.description": "记住远程仓库选择",
   "config.rememberRemoteSelection.markdownDescription": "启用后，扩展将记住您在当前会话中的远程仓库选择。您只需要在每个项目会话中选择一次远程仓库。禁用时，每次都会提示选择。"
+
 }

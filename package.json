@@ -5,6 +5,7 @@
   "version": "1.3.0",
   "icon": "resources/gitlink.png",
   "publisher": "alanhe",
+  "l10n": "./l10n",
   "engines": {
     "vscode": "^1.93.0"
   },
