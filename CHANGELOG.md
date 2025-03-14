@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.0...v1.3.2) (2025-03-14)
+
+
+### Features
+
+* add localization support for messages and commands in English and Chinese, and update package configuration for l10n ([dc19a74](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/dc19a74cd0bc9d378fb0abee986bca2f5660c240))
+
 ## [1.3.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.1.0...v1.3.0) (2025-03-13)
 
 
