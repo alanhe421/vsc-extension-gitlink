@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.2...v1.3.3) (2025-03-16)
+
+
+### Bug Fixes
+
+* include language parameter in carbon URL for improved code snippet rendering ([2dce06f](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/2dce06f84b79efa9abeb8a13968581c491726c13))
+
 ### [1.3.2](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.0...v1.3.2) (2025-03-14)
 
 
