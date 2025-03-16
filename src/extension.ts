@@ -169,7 +169,7 @@ export function activate(context: vscode.ExtensionContext) {
 					if (!selection.isEmpty) {
 						codeContent = activeEditor.document.getText(selection);
 						const base64Content = Buffer.from(codeContent).toString('base64');
-						const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}`;
+						const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${activeEditor.document.languageId}`;
 						// 使用VSCode的命令打开URL
 						vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
 							showMessage(vscode.l10n.t('Code snippet opened in browser'));
