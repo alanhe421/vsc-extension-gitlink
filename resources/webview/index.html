@@ -206,7 +206,7 @@
                 %LANGUAGE_OPTIONS%
             </select>
             <div class="dropdown">
-                <button onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
+                <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
                 <div class="dropdown-content">
                     <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
                     <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
@@ -255,31 +255,10 @@
                 console.log('domtoimage available:', typeof domtoimage);
 
                 const windowElement = document.querySelector('.window');
-                const container = document.querySelector('.container');
-
-                // 保存原始样式
-                const originalStyles = {
-                    containerMaxWidth: container.style.maxWidth,
-                    containerMargin: container.style.margin,
-                    windowHeight: windowElement.style.height,
-                    windowOverflow: windowElement.style.overflow
-                };
-
-                // 临时修改样式以确保内容完全可见
-                container.style.maxWidth = 'none';
-                container.style.margin = '0';
-                windowElement.style.height = 'auto';
-                windowElement.style.overflow = 'visible';
-
-                // 使用dom-to-image-even-more生成图片
+                
+                // 直接生成图片，不修改任何样式
                 const dataBlob = await domtoimage.toBlob(windowElement);
                 const dataUrl = await domtoimage.toPng(windowElement);
-
-                // 恢复原始样式
-                container.style.maxWidth = originalStyles.containerMaxWidth;
-                container.style.margin = originalStyles.containerMargin;
-                windowElement.style.height = originalStyles.windowHeight;
-                windowElement.style.overflow = originalStyles.windowOverflow;
 
                 return { dataBlob, dataUrl };
             } catch (error) {
