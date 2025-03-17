@@ -96,6 +96,35 @@
             color: white;
             border: 1px solid #404040;
         }
+        /* 下拉菜单样式 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #2d2d2d;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+        .dropdown-content div {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .dropdown-content div:hover {
+            background-color: #404040;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
         #editor {
             background: #2d2d2d;
             padding: 20px;
@@ -146,6 +175,19 @@
         pre > code .hljs-ln-code {
             padding-left: 10px;
         }
+        .dropdown button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dropdown-icon {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid white;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -154,8 +196,14 @@
             <select id="language" class="language-select" onchange="updateLanguage()">
                 %LANGUAGE_OPTIONS%
             </select>
-            <button onclick="copyImage()">%COPY_IMAGE_TEXT%</button>
-            <button onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</button>
+            <div class="dropdown">
+                <button onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
+                <div class="dropdown-content">
+                    <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
+                    <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
+                    <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
+                </div>
+            </div>
         </div>
         <div class="window">
             <div class="titlebar">
@@ -268,6 +316,16 @@
                     data: result.dataUrl
                 });
             }
+        }
+
+        // 打开远程图片
+        function openRemoteImage(event) {
+            const remoteImageUrl = '%REMOTE_IMAGE_URL%';
+            // 发送消息到扩展主代码
+            vscode.postMessage({
+                command: 'openExternal',
+                url: remoteImageUrl
+            });
         }
     </script>
 </body>

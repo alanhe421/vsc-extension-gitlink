@@ -208,20 +208,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 						// 检查是否使用 ray.so
 						const useRemote = vscode.workspace.getConfiguration('gitlink').get('useRemoteForCodeImage');
+						const base64Content = Buffer.from(codeContent).toString('base64');
+						const remoteImageUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
 
-						if (useRemote) {
-							const base64Content = Buffer.from(codeContent).toString('base64');
-							const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
+						function openRemoteImage() {
 							// 使用VSCode的命令打开URL
-							vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
+							vscode.env.openExternal(vscode.Uri.parse(remoteImageUrl)).then(() => {
 								showMessage(vscode.l10n.t('Code snippet opened in browser'));
 							}, (error) => {
 								showMessage(vscode.l10n.t('Error opening Code: {0}', error instanceof Error ? error.message : String(error)), 'error');
 							});
+						}
+						if (useRemote) {
+							// 使用VSCode的命令打开URL
+							openRemoteImage();
 						} else {
 							// 使用本地生成，传递资源路径和支持的语言列表
 							CodeImagePanel.createOrShow(context, codeContent, language, {
 								languages: supportedLanguages,
+								remoteImageUrl,
 							});
 						}
 					}

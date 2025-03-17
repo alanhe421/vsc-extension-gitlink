@@ -30,7 +30,7 @@ export class CodeImagePanel {
         this._panel = panel;
         this._extensionContext = extensionContext;
 
-        // 设置 Webview 内容
+        // 只在构造函数中设置一次消息监听
         this._update();
 
         // 监听面板关闭事件
@@ -69,6 +69,7 @@ export class CodeImagePanel {
         code: string,
         language: string,
         options: {
+            remoteImageUrl: string;
             languages: CodeLanguage[];
         }
     ) {
@@ -116,6 +117,10 @@ export class CodeImagePanel {
                             showMessage(message.text);
                             break;
 
+                        case 'openExternal':
+                            vscode.env.openExternal(vscode.Uri.parse(message.url));
+                            break;
+
                         case 'error':
                             showMessage(message.text, 'error');
                             break;
@@ -153,10 +158,10 @@ export class CodeImagePanel {
         language: string,
         options: {
             languages: CodeLanguage[];
+            remoteImageUrl: string;
         }
     ) {
         this._panel.webview.html = await this._getHtmlContent(code, language, options);
-        this._update(); // 重新设置消息监听器
     }
 
     private async _getHtmlContent(
@@ -164,6 +169,7 @@ export class CodeImagePanel {
         language: string,
         options: {
             languages: CodeLanguage[];
+            remoteImageUrl: string;
         }
     ): Promise<string> {
         const { languages } = options;
@@ -192,7 +198,9 @@ export class CodeImagePanel {
             .replace(/%DOWNLOAD_IMAGE_TEXT%/g, vscode.l10n.t('Download Image'))
             .replace(/%CODE_SNIPPET_TEXT%/g, vscode.l10n.t('Code Snippet'))
             .replace(/%COPIED_TEXT%/g, vscode.l10n.t('Image copied to clipboard'))
-            .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'));
+            .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'))
+            .replace(/%REMOTE_IMAGE_URL%/g, options.remoteImageUrl)
+            .replace(/%OPEN_REMOTE_IMAGE_TEXT%/g, vscode.l10n.t('Open in Ray.so'));
 
         return htmlTemplate;
     }
