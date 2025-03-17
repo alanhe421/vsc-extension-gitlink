@@ -270,8 +270,8 @@ export class CodeImagePanel {
                         <select id="language" class="language-select" onchange="updateLanguage()">
                             ${languageOptions}
                         </select>
-                        <button onclick="copyImage()">Copy Image</button>
-                        <button onclick="downloadImage()">Download Image</button>
+                        <button onclick="copyImage()">${vscode.l10n.t('Copy Image')}</button>
+                        <button onclick="downloadImage()">${vscode.l10n.t('Download Image')}</button>
                     </div>
                     <div class="window">
                         <div class="titlebar">
@@ -280,7 +280,7 @@ export class CodeImagePanel {
                                 <div class="window-control minimize"></div>
                                 <div class="window-control maximize"></div>
                             </div>
-                            <div class="window-title">Code Snippet</div>
+                            <div class="window-title">${vscode.l10n.t('Code Snippet')}</div>
                         </div>
                         <div class="content">
                             <div id="editor">
@@ -339,13 +339,13 @@ export class CodeImagePanel {
                                     ]);
                                     vscode.postMessage({
                                         command: 'info',
-                                        text: 'Image copied to clipboard'
+                                        text: vscode.l10n.t('Image copied to clipboard')
                                     });
                                 }
                             } catch (error) {
                                 vscode.postMessage({
                                     command: 'error',
-                                    text: 'Error copying image: ' + error.message
+                                    text: vscode.l10n.t('Error copying image: {0}', error.message)
                                 });
                             }
                         }

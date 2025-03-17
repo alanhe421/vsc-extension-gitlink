@@ -30,5 +30,11 @@
   "Copy GitHub Markdown Snippet": "复制 GitHub Markdown 代码片段",
   "Create GitHub Snippet Image": "创建 GitHub 代码片段图片",
   "GitLink Others": "GitLink 其他功能",
-  "GitLink": "GitLink"
+  "GitLink": "GitLink",
+  "Error: {0}": "错误：{0}",
+  "Image saved": "图片已保存",
+  "Error saving image: {0}": "保存图片时出错：{0}",
+  "Copy Image": "复制图片",
+  "Download Image": "下载图片",
+  "Code Snippet": "代码片段"
 }

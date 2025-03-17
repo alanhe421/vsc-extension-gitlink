@@ -11,16 +11,10 @@
   "Code snippet opened in browser": "Code snippet opened in browser",
   "Error opening Code: {0}": "Error opening Code: {0}",
   "Error opening Code snippet: {0}": "Error opening Code snippet: {0}",
-  "Not a Git repository": "Not a Git repository",
-  "No file is currently open": "No file is currently open",
-  "This file is not under Git version control": "This file is not under Git version control",
-  "No Git remote URL found": "No Git remote URL found",
-  "Failed to extract domain from remote URL": "Failed to extract domain from remote URL",
-  "GitLink could not detect which platform you use for remote URL \"{0}\". You can configure custom platforms in settings.": "GitLink could not detect which platform you use for remote URL \"{0}\". You can configure custom platforms in settings.",
-  "Open Settings": "Open Settings",
-  "Failed to get current branch": "Failed to get current branch",
-  "Failed to extract repository path from remote URL": "Failed to extract repository path from remote URL",
-  "error.construct.url": "error.construct.url",
-  "Select a git remote": "Select a git remote",
-  "Error getting git remote URL: {0}": "Error getting git remote URL: {0}"
+  "Error: {0}": "Error: {0}",
+  "Image saved": "Image saved",
+  "Error saving image: {0}": "Error saving image: {0}",
+  "Copy Image": "Copy Image",
+  "Download Image": "Download Image",
+  "Code Snippet": "Code Snippet"
 }
