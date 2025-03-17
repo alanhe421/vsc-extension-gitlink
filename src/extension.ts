@@ -3,8 +3,9 @@
 import * as vscode from 'vscode';
 import { CodeLanguage } from './types/language';
 import { SessionState } from './types/session-state';
-import { detectGitRepository, getCommandSource, getGitUrl, showMessage } from './utils';
+import { detectGitRepository, getCommandSource, getGitUrl, getRemoteImageUrl, showMessage } from './utils';
 import { CodeImagePanel } from './code-image';
+import path from 'path';
 
 // 支持的语言列表
 const supportedLanguages: CodeLanguage[] = [
@@ -203,14 +204,13 @@ export function activate(context: vscode.ExtensionContext) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
 					if (!selection.isEmpty) {
-						const codeContent = activeEditor.document.getText(selection);
-						const language = activeEditor.document.languageId;
-
 						// 检查是否使用 ray.so
 						const useRemote = vscode.workspace.getConfiguration('gitlink').get('useRemoteForCodeImage');
-						const base64Content = Buffer.from(codeContent).toString('base64');
-						const remoteImageUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
-
+						
+						const codeContent = activeEditor.document.getText(selection);
+						const language = activeEditor.document.languageId;
+						const fileName = path.basename(activeEditor.document.fileName);
+						const remoteImageUrl = getRemoteImageUrl(codeContent, language);
 						function openRemoteImage() {
 							// 使用VSCode的命令打开URL
 							vscode.env.openExternal(vscode.Uri.parse(remoteImageUrl)).then(() => {
@@ -227,6 +227,7 @@ export function activate(context: vscode.ExtensionContext) {
 							CodeImagePanel.createOrShow(context, codeContent, language, {
 								languages: supportedLanguages,
 								remoteImageUrl,
+								fileName,
 							});
 						}
 					}

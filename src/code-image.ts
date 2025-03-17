@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { CodeLanguage } from './types/language';
-import { showMessage } from './utils';
+import { getRemoteImageUrl, showMessage } from './utils';
 
 const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
     (fs.readFileSync(htmlPath, {
@@ -52,10 +52,14 @@ export class CodeImagePanel {
             if (editor && !editor.selection.isEmpty) {
                 const code = editor.document.getText(editor.selection);
                 const language = editor.document.languageId;
+                const fileName = path.basename(editor.document.fileName);
+                const remoteImageUrl = getRemoteImageUrl(code, language);
 
                 // 更新面板内容，使用保存的语言列表
                 await this.setContent(code, language, {
-                    languages: this._languages
+                    languages: this._languages,
+                    remoteImageUrl,
+                    fileName
                 });
             }
         });
@@ -70,6 +74,7 @@ export class CodeImagePanel {
         language: string,
         options: {
             remoteImageUrl: string;
+            fileName: string;
             languages: CodeLanguage[];
         }
     ) {
@@ -159,6 +164,7 @@ export class CodeImagePanel {
         options: {
             languages: CodeLanguage[];
             remoteImageUrl: string;
+            fileName: string;
         }
     ) {
         this._panel.webview.html = await this._getHtmlContent(code, language, options);
@@ -170,6 +176,7 @@ export class CodeImagePanel {
         options: {
             languages: CodeLanguage[];
             remoteImageUrl: string;
+            fileName: string;
         }
     ): Promise<string> {
         const { languages } = options;
@@ -196,7 +203,7 @@ export class CodeImagePanel {
             .replace(/%CODE%/g, this._escapeHtml(code))
             .replace(/%COPY_IMAGE_TEXT%/g, vscode.l10n.t('Copy Image'))
             .replace(/%DOWNLOAD_IMAGE_TEXT%/g, vscode.l10n.t('Download Image'))
-            .replace(/%CODE_SNIPPET_TEXT%/g, vscode.l10n.t('Code Snippet'))
+            .replace(/%CODE_SNIPPET_TEXT%/g, options.fileName)
             .replace(/%COPIED_TEXT%/g, vscode.l10n.t('Image copied to clipboard'))
             .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'))
             .replace(/%REMOTE_IMAGE_URL%/g, options.remoteImageUrl)

@@ -130,21 +130,30 @@
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            overflow-x: auto;
             font-family: 'Fira Code', 'Consolas', monospace;
+            width: fit-content;
+            overflow: visible;
         }
         #editor pre {
             margin: 0;
+            width: fit-content;
+            overflow: visible;
         }
         #editor code {
             font-family: 'Fira Code', 'Consolas', monospace;
             font-size: 14px;
             line-height: 1.5;
+            white-space: pre-wrap;       /* 允许文本换行 */
+            word-wrap: break-word;       /* 在单词内部换行 */
+            width: fit-content;
+            display: block;
         }
         /* 调整 highlight.js 的样式 */
         .hljs {
             background: transparent !important;
             padding: 0 !important;
+            width: fit-content !important;
+            overflow: visible !important;
         }
 
         /* 行号样式 */

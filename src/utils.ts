@@ -432,3 +432,9 @@ export function showMessage(message: string, level: 'info' | 'error' | 'warning'
   }[level];
   return method('GitLink: ' + message, ...others);
 }
+
+
+export function getRemoteImageUrl(code: string, language: string) {
+  const base64Content = Buffer.from(code).toString('base64');
+  return `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
+}
