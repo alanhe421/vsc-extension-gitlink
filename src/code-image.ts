@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { CodeLanguage } from '../types/language';
-import { showMessage } from '../utils';
+import { CodeLanguage } from './types/language';
+import { showMessage } from './utils';
 
 const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
     (fs.readFileSync(htmlPath, {
@@ -14,10 +14,10 @@ const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
         /(src|href)="([^"]*)"/gu,
         (_, type, src) =>
           `${type}="${panel.webview.asWebviewUri(
-            vscode.Uri.file(path.resolve(htmlPath, '../..', src))
+            vscode.Uri.file(path.resolve(htmlPath, '../../../', src))
           )}"`
       );
-      
+
 export class CodeImagePanel {
     public static currentPanel: CodeImagePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
@@ -35,7 +35,7 @@ export class CodeImagePanel {
 
         // 监听面板关闭事件
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        
+
         // 监听编辑器选择变化
         this._startListeningForSelectionChanges();
     }
@@ -45,21 +45,21 @@ export class CodeImagePanel {
         if (this._selectionChangeDisposable) {
             this._selectionChangeDisposable.dispose();
         }
-        
+
         // 设置新的监听器
         this._selectionChangeDisposable = vscode.window.onDidChangeTextEditorSelection(async (e) => {
             const editor = vscode.window.activeTextEditor;
             if (editor && !editor.selection.isEmpty) {
                 const code = editor.document.getText(editor.selection);
                 const language = editor.document.languageId;
-                
+
                 // 更新面板内容，使用保存的语言列表
                 await this.setContent(code, language, {
                     languages: this._languages
                 });
             }
         });
-        
+
         // 添加到待释放列表
         this._disposables.push(this._selectionChangeDisposable);
     }
@@ -178,7 +178,7 @@ export class CodeImagePanel {
 
         // 读取HTML模板
         let htmlTemplate = await readHtml(
-            path.resolve(this._extensionContext.extensionPath, 'src/webview/index.html'),
+            path.resolve(this._extensionContext.extensionPath, 'resources/webview/index.html'),
             this._panel
         );
 
@@ -212,7 +212,7 @@ export class CodeImagePanel {
 
         // 清理资源
         this._panel.dispose();
-        
+
         // 释放选择变化监听器
         if (this._selectionChangeDisposable) {
             this._selectionChangeDisposable.dispose();
@@ -225,4 +225,4 @@ export class CodeImagePanel {
             }
         }
     }
-} 
+}

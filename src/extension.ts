@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { CodeLanguage } from './types/language';
 import { SessionState } from './types/session-state';
 import { detectGitRepository, getCommandSource, getGitUrl, showMessage } from './utils';
-import { CodeImagePanel } from './webview/code-image';
+import { CodeImagePanel } from './code-image';
 
 // 支持的语言列表
 const supportedLanguages: CodeLanguage[] = [
@@ -205,10 +205,10 @@ export function activate(context: vscode.ExtensionContext) {
 					if (!selection.isEmpty) {
 						const codeContent = activeEditor.document.getText(selection);
 						const language = activeEditor.document.languageId;
-						
+
 						// 检查是否使用 ray.so
 						const useRemote = vscode.workspace.getConfiguration('gitlink').get('useRemoteForCodeImage');
-						
+
 						if (useRemote) {
 							const base64Content = Buffer.from(codeContent).toString('base64');
 							const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
