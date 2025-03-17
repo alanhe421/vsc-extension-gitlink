@@ -260,9 +260,6 @@ export class CodeImagePanel {
                         font-size: 14px;
                         line-height: 1.5;
                     }
-                    #canvas {
-                        display: none;
-                    }
                     /* 调整 highlight.js 的样式 */
                     .hljs {
                         background: transparent !important;
@@ -294,7 +291,6 @@ export class CodeImagePanel {
                             </div>
                         </div>
                     </div>
-                    <canvas id="canvas"></canvas>
                 </div>
                 <script>
                     const vscode = acquireVsCodeApi();
@@ -319,14 +315,13 @@ export class CodeImagePanel {
                         try {
                             const windowElement = document.querySelector('.window');
                             const canvas = await html2canvas(windowElement, {
-                                backgroundColor: '#2d2d2d',
-                                scale: 2
+                              
                             });
                             return { canvas, dataUrl: canvas.toDataURL('image/png') };
                         } catch (error) {
                             vscode.postMessage({
                                 command: 'error',
-                                text: 'Error generating image: ' + error.message
+                                text: vscode.l10n.t('Error generating image: {0}', error.message)
                             });
                             return null;
                         }
