@@ -46,12 +46,6 @@ const supportedLanguages: CodeLanguage[] = [
 	{ id: 'yaml', name: 'YAML' }
 ] as const;
 
-const highlightJsResources = {
-	core: 'node_modules/@highlightjs/cdn-assets/highlight.min.js',
-	style: 'node_modules/@highlightjs/cdn-assets/styles/github-dark.css',
-	html2canvas: 'node_modules/html2canvas/dist/html2canvas.min.js'
-};
-
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -228,7 +222,6 @@ export function activate(context: vscode.ExtensionContext) {
 							// 使用本地生成，传递资源路径和支持的语言列表
 							CodeImagePanel.createOrShow(context, codeContent, language, {
 								languages: supportedLanguages,
-								resources: highlightJsResources
 							});
 						}
 					}

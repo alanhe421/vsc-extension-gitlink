@@ -1,10 +1,6 @@
 .vscode/**
 .vscode-test/**
 out/**
-node_modules/**
-!node_modules/@highlightjs/cdn-assets/highlight.min.js
-!node_modules/@highlightjs/cdn-assets/styles/github-dark.css
-!node_modules/html2canvas/dist/html2canvas.min.js
 src/**
 .gitignore
 .yarnrc

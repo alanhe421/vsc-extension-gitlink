@@ -5,6 +5,19 @@ import * as vscode from 'vscode';
 import { CodeLanguage } from '../types/language';
 import { showMessage } from '../utils';
 
+const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
+    (fs.readFileSync(htmlPath, {
+        encoding: 'utf8'
+    }))
+      .replace(/%CSP_SOURCE%/gu, panel.webview.cspSource)
+      .replace(
+        /(src|href)="([^"]*)"/gu,
+        (_, type, src) =>
+          `${type}="${panel.webview.asWebviewUri(
+            vscode.Uri.file(path.resolve(htmlPath, '..', src))
+          )}"`
+      );
+      
 export class CodeImagePanel {
     public static currentPanel: CodeImagePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
@@ -22,12 +35,11 @@ export class CodeImagePanel {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     }
 
-    public static createOrShow(
+    public static async createOrShow(
         extensionContext: vscode.ExtensionContext,
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
     ) {
@@ -46,14 +58,13 @@ export class CodeImagePanel {
                 enableScripts: true,
                 retainContextWhenHidden: true,
                 localResourceRoots: [
-                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/@highlightjs/cdn-assets'),
-                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/html2canvas')
+                    vscode.Uri.joinPath(extensionContext.extensionUri),
                 ]
             }
         );
 
         CodeImagePanel.currentPanel = new CodeImagePanel(panel, extensionContext);
-        CodeImagePanel.currentPanel.setContent(code, language, options);
+        await CodeImagePanel.currentPanel.setContent(code, language, options);
     }
 
     private async _update() {
@@ -102,39 +113,25 @@ export class CodeImagePanel {
         }
     }
 
-    public setContent(
+    public async setContent(
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
     ) {
-        this._panel.webview.html = this._getHtmlContent(code, language, options);
+        this._panel.webview.html = await this._getHtmlContent(code, language, options);
+        this._update(); // 重新设置消息监听器
     }
 
-    private _getHtmlContent(
+    private async _getHtmlContent(
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
-    ): string {
-        const { resources, languages } = options;
-
-        // 获取本地资源的 URI
-        const highlightJsUri = this._panel.webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.core)
-        ).toString();
-        const styleUri = this._panel.webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.style)
-        ).toString();
-
-        const html2canvasUri = this._panel.webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.html2canvas)
-        ).toString();
-
+    ): Promise<string> {
+        const { languages } = options;
         // 检查语言是否在支持列表中，如果不在则使用 text
         const isLanguageSupported = languages.some(lang => lang.id === language);
         const defaultLanguage = isLanguageSupported ? language : 'text';
@@ -147,224 +144,25 @@ export class CodeImagePanel {
             .map(lang => `<option value="${lang.id}"${lang.id === defaultLanguage ? ' selected' : ''}">${lang.name}</option>`)
             .join('\n');
 
-        return `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" href="${styleUri}">
-                <script src="${html2canvasUri}"></script>
-                <script src="${highlightJsUri}"></script>
-                <script>
-                    // 初始化 highlight.js
-                    hljs.highlightAll();
-                </script>
-                <style>
-                    body {
-                        margin: 0;
-                        padding: 20px;
-                        background-image: linear-gradient(140deg, rgb(207, 47, 152), rgb(106, 61, 236));
-                        color: #fff;
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                    }
-                    .container {
-                        max-width: 800px;
-                        margin: 0 auto;
-                    }
-                    .toolbar {
-                        margin-bottom: 20px;
-                        display: flex;
-                        gap: 10px;
-                        justify-content: flex-end;
-                    }
-                    .window {
-                        background: #2d2d2d;
-                        border-radius: 10px;
-                        overflow: hidden;
-                        box-shadow: 0 20px 68px rgba(0, 0, 0, 0.55);
-                    }
-                    .titlebar {
-                        background: #1a1a1a;
-                        height: 40px;
-                        display: flex;
-                        align-items: center;
-                        padding: 0 12px;
-                        -webkit-app-region: drag;
-                        user-select: none;
-                    }
-                    .window-controls {
-                        display: flex;
-                        gap: 8px;
-                        margin-right: 8px;
-                    }
-                    .window-control {
-                        width: 12px;
-                        height: 12px;
-                        border-radius: 50%;
-                        border: none;
-                        padding: 0;
-                        margin: 0;
-                    }
-                    .window-control.close {
-                        background: #ff5f56;
-                    }
-                    .window-control.minimize {
-                        background: #ffbd2e;
-                    }
-                    .window-control.maximize {
-                        background: #27c93f;
-                    }
-                    .window-title {
-                        color: #808080;
-                        font-size: 14px;
-                        flex-grow: 1;
-                        text-align: center;
-                        margin-left: -52px; /* 补偿窗口控制按钮的宽度，使标题居中 */
-                    }
-                    .content {
-                        padding: 20px;
-                    }
-                    button {
-                        padding: 8px 16px;
-                        border: none;
-                        border-radius: 4px;
-                        background: #2ea043;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 14px;
-                    }
-                    button:hover {
-                        background: #2c974b;
-                    }
-                    .language-select {
-                        padding: 8px;
-                        border-radius: 4px;
-                        background: #2d2d2d;
-                        color: white;
-                        border: 1px solid #404040;
-                    }
-                    #editor {
-                        background: #2d2d2d;
-                        padding: 20px;
-                        border-radius: 8px;
-                        margin-bottom: 20px;
-                        overflow-x: auto;
-                        font-family: 'Fira Code', 'Consolas', monospace;
-                    }
-                    #editor pre {
-                        margin: 0;
-                    }
-                    #editor code {
-                        font-family: 'Fira Code', 'Consolas', monospace;
-                        font-size: 14px;
-                        line-height: 1.5;
-                    }
-                    /* 调整 highlight.js 的样式 */
-                    .hljs {
-                        background: transparent !important;
-                        padding: 0 !important;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="toolbar">
-                        <select id="language" class="language-select" onchange="updateLanguage()">
-                            ${languageOptions}
-                        </select>
-                        <button onclick="copyImage()">${vscode.l10n.t('Copy Image')}</button>
-                        <button onclick="downloadImage()">${vscode.l10n.t('Download Image')}</button>
-                    </div>
-                    <div class="window">
-                        <div class="titlebar">
-                            <div class="window-controls">
-                                <div class="window-control close"></div>
-                                <div class="window-control minimize"></div>
-                                <div class="window-control maximize"></div>
-                            </div>
-                            <div class="window-title">${vscode.l10n.t('Code Snippet')}</div>
-                        </div>
-                        <div class="content">
-                            <div id="editor">
-                                <pre><code class="language-${language}">${this._escapeHtml(code)}</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    const vscode = acquireVsCodeApi();
-                    const editor = document.getElementById('editor');
-                    const languageSelect = document.getElementById('language');
-                    const codeElement = editor.querySelector('code');
-                    
-                    // 设置初始语言
-                    languageSelect.value = '${defaultLanguage}';
-                    codeElement.className = 'language-${defaultLanguage}';
-                    hljs.highlightElement(codeElement);
-                    
-                    // 更新语言
-                    function updateLanguage() {
-                        const newLanguage = languageSelect.value;
-                        codeElement.className = 'language-' + newLanguage;
-                        hljs.highlightElement(codeElement);
-                    }
+        // 读取HTML模板
+        let htmlTemplate =  await readHtml(
+            path.resolve(this._extensionContext.extensionPath, 'src/webview/index.html'),
+            this._panel
+          );
 
-                    // 生成图片时需要包含整个窗口
-                    async function generateImage() {
-                        try {
-                            const windowElement = document.querySelector('.window');
-                            const canvas = await html2canvas(windowElement, {
-                              
-                            });
-                            return { canvas, dataUrl: canvas.toDataURL('image/png') };
-                        } catch (error) {
-                            vscode.postMessage({
-                                command: 'error',
-                                text: vscode.l10n.t('Error generating image: {0}', error.message)
-                            });
-                            return null;
-                        }
-                    }
+        // 替换占位符
+        htmlTemplate = htmlTemplate
+            .replace(/%LANGUAGE_OPTIONS%/g, languageOptions)
+            .replace(/%LANGUAGE%/g, language)
+            .replace(/%DEFAULT_LANGUAGE%/g, defaultLanguage)
+            .replace(/%CODE%/g, this._escapeHtml(code))
+            .replace(/%COPY_IMAGE_TEXT%/g, vscode.l10n.t('Copy Image'))
+            .replace(/%DOWNLOAD_IMAGE_TEXT%/g, vscode.l10n.t('Download Image'))
+            .replace(/%CODE_SNIPPET_TEXT%/g, vscode.l10n.t('Code Snippet'))
+            .replace(/%COPIED_TEXT%/g, vscode.l10n.t('Image copied to clipboard'))
+            .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'));
 
-                    // 复制图片到剪贴板
-                    async function copyImage() {
-                        const result = await generateImage();
-                        if (result) {
-                            try {
-                                const blob = await new Promise(resolve => result.canvas.toBlob(resolve));
-                                if (blob) {
-                                    await navigator.clipboard.write([
-                                        new ClipboardItem({ 'image/png': blob })
-                                    ]);
-                                    vscode.postMessage({
-                                        command: 'info',
-                                        text: vscode.l10n.t('Image copied to clipboard')
-                                    });
-                                }
-                            } catch (error) {
-                                vscode.postMessage({
-                                    command: 'error',
-                                    text: vscode.l10n.t('Error copying image: {0}', error.message)
-                                });
-                            }
-                        }
-                    }
-
-                    // 下载图片
-                    async function downloadImage() {
-                        const result = await generateImage();
-                        if (result) {
-                            vscode.postMessage({
-                                command: 'downloadImage',
-                                data: result.dataUrl
-                            });
-                        }
-                    }
-                </script>
-            </body>
-            </html>
-        `;
+        return htmlTemplate;
     }
 
     // 转义 HTML 特殊字符
