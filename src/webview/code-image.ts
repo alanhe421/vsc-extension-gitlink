@@ -27,7 +27,7 @@ export class CodeImagePanel {
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string };
+            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
     ) {
@@ -46,7 +46,8 @@ export class CodeImagePanel {
                 enableScripts: true,
                 retainContextWhenHidden: true,
                 localResourceRoots: [
-                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/@highlightjs/cdn-assets')
+                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/@highlightjs/cdn-assets'),
+                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/html2canvas')
                 ]
             }
         );
@@ -105,7 +106,7 @@ export class CodeImagePanel {
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string };
+            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
     ) {
@@ -116,7 +117,7 @@ export class CodeImagePanel {
         code: string,
         language: string,
         options: {
-            resources: { core: string; style: string };
+            resources: { core: string; style: string; html2canvas: string };
             languages: CodeLanguage[];
         }
     ): string {
@@ -128,6 +129,10 @@ export class CodeImagePanel {
         ).toString();
         const styleUri = this._panel.webview.asWebviewUri(
             vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.style)
+        ).toString();
+
+        const html2canvasUri = this._panel.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.html2canvas)
         ).toString();
 
         // 检查语言是否在支持列表中，如果不在则使用 text
@@ -149,6 +154,7 @@ export class CodeImagePanel {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="${styleUri}">
+                <script src="${html2canvasUri}"></script>
                 <script src="${highlightJsUri}"></script>
                 <script>
                     // 初始化 highlight.js
@@ -290,7 +296,6 @@ export class CodeImagePanel {
                     </div>
                     <canvas id="canvas"></canvas>
                 </div>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
                 <script>
                     const vscode = acquireVsCodeApi();
                     const editor = document.getElementById('editor');

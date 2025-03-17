@@ -48,7 +48,8 @@ const supportedLanguages: CodeLanguage[] = [
 
 const highlightJsResources = {
 	core: 'node_modules/@highlightjs/cdn-assets/highlight.min.js',
-	style: 'node_modules/@highlightjs/cdn-assets/styles/github-dark.css'
+	style: 'node_modules/@highlightjs/cdn-assets/styles/github-dark.css',
+	html2canvas: 'node_modules/html2canvas/dist/html2canvas.min.js'
 };
 
 // This method is called when your extension is activated

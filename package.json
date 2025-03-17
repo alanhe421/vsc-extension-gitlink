@@ -291,6 +291,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@highlightjs/cdn-assets": "^11.11.1"
+    "@highlightjs/cdn-assets": "^11.11.1",
+    "html2canvas": "^1.4.1"
   }
 }
