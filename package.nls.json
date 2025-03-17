@@ -20,6 +20,8 @@
   "config.useCompactMenu.description": "使用紧凑菜单样式",
   "config.useCompactMenu.markdownDescription": "启用后，所有 GitLink 命令将被分组到一个子菜单下以减少上下文菜单的混乱。禁用时，主要命令将直接显示在上下文菜单中。",
 
-  "config.rememberRemoteSelection.description": "记住远程仓库选择",
-  "config.rememberRemoteSelection.markdownDescription": "启用后，扩展将记住您在当前会话中的远程仓库选择。您只需要在每个项目会话中选择一次远程仓库。禁用时，每次都会提示选择。"
+  "config.rememberRemoteSelection.description": "Remember the last selected remote when multiple remotes are available.",
+  "config.rememberRemoteSelection.markdownDescription": "Remember the last selected remote when multiple remotes are available.",
+  "config.useRemoteForCodeImage.description": "When creating code snippet images, use ray.so instead of local generation.",
+  "config.useRemoteForCodeImage.markdownDescription": "When creating code snippet images, use [ray.so](https://ray.so) instead of local generation."
 }

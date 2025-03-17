@@ -249,6 +249,12 @@
           "default": false,
           "description": "%config.rememberRemoteSelection.description%",
           "markdownDescription": "%config.rememberRemoteSelection.markdownDescription%"
+        },
+        "gitlink.useRemoteForCodeImage": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.useRemoteForCodeImage.description%",
+          "markdownDescription": "%config.useRemoteForCodeImage.markdownDescription%"
         }
       }
     }

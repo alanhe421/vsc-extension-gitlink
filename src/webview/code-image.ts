@@ -31,7 +31,7 @@ export class CodeImagePanel {
         // 否则，创建一个新面板
         const panel = vscode.window.createWebviewPanel(
             'codeImage',
-            'Code Image',
+            'Code Snippet Image',
             vscode.ViewColumn.Beside,
             {
                 enableScripts: true,

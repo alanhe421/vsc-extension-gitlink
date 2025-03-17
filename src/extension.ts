@@ -165,8 +165,22 @@ export function activate(context: vscode.ExtensionContext) {
 						const codeContent = activeEditor.document.getText(selection);
 						const language = activeEditor.document.languageId;
 						
-						// 使用 CodeImagePanel 显示代码图片
-						CodeImagePanel.createOrShow(context, codeContent, language);
+						// 检查是否使用 ray.so
+						const useRemote = vscode.workspace.getConfiguration('gitlink').get('useRemoteForCodeImage');
+						
+						if (useRemote) {
+							const base64Content = Buffer.from(codeContent).toString('base64');
+							const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
+							// 使用VSCode的命令打开URL
+							vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
+								showMessage(vscode.l10n.t('Code snippet opened in browser'));
+							}, (error) => {
+								showMessage(vscode.l10n.t('Error opening Code: {0}', error instanceof Error ? error.message : String(error)), 'error');
+							});
+						} else {
+							// 使用本地生成
+							CodeImagePanel.createOrShow(context, codeContent, language);
+						}
 					}
 				}
 			}
