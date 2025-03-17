@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="../node_modules/@highlightjs/cdn-assets/styles/github-dark.min.css">
     <script src="../node_modules/dom-to-image-even-more/dist/dom-to-image-more.min.js"></script>
     <script src="../node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
+    <script src="../node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js"></script>
     <script>
         // 初始化 highlight.js
         hljs.highlightAll();
+        hljs.initLineNumbersOnLoad();
     </script>
     <style>
         body {
@@ -114,6 +116,35 @@
         .hljs {
             background: transparent !important;
             padding: 0 !important;
+        }
+
+        /* 行号样式 */
+        pre > code {
+            display: flex;
+        }
+        
+        pre > code .hljs-ln {
+            display: flex;
+        }
+        
+        pre > code .hljs-ln-numbers {
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        pre > code .hljs-ln-numbers div {
+            padding-top: 3px;
+            align-items: flex-start;
+            display: flex;
+            font-size: 12px;
+            flex: 1;
+        }
+        
+        pre > code .hljs-ln-code {
+            padding-left: 10px;
         }
     </style>
 </head>

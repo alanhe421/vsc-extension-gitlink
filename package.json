@@ -292,6 +292,7 @@
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.11.1",
-    "dom-to-image-even-more": "^1.0.4"
+    "dom-to-image-even-more": "^1.0.4",
+    "highlightjs-line-numbers.js": "^2.9.0"
   }
 }
