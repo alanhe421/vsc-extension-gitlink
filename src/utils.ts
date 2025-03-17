@@ -1,11 +1,11 @@
-import vscode from 'vscode';
+import { exec } from 'child_process';
 import path from 'path';
+import { promisify } from 'util';
+import vscode from 'vscode';
 import { SessionState } from './types/session-state';
 import { DomainMapping, DomainResult, Platform } from './types/types';
-import { promisify } from 'util';
-import { exec } from 'child_process';
 
-export const utils = promisify(exec);
+export const execAsync = promisify(exec);
 
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
 export async function detectGitRepository() {

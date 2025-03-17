@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { SessionState } from './types/session-state';
 import { detectGitRepository, getCommandSource, getGitUrl, showMessage } from './utils';
+import { CodeImagePanel } from './webview/code-image';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -160,17 +161,12 @@ export function activate(context: vscode.ExtensionContext) {
 				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
-					let codeContent = "";
 					if (!selection.isEmpty) {
-						codeContent = activeEditor.document.getText(selection);
-						const base64Content = Buffer.from(codeContent).toString('base64');
-						const carbonUrl = `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${activeEditor.document.languageId}`;
-						// 使用VSCode的命令打开URL
-						vscode.env.openExternal(vscode.Uri.parse(carbonUrl)).then(() => {
-							showMessage(vscode.l10n.t('Code snippet opened in browser'));
-						}, (error) => {
-							showMessage(vscode.l10n.t('Error opening Code: {0}', error instanceof Error ? error.message : String(error)), 'error');
-						});
+						const codeContent = activeEditor.document.getText(selection);
+						const language = activeEditor.document.languageId;
+						
+						// 使用 CodeImagePanel 显示代码图片
+						CodeImagePanel.createOrShow(context, codeContent, language);
 					}
 				}
 			}
