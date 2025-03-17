@@ -23,6 +23,8 @@ export class CodeImagePanel {
     private readonly _panel: vscode.WebviewPanel;
     private readonly _extensionContext: vscode.ExtensionContext;
     private _disposables: vscode.Disposable[] = [];
+    private _selectionChangeDisposable: vscode.Disposable | undefined;
+    private _languages: CodeLanguage[] = [];  // 保存支持的语言列表
 
     private constructor(panel: vscode.WebviewPanel, extensionContext: vscode.ExtensionContext) {
         this._panel = panel;
@@ -33,6 +35,33 @@ export class CodeImagePanel {
 
         // 监听面板关闭事件
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+        
+        // 监听编辑器选择变化
+        this._startListeningForSelectionChanges();
+    }
+
+    private _startListeningForSelectionChanges() {
+        // 释放旧的监听器（如果存在）
+        if (this._selectionChangeDisposable) {
+            this._selectionChangeDisposable.dispose();
+        }
+        
+        // 设置新的监听器
+        this._selectionChangeDisposable = vscode.window.onDidChangeTextEditorSelection(async (e) => {
+            const editor = vscode.window.activeTextEditor;
+            if (editor && !editor.selection.isEmpty) {
+                const code = editor.document.getText(editor.selection);
+                const language = editor.document.languageId;
+                
+                // 更新面板内容，使用保存的语言列表
+                await this.setContent(code, language, {
+                    languages: this._languages
+                });
+            }
+        });
+        
+        // 添加到待释放列表
+        this._disposables.push(this._selectionChangeDisposable);
     }
 
     public static async createOrShow(
@@ -43,9 +72,13 @@ export class CodeImagePanel {
             languages: CodeLanguage[];
         }
     ) {
-        // 如果已经有面板了，就显示它
+        // 如果已经有面板了，就更新它的内容而不是只显示
         if (CodeImagePanel.currentPanel) {
             CodeImagePanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
+            // 保存语言列表
+            CodeImagePanel.currentPanel._languages = options.languages;
+            // 更新内容
+            await CodeImagePanel.currentPanel.setContent(code, language, options);
             return;
         }
 
@@ -64,6 +97,8 @@ export class CodeImagePanel {
         );
 
         CodeImagePanel.currentPanel = new CodeImagePanel(panel, extensionContext);
+        // 保存语言列表
+        CodeImagePanel.currentPanel._languages = options.languages;
         await CodeImagePanel.currentPanel.setContent(code, language, options);
     }
 
@@ -132,23 +167,20 @@ export class CodeImagePanel {
         }
     ): Promise<string> {
         const { languages } = options;
+
         // 检查语言是否在支持列表中，如果不在则使用 text
         const isLanguageSupported = languages.some(lang => lang.id === language);
         const defaultLanguage = isLanguageSupported ? language : 'text';
-
-        // 生成语言选项，确保 text 选项始终存在
-        const hasTextOption = languages.some(lang => lang.id === 'text');
-        const allLanguages = hasTextOption ? languages : [...languages, { id: 'text', name: 'Plain Text' }];
-        
+        const allLanguages = languages;
         const languageOptions = allLanguages
             .map(lang => `<option value="${lang.id}"${lang.id === defaultLanguage ? ' selected' : ''}">${lang.name}</option>`)
             .join('\n');
 
         // 读取HTML模板
-        let htmlTemplate =  await readHtml(
+        let htmlTemplate = await readHtml(
             path.resolve(this._extensionContext.extensionPath, 'src/webview/index.html'),
             this._panel
-          );
+        );
 
         // 替换占位符
         htmlTemplate = htmlTemplate
@@ -180,6 +212,11 @@ export class CodeImagePanel {
 
         // 清理资源
         this._panel.dispose();
+        
+        // 释放选择变化监听器
+        if (this._selectionChangeDisposable) {
+            this._selectionChangeDisposable.dispose();
+        }
 
         while (this._disposables.length) {
             const disposable = this._disposables.pop();
