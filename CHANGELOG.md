@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.4](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.3...v1.4.4) (2025-03-17)
+
+
+### Features
+
+* add HTML and TypeScript files for code snippet image generation; implement webview panel with language selection and image handling features ([cc11d43](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/cc11d43705cdcd57b4b22375a2053b011eb639ea))
+* enhance webview with dropdown menu for image actions and add remote image opening functionality ([736c655](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/736c65550e43e3dff508286504f4197068a25b10))
+* implement remote image URL generation and enhance code image panel with file name support; update webview styles for better display ([a52ddcc](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/a52ddcc19ba8c128020142e2d4232c58aa8b574f))
+* update image action button to copy functionality and simplify image generation process without style modifications ([ce4faef](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/ce4faef85b94f125d13e02301a49621c2a61aaa6))
+
 ### [1.4.3](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.2...v1.4.3) (2025-03-17)
 
 
