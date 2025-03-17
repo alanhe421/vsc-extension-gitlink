@@ -1,9 +1,55 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { CodeLanguage } from './types/language';
 import { SessionState } from './types/session-state';
 import { detectGitRepository, getCommandSource, getGitUrl, showMessage } from './utils';
 import { CodeImagePanel } from './webview/code-image';
+
+// 支持的语言列表
+const supportedLanguages: CodeLanguage[] = [
+	{ id: 'text', name: 'Plain Text' },
+	{ id: 'apache', name: 'Apache' },
+	{ id: 'bash', name: 'Bash' },
+	{ id: 'c', name: 'C' },
+	{ id: 'cpp', name: 'C++' },
+	{ id: 'csharp', name: 'C#' },
+	{ id: 'css', name: 'CSS' },
+	{ id: 'diff', name: 'Diff' },
+	{ id: 'docker', name: 'Docker' },
+	{ id: 'go', name: 'Go' },
+	{ id: 'graphql', name: 'GraphQL' },
+	{ id: 'hcl', name: 'HCL' },
+	{ id: 'html', name: 'HTML' },
+	{ id: 'java', name: 'Java' },
+	{ id: 'javascript', name: 'JavaScript' },
+	{ id: 'json', name: 'JSON' },
+	{ id: 'kotlin', name: 'Kotlin' },
+	{ id: 'less', name: 'Less' },
+	{ id: 'lua', name: 'Lua' },
+	{ id: 'makefile', name: 'Makefile' },
+	{ id: 'markdown', name: 'Markdown' },
+	{ id: 'nginx', name: 'Nginx' },
+	{ id: 'objectivec', name: 'Objective-C' },
+	{ id: 'perl', name: 'Perl' },
+	{ id: 'php', name: 'PHP' },
+	{ id: 'python', name: 'Python' },
+	{ id: 'r', name: 'R' },
+	{ id: 'ruby', name: 'Ruby' },
+	{ id: 'rust', name: 'Rust' },
+	{ id: 'scala', name: 'Scala' },
+	{ id: 'scss', name: 'SCSS' },
+	{ id: 'sql', name: 'SQL' },
+	{ id: 'swift', name: 'Swift' },
+	{ id: 'typescript', name: 'TypeScript' },
+	{ id: 'vim', name: 'Vim' },
+	{ id: 'yaml', name: 'YAML' }
+] as const;
+
+const highlightJsResources = {
+	core: 'node_modules/@highlightjs/cdn-assets/highlight.min.js',
+	style: 'node_modules/@highlightjs/cdn-assets/styles/github-dark.css'
+};
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -178,8 +224,11 @@ export function activate(context: vscode.ExtensionContext) {
 								showMessage(vscode.l10n.t('Error opening Code: {0}', error instanceof Error ? error.message : String(error)), 'error');
 							});
 						} else {
-							// 使用本地生成
-							CodeImagePanel.createOrShow(context, codeContent, language);
+							// 使用本地生成，传递资源路径和支持的语言列表
+							CodeImagePanel.createOrShow(context, codeContent, language, {
+								languages: supportedLanguages,
+								resources: highlightJsResources
+							});
 						}
 					}
 				}

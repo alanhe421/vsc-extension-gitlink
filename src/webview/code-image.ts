@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { execAsync, showMessage } from '../utils';
+import { CodeLanguage } from '../types/language';
+import { showMessage } from '../utils';
 
 export class CodeImagePanel {
     public static currentPanel: CodeImagePanel | undefined;
@@ -21,7 +22,15 @@ export class CodeImagePanel {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     }
 
-    public static createOrShow(extensionContext: vscode.ExtensionContext, code: string, language: string) {
+    public static createOrShow(
+        extensionContext: vscode.ExtensionContext,
+        code: string,
+        language: string,
+        options: {
+            resources: { core: string; style: string };
+            languages: CodeLanguage[];
+        }
+    ) {
         // 如果已经有面板了，就显示它
         if (CodeImagePanel.currentPanel) {
             CodeImagePanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
@@ -36,12 +45,14 @@ export class CodeImagePanel {
             {
                 enableScripts: true,
                 retainContextWhenHidden: true,
-                localResourceRoots: []
+                localResourceRoots: [
+                    vscode.Uri.joinPath(extensionContext.extensionUri, 'node_modules/@highlightjs/cdn-assets')
+                ]
             }
         );
 
         CodeImagePanel.currentPanel = new CodeImagePanel(panel, extensionContext);
-        CodeImagePanel.currentPanel.setContent(code, language);
+        CodeImagePanel.currentPanel.setContent(code, language, options);
     }
 
     private async _update() {
@@ -50,12 +61,12 @@ export class CodeImagePanel {
             async message => {
                 try {
                     switch (message.command) {
-                        case 'copyImage':
-                            await this._handleCopyImage(message.data);
-                            break;
-
                         case 'downloadImage':
                             await this._handleDownloadImage(message.data);
+                            break;
+
+                        case 'info':
+                            showMessage(message.text);
                             break;
 
                         case 'error':
@@ -69,31 +80,6 @@ export class CodeImagePanel {
             undefined,
             this._disposables
         );
-    }
-
-    private async _handleCopyImage(imageData: string) {
-        try {
-            const data = imageData.replace(/^data:image\/png;base64,/, '');
-            const tempDir = os.tmpdir();
-            const tempFilePath = path.join(tempDir, 'code-image.png');
-            fs.writeFileSync(tempFilePath, Buffer.from(data, 'base64'));
-
-            // 根据操作系统使用不同的复制命令
-            const platform = process.platform;
-            if (platform === 'darwin') {
-                // macOS
-                await execAsync(`osascript -e 'set the clipboard to (read (POSIX file "${tempFilePath}") as JPEG picture)'`);
-            } else if (platform === 'win32') {
-                // Windows
-                await execAsync(`powershell -command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile('${tempFilePath}'))"`);
-            } else {
-                // Linux (需要安装 xclip)
-                await execAsync(`xclip -selection clipboard -t image/png -i "${tempFilePath}"`);
-            }
-            showMessage(vscode.l10n.t('Image copied to clipboard'));
-        } catch (error) {
-            showMessage(vscode.l10n.t('Error copying image: {0}', error instanceof Error ? error.message : String(error)), 'error');
-        }
     }
 
     private async _handleDownloadImage(imageData: string) {
@@ -115,30 +101,59 @@ export class CodeImagePanel {
         }
     }
 
-    public setContent(code: string, language: string) {
-        this._panel.webview.html = this._getHtmlContent(code, language);
+    public setContent(
+        code: string,
+        language: string,
+        options: {
+            resources: { core: string; style: string };
+            languages: CodeLanguage[];
+        }
+    ) {
+        this._panel.webview.html = this._getHtmlContent(code, language, options);
     }
 
-    private _getHtmlContent(code: string, language: string): string {
+    private _getHtmlContent(
+        code: string,
+        language: string,
+        options: {
+            resources: { core: string; style: string };
+            languages: CodeLanguage[];
+        }
+    ): string {
+        const { resources, languages } = options;
+
+        // 获取本地资源的 URI
+        const highlightJsUri = this._panel.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.core)
+        ).toString();
+        const styleUri = this._panel.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionContext.extensionUri, resources.style)
+        ).toString();
+
+        // 检查语言是否在支持列表中，如果不在则使用 text
+        const isLanguageSupported = languages.some(lang => lang.id === language);
+        const defaultLanguage = isLanguageSupported ? language : 'text';
+
+        // 生成语言选项，确保 text 选项始终存在
+        const hasTextOption = languages.some(lang => lang.id === 'text');
+        const allLanguages = hasTextOption ? languages : [...languages, { id: 'text', name: 'Plain Text' }];
+        
+        const languageOptions = allLanguages
+            .map(lang => `<option value="${lang.id}"${lang.id === defaultLanguage ? ' selected' : ''}">${lang.name}</option>`)
+            .join('\n');
+
         return `
             <!DOCTYPE html>
             <html>
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-                <!-- 加载常用语言包 -->
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+                <link rel="stylesheet" href="${styleUri}">
+                <script src="${highlightJsUri}"></script>
+                <script>
+                    // 初始化 highlight.js
+                    hljs.highlightAll();
+                </script>
                 <style>
                     body {
                         margin: 0;
@@ -253,41 +268,7 @@ export class CodeImagePanel {
                 <div class="container">
                     <div class="toolbar">
                         <select id="language" class="language-select" onchange="updateLanguage()">
-                            <option value="apache">Apache</option>
-                            <option value="bash">Bash</option>
-                            <option value="c">C</option>
-                            <option value="cpp">C++</option>
-                            <option value="csharp">C#</option>
-                            <option value="css">CSS</option>
-                            <option value="diff">Diff</option>
-                            <option value="docker">Docker</option>
-                            <option value="go">Go</option>
-                            <option value="graphql">GraphQL</option>
-                            <option value="hcl">HCL</option>
-                            <option value="html">HTML</option>
-                            <option value="java">Java</option>
-                            <option value="javascript">JavaScript</option>
-                            <option value="json">JSON</option>
-                            <option value="kotlin">Kotlin</option>
-                            <option value="less">Less</option>
-                            <option value="lua">Lua</option>
-                            <option value="makefile">Makefile</option>
-                            <option value="markdown">Markdown</option>
-                            <option value="nginx">Nginx</option>
-                            <option value="objectivec">Objective-C</option>
-                            <option value="perl">Perl</option>
-                            <option value="php">PHP</option>
-                            <option value="python">Python</option>
-                            <option value="r">R</option>
-                            <option value="ruby">Ruby</option>
-                            <option value="rust">Rust</option>
-                            <option value="scala">Scala</option>
-                            <option value="scss">SCSS</option>
-                            <option value="sql">SQL</option>
-                            <option value="swift">Swift</option>
-                            <option value="typescript">TypeScript</option>
-                            <option value="vim">Vim</option>
-                            <option value="yaml">YAML</option>
+                            ${languageOptions}
                         </select>
                         <button onclick="copyImage()">复制图片</button>
                         <button onclick="downloadImage()">下载图片</button>
@@ -317,11 +298,10 @@ export class CodeImagePanel {
                     const codeElement = editor.querySelector('code');
                     
                     // 设置初始语言
-                    languageSelect.value = '${language}';
-                    
-                    // 初始化代码高亮
+                    languageSelect.value = '${defaultLanguage}';
+                    codeElement.className = 'language-${defaultLanguage}';
                     hljs.highlightElement(codeElement);
-
+                    
                     // 更新语言
                     function updateLanguage() {
                         const newLanguage = languageSelect.value;
@@ -337,7 +317,7 @@ export class CodeImagePanel {
                                 backgroundColor: '#2d2d2d',
                                 scale: 2
                             });
-                            return canvas.toDataURL('image/png');
+                            return { canvas, dataUrl: canvas.toDataURL('image/png') };
                         } catch (error) {
                             vscode.postMessage({
                                 command: 'error',
@@ -349,22 +329,35 @@ export class CodeImagePanel {
 
                     // 复制图片到剪贴板
                     async function copyImage() {
-                        const imageData = await generateImage();
-                        if (imageData) {
-                            vscode.postMessage({
-                                command: 'copyImage',
-                                data: imageData
-                            });
+                        const result = await generateImage();
+                        if (result) {
+                            try {
+                                const blob = await new Promise(resolve => result.canvas.toBlob(resolve));
+                                if (blob) {
+                                    await navigator.clipboard.write([
+                                        new ClipboardItem({ 'image/png': blob })
+                                    ]);
+                                    vscode.postMessage({
+                                        command: 'info',
+                                        text: 'Image copied to clipboard'
+                                    });
+                                }
+                            } catch (error) {
+                                vscode.postMessage({
+                                    command: 'error',
+                                    text: 'Error copying image: ' + error.message
+                                });
+                            }
                         }
                     }
 
                     // 下载图片
                     async function downloadImage() {
-                        const imageData = await generateImage();
-                        if (imageData) {
+                        const result = await generateImage();
+                        if (result) {
                             vscode.postMessage({
                                 command: 'downloadImage',
-                                data: imageData
+                                data: result.dataUrl
                             });
                         }
                     }

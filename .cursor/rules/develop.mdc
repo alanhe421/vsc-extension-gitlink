@@ -1,9 +1,12 @@
 ---
 description: 项目开发规范
-globs:
+globs: 
 alwaysApply: true
 ---
 
 # 国际化
 - package.json中配置项的国际化描述文件是在项目根目录package.nls.json和package.nls.<locale>.json中配置的
 - extension拓展文件的国际化描述文件是在l10n/bundle.l10n.<locale>.json中配置的
+
+## 第三方包
+- 代码高亮：@highlightjs
