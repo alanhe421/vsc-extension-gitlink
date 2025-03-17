@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.1...v1.4.2) (2025-03-17)
+
 ### [1.4.1](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.0...v1.4.1) (2025-03-17)
 
 
