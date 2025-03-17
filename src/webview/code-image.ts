@@ -14,7 +14,7 @@ const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
         /(src|href)="([^"]*)"/gu,
         (_, type, src) =>
           `${type}="${panel.webview.asWebviewUri(
-            vscode.Uri.file(path.resolve(htmlPath, '..', src))
+            vscode.Uri.file(path.resolve(htmlPath, '../..', src))
           )}"`
       );
       

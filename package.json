@@ -292,7 +292,6 @@
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.11.1",
-    "html2canvas": "^1.4.1",
     "dom-to-image-even-more": "^1.0.4"
   }
 }

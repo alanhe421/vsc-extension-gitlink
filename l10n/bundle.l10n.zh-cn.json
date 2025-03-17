@@ -36,5 +36,7 @@
   "Error saving image: {0}": "保存图片时出错：{0}",
   "Copy Image": "复制图片",
   "Download Image": "下载图片",
-  "Code Snippet": "代码片段"
+  "Code Snippet": "代码片段",
+  "Image copied to clipboard": "图片已复制到剪贴板",
+  "Error copying image": "复制图片时出错"
 }

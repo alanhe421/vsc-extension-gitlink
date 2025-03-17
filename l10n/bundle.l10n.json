@@ -16,5 +16,7 @@
   "Error saving image: {0}": "Error saving image: {0}",
   "Copy Image": "Copy Image",
   "Download Image": "Download Image",
-  "Code Snippet": "Code Snippet"
+  "Code Snippet": "Code Snippet",
+  "Image copied to clipboard": "Image copied to clipboard",
+  "Error copying image": "Error copying image"
 }
