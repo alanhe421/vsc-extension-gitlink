@@ -67,6 +67,8 @@ This extension provides the following settings:
 
 * `gitlink.rememberRemoteSelection`: Whether to remember the remote selection for the current session. When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time. Default is false.
 
+* `gitlink.useRemoteForCodeImage`: Whether to use remote service for code snippet images. When enabled, the extension will use the remote service - ray.so to create code snippet images. When disabled, the extension will use the local service to create code snippet images. Default is false.
+
 ## Internationalization
 
 GitLink supports multiple languages:
