@@ -270,8 +270,8 @@ export class CodeImagePanel {
                         <select id="language" class="language-select" onchange="updateLanguage()">
                             ${languageOptions}
                         </select>
-                        <button onclick="copyImage()">复制图片</button>
-                        <button onclick="downloadImage()">下载图片</button>
+                        <button onclick="copyImage()">Copy Image</button>
+                        <button onclick="downloadImage()">Download Image</button>
                     </div>
                     <div class="window">
                         <div class="titlebar">
