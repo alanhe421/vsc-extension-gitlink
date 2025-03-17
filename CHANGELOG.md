@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.2...v1.4.0) (2025-03-17)
+
+
+### Features
+
+* add configuration option to use remote service for code snippet images and update localization descriptions ([c857b1a](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/c857b1aa5e975dd3b9537a8e5603368417b7468d))
+* add utility functions for Git repository detection, remote URL extraction, and Git URL construction ([a608127](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/a608127a9f56c0a0fd6ae926ccbbc44a1fd53e96))
+* implement CodeImagePanel for displaying code snippets as images and update activation logic to use it ([76c6b60](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/76c6b602f6178acc3c9b180a1885b893313566e6))
+
+
+### Bug Fixes
+
+* include language parameter in carbon URL for improved code snippet rendering ([2dce06f](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/2dce06f84b79efa9abeb8a13968581c491726c13))
+
 ### [1.3.3](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.2...v1.3.3) (2025-03-16)
 
 
