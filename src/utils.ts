@@ -316,7 +316,7 @@ export async function getGitRootPath(filePath: string): Promise<string | null> {
       ? path.dirname(filePath)
       : filePath;
     console.log('getGitRootPath cwd', cwd);
-    const { stdout } = await utils('git rev-parse --show-toplevel', { cwd });
+    const { stdout } = await execAsync('git rev-parse --show-toplevel', { cwd });
     return stdout.trim();
   } catch (error) {
     console.error('Error getting git root path:', error);
@@ -327,7 +327,7 @@ export async function getGitRootPath(filePath: string): Promise<string | null> {
 // 获取所有远程仓库
 export async function getGitRemotes(gitRootPath: string): Promise<string[]> {
   try {
-    const { stdout } = await utils('git remote', { cwd: gitRootPath });
+    const { stdout } = await execAsync('git remote', { cwd: gitRootPath });
     return stdout.trim().split('\n').filter(remote => remote.length > 0);
   } catch (error) {
     console.error('Error getting git remotes:', error);
@@ -385,7 +385,7 @@ export async function getGitRemoteUrl(gitRootPath: string, sessionState: Session
     }
 
     // 获取选定远程仓库的 URL
-    const { stdout } = await utils(`git remote get-url ${selectedRemote}`, { cwd: gitRootPath });
+    const { stdout } = await execAsync(`git remote get-url ${selectedRemote}`, { cwd: gitRootPath });
     return stdout.trim();
   } catch (error) {
     console.error('Error getting git remote URL:', error);
@@ -396,7 +396,7 @@ export async function getGitRemoteUrl(gitRootPath: string, sessionState: Session
 
 export async function getCurrentBranch(gitRootPath: string): Promise<string | null> {
   try {
-    const { stdout } = await utils('git rev-parse --abbrev-ref HEAD', { cwd: gitRootPath });
+    const { stdout } = await execAsync('git rev-parse --abbrev-ref HEAD', { cwd: gitRootPath });
     return stdout.trim();
   } catch (error) {
     console.error('Error getting current branch:', error);
