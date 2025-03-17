@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.0...v1.4.1) (2025-03-17)
+
+
+### Features
+
+* add html2canvas support for capturing code snippets as images; update resource handling in CodeImagePanel ([dad62c0](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/dad62c0474ce8e6589a2318cde40f398637eddf6))
+* integrate highlight.js for code syntax highlighting and add support for multiple programming languages ([031eb34](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/031eb3476e9fef7f6f3e322ee61891f1911b5e0c))
+* update localization strings for image handling and code snippets in English and Chinese; enhance button labels in CodeImagePanel for better user experience ([ecadcd7](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/ecadcd7840a83dcf1cf9b5bd4c53e35bbe968c11))
+
+
+### Bug Fixes
+
+* update localization strings to English for better clarity and consistency in package.nls.json; change button labels in CodeImagePanel to English ([b591a4f](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/b591a4f11c04de09248d491b1dbbd070f9d0d06e))
+
 ## [1.4.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.3.2...v1.4.0) (2025-03-17)
 
 
