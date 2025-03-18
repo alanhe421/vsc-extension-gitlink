@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { Base64 } from 'js-base64';
 import path from 'path';
 import { promisify } from 'util';
 import vscode from 'vscode';
@@ -435,6 +436,6 @@ export function showMessage(message: string, level: 'info' | 'error' | 'warning'
 
 
 export function getRemoteImageUrl(code: string, language: string) {
-  const base64Content = Buffer.from(code).toString('base64');
+  const base64Content = Base64.encode(code);  // 使用 js-base64 进行编码
   return `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
 }
