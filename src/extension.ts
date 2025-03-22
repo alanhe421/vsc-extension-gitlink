@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { CodeLanguage } from './types/language';
 import { SessionState } from './types/session-state';
-import { detectGitRepository, getCommandSource, getGitUrl, getRemoteImageUrl, showMessage } from './utils';
+import { detectGitRepository, getCommandSource, getGitUrl, getRemoteImageUrl, mapLanguageId, showMessage } from './utils';
 import { CodeImagePanel } from './code-image';
 import path from 'path';
 
@@ -44,7 +44,9 @@ const supportedLanguages: CodeLanguage[] = [
 	{ id: 'swift', name: 'Swift' },
 	{ id: 'typescript', name: 'TypeScript' },
 	{ id: 'vim', name: 'Vim' },
-	{ id: 'yaml', name: 'YAML' }
+	{ id: 'yaml', name: 'YAML' },
+	{ id: 'tsx', name: 'TSX' },
+	{ id: 'jsx', name: 'JSX' },
 ] as const;
 
 // This method is called when your extension is activated

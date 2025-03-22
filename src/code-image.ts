@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { CodeLanguage } from './types/language';
-import { getRemoteImageUrl, showMessage } from './utils';
+import { getRemoteImageUrl, mapLanguageId, showMessage } from './utils';
 
 const readHtml = async (htmlPath: string, panel: vscode.WebviewPanel) =>
     (fs.readFileSync(htmlPath, {
@@ -167,7 +167,7 @@ export class CodeImagePanel {
             fileName: string;
         }
     ) {
-        this._panel.webview.html = await this._getHtmlContent(code, language, options);
+        this._panel.webview.html = await this._getHtmlContent(code, mapLanguageId(language), options);
     }
 
     private async _getHtmlContent(

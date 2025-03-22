@@ -437,5 +437,15 @@ export function showMessage(message: string, level: 'info' | 'error' | 'warning'
 
 export function getRemoteImageUrl(code: string, language: string) {
   const base64Content = Base64.encode(code);  // 使用 js-base64 进行编码
-  return `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${language}`;
+  return `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${mapLanguageId(language)}`;
+}
+
+
+// 添加语言标识符映射函数
+export function mapLanguageId(languageId: string): string {
+  const languageMap: Record<string, string> = {
+    'typescriptreact': 'tsx',
+    'javascriptreact': 'jsx',
+  };
+  return languageMap[languageId] || languageId;
 }
