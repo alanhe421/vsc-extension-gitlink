@@ -225,27 +225,29 @@
             </div>
             <div class="content">
                 <div id="editor">
-                    <pre><code class="language-%LANGUAGE%">%CODE%</code></pre>
+                    <pre><code class="language-%LANGUAGE%"></code></pre>
                 </div>
             </div>
         </div>
+        <template id="code-content">%CODE%</template>
     </div>
     <script>
         const vscode = acquireVsCodeApi();
         const editor = document.getElementById('editor');
         const languageSelect = document.getElementById('language');
+        const codeTemplate = document.getElementById('code-content');
         const codeElement = editor.querySelector('code');
-
         // 设置初始语言
         languageSelect.value = '%DEFAULT_LANGUAGE%';
-        codeElement.className = 'language-%DEFAULT_LANGUAGE%';
-        hljs.highlightElement(codeElement);
+        updateLanguage();
 
         // 更新语言
         function updateLanguage() {
             const newLanguage = languageSelect.value;
             codeElement.className = 'language-' + newLanguage;
-            hljs.highlightElement(codeElement);
+            codeElement.innerHTML = hljs.highlight(codeTemplate.innerHTML,{
+                language: newLanguage,
+            }).value;
         }
 
         // 生成图片时需要包含整个窗口
