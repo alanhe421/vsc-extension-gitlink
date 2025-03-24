@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.8](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.7...v1.4.8) (2025-03-24)
+
+
+### Features
+
+* update code highlighting mechanism in webview to use template for code content and improve language selection handling ([8dd651a](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/8dd651a115b6b26f3874e514c4d74b636a06625c))
+
 ### [1.4.7](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.6...v1.4.7) (2025-03-22)
 
 
