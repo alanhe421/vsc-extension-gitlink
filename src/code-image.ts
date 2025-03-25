@@ -200,7 +200,7 @@ export class CodeImagePanel {
             .replace(/%LANGUAGE_OPTIONS%/g, languageOptions)
             .replace(/%LANGUAGE%/g, language)
             .replace(/%DEFAULT_LANGUAGE%/g, defaultLanguage)
-            .replace(/%CODE%/g, this._escapeHtml(code))
+            .replace(/%CODE%/g, code)
             .replace(/%COPY_IMAGE_TEXT%/g, vscode.l10n.t('Copy Image'))
             .replace(/%DOWNLOAD_IMAGE_TEXT%/g, vscode.l10n.t('Download Image'))
             .replace(/%CODE_SNIPPET_TEXT%/g, options.fileName)
@@ -210,16 +210,6 @@ export class CodeImagePanel {
             .replace(/%OPEN_REMOTE_IMAGE_TEXT%/g, vscode.l10n.t('Open in Ray.so'));
 
         return htmlTemplate;
-    }
-
-    // 转义 HTML 特殊字符
-    private _escapeHtml(text: string): string {
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
     }
 
     public dispose() {
