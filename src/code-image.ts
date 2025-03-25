@@ -195,6 +195,8 @@ export class CodeImagePanel {
             this._panel
         );
 
+        const baseUrl = this._panel.webview.asWebviewUri(vscode.Uri.file(path.resolve(this._extensionContext.extensionPath))).toString();
+
         // 替换占位符
         htmlTemplate = htmlTemplate
             .replace(/%LANGUAGE_OPTIONS%/g, languageOptions)
@@ -207,6 +209,7 @@ export class CodeImagePanel {
             .replace(/%COPIED_TEXT%/g, vscode.l10n.t('Image copied to clipboard'))
             .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'))
             .replace(/%REMOTE_IMAGE_URL%/g, options.remoteImageUrl)
+            .replace(/%BASE_URL%/g, baseUrl)
             .replace(/%OPEN_REMOTE_IMAGE_TEXT%/g, vscode.l10n.t('Open in Ray.so'));
 
         return htmlTemplate;

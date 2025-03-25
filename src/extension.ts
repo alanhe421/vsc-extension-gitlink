@@ -1,53 +1,29 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import fs from 'fs';
+import path from 'path';
 import * as vscode from 'vscode';
+import { CodeImagePanel } from './code-image';
 import { CodeLanguage } from './types/language';
 import { SessionState } from './types/session-state';
-import { detectGitRepository, getCommandSource, getGitUrl, getRemoteImageUrl, mapLanguageId, showMessage } from './utils';
-import { CodeImagePanel } from './code-image';
-import path from 'path';
+import { detectGitRepository, getCommandSource, getGitUrl, getRemoteImageUrl, showMessage } from './utils';
 
-// 支持的语言列表
-const supportedLanguages: CodeLanguage[] = [
-	{ id: 'text', name: 'Plain Text' },
-	{ id: 'apache', name: 'Apache' },
-	{ id: 'bash', name: 'Bash' },
-	{ id: 'c', name: 'C' },
-	{ id: 'cpp', name: 'C++' },
-	{ id: 'csharp', name: 'C#' },
-	{ id: 'css', name: 'CSS' },
-	{ id: 'diff', name: 'Diff' },
-	{ id: 'docker', name: 'Docker' },
-	{ id: 'go', name: 'Go' },
-	{ id: 'graphql', name: 'GraphQL' },
-	{ id: 'hcl', name: 'HCL' },
-	{ id: 'html', name: 'HTML' },
-	{ id: 'java', name: 'Java' },
-	{ id: 'javascript', name: 'JavaScript' },
-	{ id: 'json', name: 'JSON' },
-	{ id: 'kotlin', name: 'Kotlin' },
-	{ id: 'less', name: 'Less' },
-	{ id: 'lua', name: 'Lua' },
-	{ id: 'makefile', name: 'Makefile' },
-	{ id: 'markdown', name: 'Markdown' },
-	{ id: 'nginx', name: 'Nginx' },
-	{ id: 'objectivec', name: 'Objective-C' },
-	{ id: 'perl', name: 'Perl' },
-	{ id: 'php', name: 'PHP' },
-	{ id: 'python', name: 'Python' },
-	{ id: 'r', name: 'R' },
-	{ id: 'ruby', name: 'Ruby' },
-	{ id: 'rust', name: 'Rust' },
-	{ id: 'scala', name: 'Scala' },
-	{ id: 'scss', name: 'SCSS' },
-	{ id: 'sql', name: 'SQL' },
-	{ id: 'swift', name: 'Swift' },
-	{ id: 'typescript', name: 'TypeScript' },
-	{ id: 'vim', name: 'Vim' },
-	{ id: 'yaml', name: 'YAML' },
-	{ id: 'tsx', name: 'TSX' },
-	{ id: 'jsx', name: 'JSX' },
-] as const;
+function getHighlightLanguages(extensionPath: string): CodeLanguage[] {
+	const languagesPath = path.join(extensionPath, 'node_modules', '@highlightjs/cdn-assets', 'languages');
+	const files = fs.readdirSync(languagesPath);
+	
+	return files
+		.filter(file => file.endsWith('.min.js'))
+		.map(file => {
+			const id = file.replace('.min.js', '');
+			// 将 id 转换为更友好的显示名称
+			const name = id
+				.split('-')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+				.join(' ');
+			return { id, name };
+		});
+}
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -58,6 +34,8 @@ export function activate(context: vscode.ExtensionContext) {
 	const sessionState = new SessionState();
 	// 在扩展激活时检测项目
 	detectGitRepository();
+
+	const supportedLanguages = getHighlightLanguages(context.extensionPath);
 
 	// Register the "Open in GitHub" command
 	const openInGitHubDisposable = vscode.commands.registerCommand('gitlink.openInGitHub', async (uri?: vscode.Uri, allUris?: vscode.Uri[]) => {

@@ -8,9 +8,9 @@
     <script src="node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
     <script src="node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js"></script>
     <script>
-        // 初始化 highlight.js
-        hljs.highlightAll();
-        hljs.initLineNumbersOnLoad();
+      // 初始化 highlight.js
+      hljs.highlightAll();
+      hljs.initLineNumbersOnLoad();
     </script>
     <style>
         body {
@@ -20,22 +20,26 @@
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
+
         .toolbar {
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
             justify-content: flex-end;
         }
+
         .window {
             background: #2d2d2d;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 20px 68px rgba(0, 0, 0, 0.55);
         }
+
         .titlebar {
             background: #1a1a1a;
             height: 40px;
@@ -45,11 +49,13 @@
             -webkit-app-region: drag;
             user-select: none;
         }
+
         .window-controls {
             display: flex;
             gap: 8px;
             margin-right: 8px;
         }
+
         .window-control {
             width: 12px;
             height: 12px;
@@ -58,25 +64,32 @@
             padding: 0;
             margin: 0;
         }
+
         .window-control.close {
             background: #ff5f56;
         }
+
         .window-control.minimize {
             background: #ffbd2e;
         }
+
         .window-control.maximize {
             background: #27c93f;
         }
+
         .window-title {
             color: #808080;
             font-size: 14px;
             flex-grow: 1;
             text-align: center;
-            margin-left: -52px; /* 补偿窗口控制按钮的宽度，使标题居中 */
+            margin-left: -52px;
+            /* 补偿窗口控制按钮的宽度，使标题居中 */
         }
+
         .content {
             padding: 20px;
         }
+
         button {
             padding: 8px 16px;
             border: none;
@@ -86,9 +99,11 @@
             cursor: pointer;
             font-size: 14px;
         }
+
         button:hover {
             background: #2c974b;
         }
+
         .language-select {
             padding: 8px;
             border-radius: 4px;
@@ -96,21 +111,24 @@
             color: white;
             border: 1px solid #404040;
         }
+
         /* 下拉菜单样式 */
         .dropdown {
             position: relative;
             display: inline-block;
         }
+
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
             background-color: #2d2d2d;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
             border-radius: 4px;
         }
+
         .dropdown-content div {
             color: white;
             padding: 12px 16px;
@@ -119,12 +137,15 @@
             font-size: 14px;
             cursor: pointer;
         }
+
         .dropdown-content div:hover {
             background-color: #404040;
         }
+
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
         #editor {
             background: #2d2d2d;
             padding: 20px;
@@ -134,20 +155,25 @@
             width: fit-content;
             overflow: visible;
         }
+
         #editor pre {
             margin: 0;
             width: fit-content;
             overflow: visible;
         }
+
         #editor code {
             font-family: 'Fira Code', 'Consolas', monospace;
             font-size: 14px;
             line-height: 1.5;
-            white-space: pre-wrap;       /* 允许文本换行 */
-            word-wrap: break-word;       /* 在单词内部换行 */
+            white-space: pre-wrap;
+            /* 允许文本换行 */
+            word-wrap: break-word;
+            /* 在单词内部换行 */
             width: fit-content;
             display: block;
         }
+
         /* 调整 highlight.js 的样式 */
         .hljs {
             background: transparent !important;
@@ -184,11 +210,13 @@
         pre > code .hljs-ln-code {
             padding-left: 10px;
         }
+
         .dropdown button {
             display: flex;
             align-items: center;
             gap: 6px;
         }
+
         .dropdown-icon {
             width: 0;
             height: 0;
@@ -199,124 +227,143 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="toolbar">
-            <select id="language" class="language-select" onchange="updateLanguage()">
-                %LANGUAGE_OPTIONS%
-            </select>
-            <div class="dropdown">
-                <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
-                <div class="dropdown-content">
-                    <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
-                    <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
-                    <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
-                </div>
+<div class="container">
+    <div class="toolbar">
+        <select id="language" class="language-select" onchange="updateLanguage()">
+            %LANGUAGE_OPTIONS%
+        </select>
+        <div class="dropdown">
+            <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
+            <div class="dropdown-content">
+                <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
+                <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
+                <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
             </div>
         </div>
-        <div class="window">
-            <div class="titlebar">
-                <div class="window-controls">
-                    <div class="window-control close"></div>
-                    <div class="window-control minimize"></div>
-                    <div class="window-control maximize"></div>
-                </div>
-                <div class="window-title">%CODE_SNIPPET_TEXT%</div>
-            </div>
-            <div class="content">
-                <div id="editor">
-                    <pre><code class="language-%LANGUAGE%"></code></pre>
-                </div>
-            </div>
-        </div>
-        <template id="code-content">%CODE%</template>
     </div>
-    <script>
-        const vscode = acquireVsCodeApi();
-        const editor = document.getElementById('editor');
-        const languageSelect = document.getElementById('language');
-        const codeTemplate = document.getElementById('code-content');
-        const codeElement = editor.querySelector('code');
-        // 设置初始语言
-        languageSelect.value = '%DEFAULT_LANGUAGE%';
-        updateLanguage();
+    <div class="window">
+        <div class="titlebar">
+            <div class="window-controls">
+                <div class="window-control close"></div>
+                <div class="window-control minimize"></div>
+                <div class="window-control maximize"></div>
+            </div>
+            <div class="window-title">%CODE_SNIPPET_TEXT%</div>
+        </div>
+        <div class="content">
+            <div id="editor">
+                <pre><code class="language-%LANGUAGE%"></code></pre>
+            </div>
+        </div>
+    </div>
+    <template id="code-content">%CODE%</template>
+</div>
+<script>
+  const vscode = acquireVsCodeApi();
+  const editor = document.getElementById('editor');
+  const languageSelect = document.getElementById('language');
+  const codeTemplate = document.getElementById('code-content');
+  const codeElement = editor.querySelector('code');
+  // 设置初始语言
+  languageSelect.value = '%DEFAULT_LANGUAGE%';
+  updateLanguage();
 
-        // 更新语言
-        function updateLanguage() {
-            const newLanguage = languageSelect.value;
-            codeElement.className = 'language-' + newLanguage;
-            codeElement.innerHTML = hljs.highlight(codeTemplate.innerHTML,{
-                language: newLanguage,
-            }).value;
+  // 更新语言
+  async function updateLanguage() {
+    const newLanguage = languageSelect.value;
+
+    const applyHigh = () => {
+      codeElement.className = 'language-' + newLanguage;
+      codeElement.innerHTML = hljs.highlight(codeTemplate.innerHTML, {
+        language: newLanguage,
+      }).value;
+    };
+
+    // 如果语言未注册，动态导入
+    if (!hljs.getLanguage(newLanguage)) {
+      try {
+        const module = await import(`%BASE_URL%/node_modules/@highlightjs/cdn-assets/es/languages/${newLanguage}.min.js`);
+        hljs.registerLanguage(newLanguage, module.default);
+        applyHigh();
+      } catch (error) {
+        console.error(`Failed to load language: ${newLanguage}`, error);
+        return;
+      }
+    } else {
+      applyHigh();
+    }
+  }
+
+  // 生成图片时需要包含整个窗口
+  async function generateImage() {
+    try {
+      console.log('Generating image...');
+      console.log('domtoimage available:', typeof domtoimage);
+
+      const windowElement = document.querySelector('.window');
+
+      // 直接生成图片，不修改任何样式
+      const dataBlob = await domtoimage.toBlob(windowElement);
+      const dataUrl = await domtoimage.toPng(windowElement);
+
+      return {dataBlob, dataUrl};
+    } catch (error) {
+      console.error('Error generating image:', error);
+      vscode.postMessage({
+        command: 'error',
+        text: 'Error generating image'
+      });
+      return null;
+    }
+  }
+
+  // 复制图片到剪贴板
+  async function copyImage() {
+    const result = await generateImage();
+    if (result) {
+      try {
+        const blob = await new Promise(resolve => resolve(result.dataBlob));
+        if (blob) {
+          await navigator.clipboard.write([
+            new ClipboardItem({'image/png': blob})
+          ]);
+          vscode.postMessage({
+            command: 'info',
+            text: '%COPIED_TEXT%'
+          });
         }
+      } catch (error) {
+        vscode.postMessage({
+          command: 'error',
+          text: '%COPY_ERROR_TEXT%'
+        });
+      }
+    }
+  }
 
-        // 生成图片时需要包含整个窗口
-        async function generateImage() {
-            try {
-                console.log('Generating image...');
-                console.log('domtoimage available:', typeof domtoimage);
+  // 下载图片
+  async function downloadImage() {
+    const result = await generateImage();
+    if (result) {
+      vscode.postMessage({
+        command: 'downloadImage',
+        data: result.dataUrl
+      });
+    }
+  }
 
-                const windowElement = document.querySelector('.window');
-                
-                // 直接生成图片，不修改任何样式
-                const dataBlob = await domtoimage.toBlob(windowElement);
-                const dataUrl = await domtoimage.toPng(windowElement);
-
-                return { dataBlob, dataUrl };
-            } catch (error) {
-                console.error('Error generating image:', error);
-                vscode.postMessage({
-                    command: 'error',
-                    text: 'Error generating image'
-                });
-                return null;
-            }
-        }
-
-        // 复制图片到剪贴板
-        async function copyImage() {
-            const result = await generateImage();
-            if (result) {
-                try {
-                    const blob = await new Promise(resolve => resolve(result.dataBlob));
-                    if (blob) {
-                        await navigator.clipboard.write([
-                            new ClipboardItem({ 'image/png': blob })
-                        ]);
-                        vscode.postMessage({
-                            command: 'info',
-                            text: '%COPIED_TEXT%'
-                        });
-                    }
-                } catch (error) {
-                    vscode.postMessage({
-                        command: 'error',
-                        text: '%COPY_ERROR_TEXT%'
-                    });
-                }
-            }
-        }
-
-        // 下载图片
-        async function downloadImage() {
-            const result = await generateImage();
-            if (result) {
-                vscode.postMessage({
-                    command: 'downloadImage',
-                    data: result.dataUrl
-                });
-            }
-        }
-
-        // 打开远程图片
-        function openRemoteImage(event) {
-            const remoteImageUrl = '%REMOTE_IMAGE_URL%';
-            // 发送消息到扩展主代码
-            vscode.postMessage({
-                command: 'openExternal',
-                url: remoteImageUrl
-            });
-        }
-    </script>
+  // 打开远程图片
+  function openRemoteImage(event) {
+    const remoteImageUrl = '%REMOTE_IMAGE_URL%';
+    // 发送消息到扩展主代码
+    vscode.postMessage({
+      command: 'openExternal',
+      url: remoteImageUrl
+    });
+  }
+</script>
 </body>
+
 </html>
