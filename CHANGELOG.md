@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.10](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.9...v1.4.10) (2025-03-25)
+
+
+### Features
+
+* add shellscript mapping to language ID for improved code highlighting ([492fa20](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/492fa201447944c86386ce3945b6f4ce202a10c0))
+* enhance code highlighting in webview by dynamically loading languages and improving image generation functionality ([558883d](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/558883dcc5d48844d6152760b5978d2421b14b3f))
+
 ### [1.4.9](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.8...v1.4.9) (2025-03-25)
 
 ### [1.4.8](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.7...v1.4.8) (2025-03-24)

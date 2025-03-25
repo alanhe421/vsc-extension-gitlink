@@ -2,7 +2,7 @@
   "name": "cn-alanhe-gitlink",
   "displayName": "Beautiful GitLink",
   "description": "A VCS extension that opens a local file under Git version control in its remote host using the default browser.",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "icon": "resources/gitlink.png",
   "publisher": "alanhe",
   "l10n": "./l10n",
