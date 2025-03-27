@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.11](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.10...v1.4.11) (2025-03-27)
+
+
+### Bug Fixes
+
+* update default language to 'plaintext' and improve language ID mapping for better compatibility ([4ef2b89](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/4ef2b892a91fb3ac0094295947b43b23db9e8825))
+
 ### [1.4.10](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.9...v1.4.10) (2025-03-25)
 
 
