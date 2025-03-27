@@ -183,7 +183,7 @@ export class CodeImagePanel {
 
         // 检查语言是否在支持列表中，如果不在则使用 text
         const isLanguageSupported = languages.some(lang => lang.id === language);
-        const defaultLanguage = isLanguageSupported ? language : 'text';
+        const defaultLanguage = isLanguageSupported ? language : 'plaintext';
         const allLanguages = languages;
         const languageOptions = allLanguages
             .map(lang => `<option value="${lang.id}"${lang.id === defaultLanguage ? ' selected' : ''}">${lang.name}</option>`)

@@ -441,11 +441,14 @@ export function getRemoteImageUrl(code: string, language: string) {
 }
 
 
-// 添加语言标识符映射函数，VSC中针对部分语言的ID在high中无法识别，因此这里做了映射
+/**
+ * @see https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md
+ * 添加语言标识符映射函数，VSC中针对部分语言的ID在high中无法识别，因此这里做了映射
+ */
 export function mapLanguageId(languageId: string): string {
   const languageMap: Record<string, string> = {
-    'typescriptreact': 'tsx',
-    'javascriptreact': 'jsx',
+    'typescriptreact': 'typescript',
+    'javascriptreact': 'javascript',
     'shellscript': 'bash',
   };
   return languageMap[languageId] || languageId;

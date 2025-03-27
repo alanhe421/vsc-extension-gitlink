@@ -189,6 +189,7 @@ export function activate(context: vscode.ExtensionContext) {
 						
 						const codeContent = activeEditor.document.getText(selection);
 						const language = activeEditor.document.languageId;
+						console.log('current file\'s language is', language);
 						const fileName = path.basename(activeEditor.document.fileName);
 						const remoteImageUrl = getRemoteImageUrl(codeContent, language);
 						function openRemoteImage() {
