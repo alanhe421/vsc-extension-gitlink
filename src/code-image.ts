@@ -202,7 +202,7 @@ export class CodeImagePanel {
             .replace(/%LANGUAGE_OPTIONS%/g, languageOptions)
             .replace(/%LANGUAGE%/g, language)
             .replace(/%DEFAULT_LANGUAGE%/g, defaultLanguage)
-            .replace(/%CODE%/g, code)
+            .replace(/%CODE%/g, encodeURIComponent(code))
             .replace(/%COPY_IMAGE_TEXT%/g, vscode.l10n.t('Copy Image'))
             .replace(/%DOWNLOAD_IMAGE_TEXT%/g, vscode.l10n.t('Download Image'))
             .replace(/%CODE_SNIPPET_TEXT%/g, options.fileName)

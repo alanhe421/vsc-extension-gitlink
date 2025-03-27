@@ -258,13 +258,12 @@
             </div>
         </div>
     </div>
-    <template id="code-content">%CODE%</template>
 </div>
 <script>
   const vscode = acquireVsCodeApi();
   const editor = document.getElementById('editor');
   const languageSelect = document.getElementById('language');
-  const codeTemplate = document.getElementById('code-content');
+  const codeSnippet = decodeURIComponent`%CODE%`;
   const codeElement = editor.querySelector('code');
   // 设置初始语言
   languageSelect.value = '%DEFAULT_LANGUAGE%';
@@ -276,7 +275,7 @@
 
     const applyHigh = () => {
       codeElement.className = 'language-' + newLanguage;
-      codeElement.innerHTML = hljs.highlight(codeTemplate.innerHTML, {
+      codeElement.innerHTML = hljs.highlight(codeSnippet, {
         language: newLanguage,
       }).value;
     };
