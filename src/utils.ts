@@ -450,6 +450,7 @@ export function mapLanguageId(languageId: string): string {
     'typescriptreact': 'typescript',
     'javascriptreact': 'javascript',
     'shellscript': 'bash',
+    'jsonc': 'json',
   };
   return languageMap[languageId] || languageId;
 }

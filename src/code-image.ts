@@ -186,8 +186,12 @@ export class CodeImagePanel {
         const defaultLanguage = isLanguageSupported ? language : 'plaintext';
         const allLanguages = languages;
         const languageOptions = allLanguages
-            .map(lang => `<option value="${lang.id}"${lang.id === defaultLanguage ? ' selected' : ''}">${lang.name}</option>`)
-            .join('\n');
+            .map((lang) => ({
+                id: lang.id,
+                label: lang.name,
+                value: lang.id,
+                selected: lang.id === defaultLanguage
+            }))
 
         // 读取HTML模板
         let htmlTemplate = await readHtml(
@@ -199,7 +203,7 @@ export class CodeImagePanel {
 
         // 替换占位符
         htmlTemplate = htmlTemplate
-            .replace(/%LANGUAGE_OPTIONS%/g, languageOptions)
+            .replace(/%LANGUAGE_OPTIONS%/g, JSON.stringify(languageOptions))
             .replace(/%LANGUAGE%/g, language)
             .replace(/%DEFAULT_LANGUAGE%/g, defaultLanguage)
             .replace(/%CODE%/g, encodeURIComponent(code))

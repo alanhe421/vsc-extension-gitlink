@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="node_modules/@highlightjs/cdn-assets/styles/github-dark.min.css">
+    <link
+    rel="stylesheet"
+    href="node_modules/choices.js/public/assets/styles/choices.min.css"
+  />
     <script src="node_modules/dom-to-image-even-more/dist/dom-to-image-more.min.js"></script>
     <script src="node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
     <script src="node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js"></script>
+    <script src="node_modules/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
       // 初始化 highlight.js
       hljs.highlightAll();
@@ -24,13 +29,20 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .toolbar {
             margin-bottom: 20px;
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+            gap: 15px;
+            align-items: center;
+            justify-content: end;
+        }
+
+        .toolbar .choices {
+            flex: 0 0 auto;
         }
 
         .window {
@@ -84,6 +96,91 @@
             text-align: center;
             margin-left: -52px;
             /* 补偿窗口控制按钮的宽度，使标题居中 */
+        }
+
+        /* Choices.js 自定义样式 */
+        .choices {
+            margin-bottom: 0;
+            min-width: 150px;
+        }
+
+        .choices[data-type*=select-one] .choices__input{
+          background-color: #1a1a1a;
+          color: #fff;
+        }
+
+        .choices__inner {
+            background-color: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            min-height: 24px;
+            padding: 4px 8px;
+        }
+
+        .choices__list--dropdown {
+            background-color: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            margin-top: 4px;
+            width: 100%;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 999;
+        }
+
+        .choices__list--dropdown .choices__item--selectable[data-select-text], .choices__list[aria-expanded] .choices__item--selectable[data-select-text]{
+          padding-right: 1px;
+        }
+
+        .choices__list--dropdown .choices__item {
+            color: #fff;
+            padding: 8px 12px;
+            background-color: #1a1a1a;
+        }
+
+        .choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted{
+          background-color: #2d2d2d;
+        }
+
+        .choices__list--dropdown .choices__list {
+            background-color: #1a1a1a;
+        }
+
+        .choices.is-open .choices__inner {
+            border-radius: 4px;
+        }
+
+        .choices__list--dropdown.is-active {
+            border-color: #404040;
+        }
+
+        .choices__list--single {
+            padding: 2px 16px 2px 4px;
+        }
+
+        .choices__input {
+            background-color: transparent;
+            color: #fff;
+            margin: 0;
+        }
+
+        .choices[data-type*="select-one"]:after {
+            border-color: #fff transparent transparent;
+            right: 12px;
+        }
+
+        .choices[data-type*="select-one"].is-open:after {
+            border-color: transparent transparent #fff;
+        }
+
+        .choices__list--dropdown .choices__item--selectable:after {
+            display: none;
+        }
+
+        .choices__placeholder {
+            color: #808080;
+            opacity: 1;
         }
 
         .content {
@@ -231,8 +328,7 @@
 <body>
 <div class="container">
     <div class="toolbar">
-        <select id="language" class="language-select" onchange="updateLanguage()">
-            %LANGUAGE_OPTIONS%
+        <select id="language" class="language-select" >
         </select>
         <div class="dropdown">
             <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
@@ -263,6 +359,17 @@
   const vscode = acquireVsCodeApi();
   const editor = document.getElementById('editor');
   const languageSelect = document.getElementById('language');
+
+  new Choices(languageSelect, {
+    silent:false,
+    removeItemButton: false,
+    choices: JSON.parse('%LANGUAGE_OPTIONS%')
+  });
+
+  languageSelect.addEventListener('change', () => {
+    updateLanguage();
+  });
+
   const codeSnippet = decodeURIComponent`%CODE%`;
   const codeElement = editor.querySelector('code');
   // 设置初始语言
