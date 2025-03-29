@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.13](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.12...v1.4.13) (2025-03-29)
+
+
+### Features
+
+* integrate Choices.js for enhanced language selection in webview and update styles ([066b775](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/066b775a6d9e6cf9badd7e96ac9351bf20e6d593))
+
 ### [1.4.12](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.11...v1.4.12) (2025-03-27)
 
 
