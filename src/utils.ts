@@ -451,6 +451,7 @@ export function mapLanguageId(languageId: string): string {
     'javascriptreact': 'javascript',
     'shellscript': 'bash',
     'jsonc': 'json',
+    'html': 'xml',
   };
   return languageMap[languageId] || languageId;
 }
