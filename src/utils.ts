@@ -8,6 +8,8 @@ import { DomainMapping, DomainResult, Platform } from './types/types';
 
 export const execAsync = promisify(exec);
 
+Base64.extendString();
+
 // 检测项目是否为 Git 仓库，并检查是否有匹配的平台
 export async function detectGitRepository() {
   console.log('detectGitRepository start');
@@ -436,8 +438,8 @@ export function showMessage(message: string, level: 'info' | 'error' | 'warning'
 
 
 export function getRemoteImageUrl(code: string, language: string) {
-  const base64Content = Base64.encode(code);  // 使用 js-base64 进行编码
-  const encodedContent = encodeURIComponent(base64Content); // URL 编码
+  // @ts-ignore
+  const encodedContent = code.toBase64URI(); // URL 编码
   return `https://ray.so/#theme=candy&background=white&padding=128&code=${encodedContent}&language=${mapLanguageId(language)}`;
 }
 
