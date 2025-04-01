@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.15...v1.5.0) (2025-04-01)
+
+
+### Features
+
+* add drawing functionality with pen tool and update localization strings ([#7](https://github.com/alanhe421/vsc-extension-gitlink-issues/issues/7)) ([acab4cc](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/acab4cc593bebaca92f55d99cf6584d6e37cdeb2))
+
 ### [1.4.15](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.14...v1.4.15) (2025-04-01)
 
 
