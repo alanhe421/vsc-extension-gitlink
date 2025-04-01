@@ -185,6 +185,7 @@
 
         .content {
             padding: 20px;
+            position: relative;
         }
 
         button {
@@ -257,6 +258,7 @@
             margin: 0;
             width: fit-content;
             overflow: visible;
+            position: relative;
         }
 
         #editor code {
@@ -322,6 +324,75 @@
             border-top: 5px solid white;
             margin-left: 4px;
         }
+
+        /* 修改画笔按钮样式 */
+        #penButton {
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid transparent;
+        }
+        
+        #penButton.active {
+            background: #404040;
+            border-color: #2ea043;
+        }
+        
+        #penButton svg {
+            transition: color 0.2s;
+        }
+        
+        #penButton.active svg {
+            color: #2ea043;
+        }
+        
+        /* 添加一个小提示 */
+        #penButton::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d2d2d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        
+        #penButton:hover::after {
+            opacity: 1;
+        }
+        
+        #drawingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        #drawingCanvas.drawing-mode {
+            pointer-events: auto;
+        }
+        
+        body.drawing {
+            cursor: crosshair;
+        }
+
+        /* 添加禁用文本选择的样式 */
+        .drawing #editor pre,
+        .drawing #editor code {
+            user-select: none;
+            -webkit-user-select: none;
+        }
     </style>
 </head>
 
@@ -338,6 +409,11 @@
                 <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
             </div>
         </div>
+        <button id="penButton" data-tooltip="%ENABLE_PEN_TEXT%">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34l-3.75-3.75-2.53 2.54 3.75 3.75 2.53-2.54z" fill="currentColor"/>
+            </svg>
+        </button>
     </div>
     <div class="window">
         <div class="titlebar">
@@ -349,8 +425,11 @@
             <div class="window-title">%CODE_SNIPPET_TEXT%</div>
         </div>
         <div class="content">
+            <canvas id="drawingCanvas"></canvas>
             <div id="editor">
-                <pre><code class="language-%LANGUAGE%"></code></pre>
+                <pre>
+                    <code class="language-%LANGUAGE%"></code>
+                </pre>
             </div>
         </div>
     </div>
@@ -400,6 +479,9 @@
     } else {
       applyHigh();
     }
+
+    // 在高亮完成后重新调整 canvas 大小
+    setTimeout(resizeCanvas, 0);
   }
 
   // 生成图片时需要包含整个窗口
@@ -469,6 +551,141 @@
       url: remoteImageUrl
     });
   }
+
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+  const penButton = document.getElementById('penButton');
+  let isDrawing = false;
+  let isDrawingMode = false;
+  
+  // 添加上一个点的位置记录
+  let lastX = 0;
+  let lastY = 0;
+  
+  // 设置画布大小
+  function resizeCanvas() {
+      const contentElement = document.querySelector('.content');
+      const rect = contentElement.getBoundingClientRect();
+      
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+  }
+  
+  // 初始化画布
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  // 修改 togglePen 函数
+  function togglePen() {
+      isDrawingMode = !isDrawingMode;
+      penButton.classList.toggle('active');
+      document.body.classList.toggle('drawing');
+      canvas.classList.toggle('drawing-mode');
+      
+      // 更新提示文本
+      penButton.setAttribute(
+          'data-tooltip', 
+          isDrawingMode ? '%DISABLE_PEN_TEXT%' : '%ENABLE_PEN_TEXT%'
+      );
+      
+      // 如果关闭画笔模式，清除当前的绘制状态
+      if (!isDrawingMode) {
+          isDrawing = false;
+      }
+  }
+  
+  // 修改绘制相关的代码
+  function startDrawing(e) {
+      if (!isDrawingMode) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // 检查是否在有效范围内
+      if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+          return;
+      }
+      
+      isDrawing = true;
+      
+      // 记录起始点
+      lastX = x;
+      lastY = y;
+      
+      // 设置画笔样式
+      ctx.strokeStyle = '#ff0000';
+      ctx.lineWidth = 2;  // 稍微细一点的线条
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      
+      // 开始新的路径
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+  }
+  
+  function draw(e) {
+      if (!isDrawing || !isDrawingMode) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // 检查是否在有效范围内
+      if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+          stopDrawing();
+          return;
+      }
+      
+      // 直接连接到当前点
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      
+      // 更新最后的位置
+      lastX = x;
+      lastY = y;
+  }
+  
+  // 添加快捷键支持
+  document.addEventListener('keydown', (e) => {
+      // 按 Escape 键退出画笔模式
+      if (e.key === 'Escape' && isDrawingMode) {
+          togglePen();
+      }
+  });
+  
+  // 添加点击其他按钮时自动关闭画笔模式
+  document.querySelector('.dropdown').addEventListener('click', () => {
+      if (isDrawingMode) {
+          togglePen();
+      }
+  });
+  
+  // 事件监听
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseout', stopDrawing);
+  
+  function stopDrawing() {
+      if (isDrawing) {
+          ctx.stroke(); // 确保最后一笔完整
+      }
+      isDrawing = false;
+  }
+
+  function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  
+  // 单击切换画笔
+  penButton.addEventListener('click', togglePen);
+  
+  // 双击清空画布
+  penButton.addEventListener('dblclick', (e) => {
+      e.preventDefault();  // 防止文本选中
+      clearCanvas();
+  });
 </script>
 </body>
 

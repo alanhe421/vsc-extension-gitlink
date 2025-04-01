@@ -18,5 +18,8 @@
   "Download Image": "Download Image",
   "Code Snippet": "Code Snippet",
   "Image copied to clipboard": "Image copied to clipboard",
-  "Error copying image": "Error copying image"
+  "Error copying image": "Error copying image",
+  "Enable Pen": "Enable Pen, DoubleClick to clear",
+  "Disable Pen": "Disable Pen, DoubleClick to clear",
+  "Open in Ray.so": "Open in Ray.so"
 }
