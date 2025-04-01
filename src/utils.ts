@@ -437,7 +437,8 @@ export function showMessage(message: string, level: 'info' | 'error' | 'warning'
 
 export function getRemoteImageUrl(code: string, language: string) {
   const base64Content = Base64.encode(code);  // 使用 js-base64 进行编码
-  return `https://ray.so/#theme=candy&background=white&padding=128&code=${base64Content}&language=${mapLanguageId(language)}`;
+  const encodedContent = encodeURIComponent(base64Content); // URL 编码
+  return `https://ray.so/#theme=candy&background=white&padding=128&code=${encodedContent}&language=${mapLanguageId(language)}`;
 }
 
 
