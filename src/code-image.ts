@@ -214,7 +214,9 @@ export class CodeImagePanel {
             .replace(/%COPY_ERROR_TEXT%/g, vscode.l10n.t('Error copying image'))
             .replace(/%REMOTE_IMAGE_URL%/g, options.remoteImageUrl)
             .replace(/%BASE_URL%/g, baseUrl)
-            .replace(/%OPEN_REMOTE_IMAGE_TEXT%/g, vscode.l10n.t('Open in Ray.so'));
+            .replace(/%OPEN_REMOTE_IMAGE_TEXT%/g, vscode.l10n.t('Open in Ray.so'))
+            .replace(/%ENABLE_PEN_TEXT%/g, vscode.l10n.t('Enable Pen, DoubleClick to clear'))
+            .replace(/%DISABLE_PEN_TEXT%/g, vscode.l10n.t('Disable Pen, DoubleClick to clear'));
 
         return htmlTemplate;
     }
