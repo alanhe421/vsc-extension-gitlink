@@ -27,8 +27,10 @@ A VS Code extension that allows you to open the web version of files in your Git
 - Right-click on a file in the explorer and select "Create GitHub Snippet Image" to open ray.so and create a Code Snippet Image.
 - Support multi-file copy in explorer.
 - Supports both SSH and HTTPS remote URL formats.
-- Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not
-- Supports custom Git hosting platforms and URL templates
+- Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not.
+- Supports custom Git hosting platforms and URL templates.
+- Support pen tool to draw annotations on code snippet images. Double-click to clear drawings.
+
 
 ## Built-in Supported Platforms
 
