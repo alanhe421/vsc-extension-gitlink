@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.15](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.14...v1.4.15) (2025-04-01)
+
+
+### Features
+
+* extend Base64 functionality and simplify remote image URL encoding ([7cc48a6](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/7cc48a60383ec1073adbc38dc8a543f41d6c9b32))
+
+
+### Bug Fixes
+
+* URL encode base64 content for remote image URL generation ([1b834e3](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/1b834e3f74cd410a96912ab587934041b849ad4e))
+
 ### [1.4.14](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.12...v1.4.14) (2025-03-31)
 
 
