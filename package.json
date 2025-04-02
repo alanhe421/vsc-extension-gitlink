@@ -63,55 +63,96 @@
         {
           "command": "gitlink.openInGitHub",
           "group": "gitlink@1",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'default' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.openInGitHub == 'root')"
         },
         {
           "command": "gitlink.copyGitHubLink",
           "group": "gitlink@2",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'default' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubLink == 'root')"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "group": "gitlink@3",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet",
+          "group": "gitlink@4",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownSnippet == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "group": "gitlink@5",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubSnippetImage == 'root'"
         },
         {
           "submenu": "gitlink.submenu.others",
-          "group": "gitlink@4",
-          "when": "!config.gitlink.useCompactMenu"
+          "group": "gitlink@6",
+          "when": "config.gitlink.menuLayout != 'compact'"
         },
         {
           "submenu": "gitlink.submenu.all",
           "group": "gitlink@1",
-          "when": "config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'compact'"
         }
       ],
       "editor/context": [
         {
           "command": "gitlink.openInGitHub",
           "group": "gitlink@1",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'default' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.openInGitHub == 'root')"
         },
         {
           "command": "gitlink.copyGitHubLink",
           "group": "gitlink@2",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'default' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubLink == 'root')"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "group": "gitlink@3",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet",
+          "group": "gitlink@4",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownSnippet == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "group": "gitlink@5",
+          "when": "config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubSnippetImage == 'root'"
         },
         {
           "submenu": "gitlink.submenu.others",
-          "group": "gitlink@4",
-          "when": "!config.gitlink.useCompactMenu"
+          "group": "gitlink@6",
+          "when": "config.gitlink.menuLayout != 'compact'"
         },
         {
           "submenu": "gitlink.submenu.all",
           "group": "gitlink@1",
-          "when": "config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLayout == 'compact'"
         }
       ],
       "gitlink.submenu.others": [
         {
-          "command": "gitlink.copyGitHubMarkdownLink"
+          "command": "gitlink.openInGitHub",
+          "when": "config.gitlink.menuLayout == 'compact' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.openInGitHub == 'submenu')"
         },
         {
-          "command": "gitlink.copyGitHubMarkdownSnippet"
+          "command": "gitlink.copyGitHubLink",
+          "when": "config.gitlink.menuLayout == 'compact' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubLink == 'submenu')"
         },
         {
-          "command": "gitlink.copyGitHubSnippetImage"
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "when": "config.gitlink.menuLayout == 'compact' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownLink == 'submenu')"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet",
+          "when": "config.gitlink.menuLayout == 'compact' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubMarkdownSnippet == 'submenu')"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "when": "config.gitlink.menuLayout == 'compact' || (config.gitlink.menuLayout == 'custom' && config.gitlink.customMenuLayout.copyGitHubSnippetImage == 'submenu')"
         }
       ],
       "gitlink.submenu.all": [
@@ -238,10 +279,19 @@
             }
           }
         },
-        "gitlink.useCompactMenu": {
+        "gitlink.rememberRemoteSelection": {
           "type": "boolean",
           "default": false,
+          "description": "%config.rememberRemoteSelection.description%",
+          "markdownDescription": "%config.rememberRemoteSelection.markdownDescription%"
         },
+        "gitlink.useRemoteForCodeImage": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.useRemoteForCodeImage.description%",
+          "markdownDescription": "%config.useRemoteForCodeImage.markdownDescription%"
+        }
+        ,
         "gitlink.menuLayout": {
           "type": "string",
           "enum": [
@@ -257,21 +307,38 @@
           "default": {
             "openInGitHub": "root",
             "copyGitHubLink": "root",
-            "others": "submenu"
+            "copyGitHubMarkdownLink": "submenu",
+            "copyGitHubMarkdownSnippet": "submenu",
+            "copyGitHubSnippetImage": "submenu"
+          },
+          "properties": {
+            "openInGitHub": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "root"
+            },
+            "copyGitHubLink": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "root"
+            },
+            "copyGitHubMarkdownLink": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu"
+            },
+            "copyGitHubMarkdownSnippet": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu"
+            },
+            "copyGitHubSnippetImage": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu"
+            }
           },
           "when": "config.gitlink.menuLayout == 'custom'"
-        },
-        "gitlink.rememberRemoteSelection": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.rememberRemoteSelection.description%",
-          "markdownDescription": "%config.rememberRemoteSelection.markdownDescription%"
-        },
-        "gitlink.useRemoteForCodeImage": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.useRemoteForCodeImage.description%",
-          "markdownDescription": "%config.useRemoteForCodeImage.markdownDescription%"
         }
       }
     }
