@@ -241,8 +241,25 @@
         "gitlink.useCompactMenu": {
           "type": "boolean",
           "default": false,
-          "description": "%config.useCompactMenu.description%",
-          "markdownDescription": "%config.useCompactMenu.markdownDescription%"
+        },
+        "gitlink.menuLayout": {
+          "type": "string",
+          "enum": [
+            "default",
+            "compact",
+            "custom"
+          ],
+          "default": "default",
+          "description": "菜单显示样式"
+        },
+        "gitlink.customMenuLayout": {
+          "type": "object",
+          "default": {
+            "openInGitHub": "root",
+            "copyGitHubLink": "root",
+            "others": "submenu"
+          },
+          "when": "config.gitlink.menuLayout == 'custom'"
         },
         "gitlink.rememberRemoteSelection": {
           "type": "boolean",
