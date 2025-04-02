@@ -38,5 +38,7 @@
   "Download Image": "下载图片",
   "Code Snippet": "代码片段",
   "Image copied to clipboard": "图片已复制到剪贴板",
-  "Error copying image": "复制图片时出错"
+  "Error copying image": "复制图片时出错",
+  "Enable Pen, DoubleClick to clear": "打开画笔，双击则清除画笔内容",
+  "Disable Pen, DoubleClick to clear": "关闭画笔，双击则清除画笔内容"
 }

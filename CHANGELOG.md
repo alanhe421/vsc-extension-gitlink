@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.5.0...v1.5.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* update repository URLs in package.json for consistency ([f736367](https://github.com/alanhe421/vsc-extension-gitlink/commit/f73636760e7be1f0d3e29bfaadd05024c6ace80f))
+
+## [1.5.0](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.15...v1.5.0) (2025-04-01)
+
+
+### Features
+
+* add drawing functionality with pen tool and update localization strings ([#7](https://github.com/alanhe421/vsc-extension-gitlink-issues/issues/7)) ([acab4cc](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/acab4cc593bebaca92f55d99cf6584d6e37cdeb2))
+
+### [1.4.15](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.14...v1.4.15) (2025-04-01)
+
+
+### Features
+
+* extend Base64 functionality and simplify remote image URL encoding ([7cc48a6](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/7cc48a60383ec1073adbc38dc8a543f41d6c9b32))
+
+
+### Bug Fixes
+
+* URL encode base64 content for remote image URL generation ([1b834e3](https://github.com/alanhe421/vsc-extension-gitlink-issues/commit/1b834e3f74cd410a96912ab587934041b849ad4e))
+
 ### [1.4.14](https://github.com/alanhe421/vsc-extension-gitlink-issues/compare/v1.4.12...v1.4.14) (2025-03-31)
 
 

@@ -16,7 +16,9 @@
   "Error saving image: {0}": "Error saving image: {0}",
   "Copy Image": "Copy Image",
   "Download Image": "Download Image",
-  "Code Snippet": "Code Snippet",
   "Image copied to clipboard": "Image copied to clipboard",
-  "Error copying image": "Error copying image"
+  "Error copying image": "Error copying image",
+  "Open in Ray.so": "Open in Ray.so",
+  "Enable Pen, DoubleClick to clear": "Enable Pen, DoubleClick to clear",
+  "Disable Pen, DoubleClick to clear": "Disable Pen, DoubleClick to clear"
 }

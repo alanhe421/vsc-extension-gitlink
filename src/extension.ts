@@ -127,7 +127,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (source === 'editor') {
 				const activeEditor = vscode.window.activeTextEditor;
 				let { url: gitUrl, fileName: linkText } = gitUrls[0];
-				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
+				if (activeEditor && activeEditor.document.uri.fsPath) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
 					let codeContent = "";
@@ -180,7 +180,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// 只有当命令来源是编辑器时，才添加代码块
 			if (source === 'editor') {
 				const activeEditor = vscode.window.activeTextEditor;
-				if (activeEditor && activeEditor.document.uri.fsPath === uri?.fsPath) {
+				if (activeEditor && activeEditor.document.uri.fsPath) {
 					// 获取选中的代码
 					const selection = activeEditor.selection;
 					if (!selection.isEmpty) {
