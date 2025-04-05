@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="node_modules/@highlightjs/cdn-assets/styles/github-dark.min.css">
-    <link
-    rel="stylesheet"
-    href="node_modules/choices.js/public/assets/styles/choices.min.css"
-  />
+    <link rel="stylesheet" href="node_modules/choices.js/public/assets/styles/choices.min.css" />
     <script src="node_modules/dom-to-image-even-more/dist/dom-to-image-more.min.js"></script>
     <script src="node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
     <script src="node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js"></script>
     <script src="node_modules/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-      // 初始化 highlight.js
-      hljs.highlightAll();
-      hljs.initLineNumbersOnLoad();
-    </script>
+    <script src="node_modules/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
     <style>
         body {
             margin: 0;
             padding: 20px;
+            height: 100vh;
             background-image: linear-gradient(140deg, rgb(207, 47, 152), rgb(106, 61, 236));
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -104,9 +99,9 @@
             min-width: 150px;
         }
 
-        .choices[data-type*=select-one] .choices__input{
-          background-color: #1a1a1a;
-          color: #fff;
+        .choices[data-type*=select-one] .choices__input {
+            background-color: #1a1a1a;
+            color: #fff;
         }
 
         .choices__inner {
@@ -129,8 +124,9 @@
             z-index: 999;
         }
 
-        .choices__list--dropdown .choices__item--selectable[data-select-text], .choices__list[aria-expanded] .choices__item--selectable[data-select-text]{
-          padding-right: 1px;
+        .choices__list--dropdown .choices__item--selectable[data-select-text],
+        .choices__list[aria-expanded] .choices__item--selectable[data-select-text] {
+            padding-right: 1px;
         }
 
         .choices__list--dropdown .choices__item {
@@ -139,8 +135,9 @@
             background-color: #1a1a1a;
         }
 
-        .choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted{
-          background-color: #2d2d2d;
+        .choices__list--dropdown .choices__item--selectable.is-highlighted,
+        .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+            background-color: #2d2d2d;
         }
 
         .choices__list--dropdown .choices__list {
@@ -282,15 +279,15 @@
         }
 
         /* 行号样式 */
-        pre > code {
+        pre>code {
             display: flex;
         }
 
-        pre > code .hljs-ln {
+        pre>code .hljs-ln {
             display: flex;
         }
 
-        pre > code .hljs-ln-numbers {
+        pre>code .hljs-ln-numbers {
             display: flex;
             flex-direction: column;
             user-select: none;
@@ -298,7 +295,7 @@
             align-items: center;
         }
 
-        pre > code .hljs-ln-numbers div {
+        pre>code .hljs-ln-numbers div {
             padding-top: 3px;
             align-items: flex-start;
             display: flex;
@@ -306,7 +303,7 @@
             flex: 1;
         }
 
-        pre > code .hljs-ln-code {
+        pre>code .hljs-ln-code {
             padding-left: 10px;
         }
 
@@ -334,20 +331,20 @@
             position: relative;
             border: 1px solid transparent;
         }
-        
+
         #penButton.active {
             background: #404040;
             border-color: #2ea043;
         }
-        
+
         #penButton svg {
             transition: color 0.2s;
         }
-        
+
         #penButton.active svg {
             color: #2ea043;
         }
-        
+
         /* 添加一个小提示 */
         #penButton::after {
             content: attr(data-tooltip);
@@ -364,11 +361,11 @@
             transition: opacity 0.2s;
             pointer-events: none;
         }
-        
+
         #penButton:hover::after {
             opacity: 1;
         }
-        
+
         #drawingCanvas {
             position: absolute;
             top: 0;
@@ -378,11 +375,11 @@
             z-index: 1;
             pointer-events: none;
         }
-        
+
         #drawingCanvas.drawing-mode {
             pointer-events: auto;
         }
-        
+
         body.drawing {
             cursor: crosshair;
         }
@@ -397,296 +394,322 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="toolbar">
-        <select id="language" class="language-select" >
-        </select>
-        <div class="dropdown">
-            <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
-            <div class="dropdown-content">
-                <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
-                <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
-                <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
+    <div class="container">
+        <div class="toolbar">
+            <select id="language" class="language-select">
+            </select>
+            <div class="dropdown">
+                <button onclick="copyImage()">%COPY_IMAGE_TEXT% <span class="dropdown-icon"></span></button>
+                <div class="dropdown-content">
+                    <div onclick="copyImage()">%COPY_IMAGE_TEXT%</div>
+                    <div onclick="downloadImage()">%DOWNLOAD_IMAGE_TEXT%</div>
+                    <div onclick="openRemoteImage(event)">%OPEN_REMOTE_IMAGE_TEXT%</div>
+                </div>
             </div>
+            <button id="penButton" data-tooltip="%ENABLE_PEN_TEXT%">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34l-3.75-3.75-2.53 2.54 3.75 3.75 2.53-2.54z"
+                        fill="currentColor" />
+                </svg>
+            </button>
         </div>
-        <button id="penButton" data-tooltip="%ENABLE_PEN_TEXT%">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34l-3.75-3.75-2.53 2.54 3.75 3.75 2.53-2.54z" fill="currentColor"/>
-            </svg>
-        </button>
-    </div>
-    <div class="window">
-        <div class="titlebar">
-            <div class="window-controls">
-                <div class="window-control close"></div>
-                <div class="window-control minimize"></div>
-                <div class="window-control maximize"></div>
+        <div class="window">
+            <div class="titlebar">
+                <div class="window-controls">
+                    <div class="window-control close"></div>
+                    <div class="window-control minimize"></div>
+                    <div class="window-control maximize"></div>
+                </div>
+                <div class="window-title">%CODE_SNIPPET_TEXT%</div>
             </div>
-            <div class="window-title">%CODE_SNIPPET_TEXT%</div>
-        </div>
-        <div class="content">
-            <canvas id="drawingCanvas"></canvas>
-            <div id="editor">
-                <pre>
+            <div class="content">
+                <canvas id="drawingCanvas"></canvas>
+                <div id="editor">
+                    <pre>
                     <code class="language-%LANGUAGE%"></code>
                 </pre>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-  const vscode = acquireVsCodeApi();
-  const editor = document.getElementById('editor');
-  const languageSelect = document.getElementById('language');
+    <script>
+        // 初始化 highlight.js
+        hljs.highlightAll();
+        hljs.initLineNumbersOnLoad();
 
-  new Choices(languageSelect, {
-    silent:false,
-    removeItemButton: false,
-    choices: JSON.parse('%LANGUAGE_OPTIONS%')
-  });
+        const vscode = acquireVsCodeApi();
+        const editor = document.getElementById('editor');
+        const languageSelect = document.getElementById('language');
 
-  languageSelect.addEventListener('change', () => {
-    updateLanguage();
-  });
-
-  const codeSnippet = decodeURIComponent`%CODE%`;
-  const codeElement = editor.querySelector('code');
-  // 设置初始语言
-  languageSelect.value = '%DEFAULT_LANGUAGE%';
-  updateLanguage();
-
-  // 更新语言
-  async function updateLanguage() {
-    const newLanguage = languageSelect.value;
-
-    const applyHigh = () => {
-      codeElement.className = 'language-' + newLanguage;
-      codeElement.innerHTML = hljs.highlight(codeSnippet, {
-        language: newLanguage,
-      }).value;
-    };
-
-    // 如果语言未注册，动态导入
-    if (!hljs.getLanguage(newLanguage)) {
-      try {
-        const module = await import(`%BASE_URL%/node_modules/@highlightjs/cdn-assets/es/languages/${newLanguage}.min.js`);
-        hljs.registerLanguage(newLanguage, module.default);
-        applyHigh();
-      } catch (error) {
-        console.error(`Failed to load language: ${newLanguage}`, error);
-        return;
-      }
-    } else {
-      applyHigh();
-    }
-
-    // 在高亮完成后重新调整 canvas 大小
-    setTimeout(resizeCanvas, 0);
-  }
-
-  // 生成图片时需要包含整个窗口
-  async function generateImage() {
-    try {
-      console.log('Generating image...');
-      console.log('domtoimage available:', typeof domtoimage);
-
-      const windowElement = document.querySelector('.window');
-
-      // 直接生成图片，不修改任何样式
-      const dataBlob = await domtoimage.toBlob(windowElement);
-      const dataUrl = await domtoimage.toPng(windowElement);
-
-      return {dataBlob, dataUrl};
-    } catch (error) {
-      console.error('Error generating image:', error);
-      vscode.postMessage({
-        command: 'error',
-        text: 'Error generating image'
-      });
-      return null;
-    }
-  }
-
-  // 复制图片到剪贴板
-  async function copyImage() {
-    const result = await generateImage();
-    if (result) {
-      try {
-        const blob = await new Promise(resolve => resolve(result.dataBlob));
-        if (blob) {
-          await navigator.clipboard.write([
-            new ClipboardItem({'image/png': blob})
-          ]);
-          vscode.postMessage({
-            command: 'info',
-            text: '%COPIED_TEXT%'
-          });
-        }
-      } catch (error) {
-        vscode.postMessage({
-          command: 'error',
-          text: '%COPY_ERROR_TEXT%'
+        new Choices(languageSelect, {
+            silent: false,
+            removeItemButton: false,
+            choices: JSON.parse('%LANGUAGE_OPTIONS%')
         });
-      }
-    }
-  }
 
-  // 下载图片
-  async function downloadImage() {
-    const result = await generateImage();
-    if (result) {
-      vscode.postMessage({
-        command: 'downloadImage',
-        data: result.dataUrl
-      });
-    }
-  }
+        languageSelect.addEventListener('change', () => {
+            updateLanguage();
+        });
 
-  // 打开远程图片
-  function openRemoteImage(event) {
-    const remoteImageUrl = '%REMOTE_IMAGE_URL%';
-    // 发送消息到扩展主代码
-    vscode.postMessage({
-      command: 'openExternal',
-      url: remoteImageUrl
-    });
-  }
+        const codeSnippet = decodeURIComponent`%CODE%`;
+        const codeElement = editor.querySelector('code');
+        // 设置初始语言
+        languageSelect.value = '%DEFAULT_LANGUAGE%';
+        updateLanguage();
 
-  const canvas = document.getElementById('drawingCanvas');
-  const ctx = canvas.getContext('2d');
-  const penButton = document.getElementById('penButton');
-  let isDrawing = false;
-  let isDrawingMode = false;
-  
-  // 添加上一个点的位置记录
-  let lastX = 0;
-  let lastY = 0;
-  
-  // 设置画布大小
-  function resizeCanvas() {
-      const contentElement = document.querySelector('.content');
-      const rect = contentElement.getBoundingClientRect();
-      
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-  }
-  
-  // 初始化画布
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  
-  // 修改 togglePen 函数
-  function togglePen() {
-      isDrawingMode = !isDrawingMode;
-      penButton.classList.toggle('active');
-      document.body.classList.toggle('drawing');
-      canvas.classList.toggle('drawing-mode');
-      
-      // 更新提示文本
-      penButton.setAttribute(
-          'data-tooltip', 
-          isDrawingMode ? '%DISABLE_PEN_TEXT%' : '%ENABLE_PEN_TEXT%'
-      );
-      
-      // 如果关闭画笔模式，清除当前的绘制状态
-      if (!isDrawingMode) {
-          isDrawing = false;
-      }
-  }
-  
-  // 修改绘制相关的代码
-  function startDrawing(e) {
-      if (!isDrawingMode) return;
-      
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      // 检查是否在有效范围内
-      if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
-          return;
-      }
-      
-      isDrawing = true;
-      
-      // 记录起始点
-      lastX = x;
-      lastY = y;
-      
-      // 设置画笔样式
-      ctx.strokeStyle = '#ff0000';
-      ctx.lineWidth = 2;  // 稍微细一点的线条
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      
-      // 开始新的路径
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-  }
-  
-  function draw(e) {
-      if (!isDrawing || !isDrawingMode) return;
-      
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      // 检查是否在有效范围内
-      if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
-          stopDrawing();
-          return;
-      }
-      
-      // 直接连接到当前点
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      
-      // 更新最后的位置
-      lastX = x;
-      lastY = y;
-  }
-  
-  // 添加快捷键支持
-  document.addEventListener('keydown', (e) => {
-      // 按 Escape 键退出画笔模式
-      if (e.key === 'Escape' && isDrawingMode) {
-          togglePen();
-      }
-  });
-  
-  // 添加点击其他按钮时自动关闭画笔模式
-  document.querySelector('.dropdown').addEventListener('click', () => {
-      if (isDrawingMode) {
-          togglePen();
-      }
-  });
-  
-  // 事件监听
-  canvas.addEventListener('mousedown', startDrawing);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', stopDrawing);
-  canvas.addEventListener('mouseout', stopDrawing);
-  
-  function stopDrawing() {
-      if (isDrawing) {
-          ctx.stroke(); // 确保最后一笔完整
-      }
-      isDrawing = false;
-  }
+        // 更新语言
+        async function updateLanguage() {
+            const newLanguage = languageSelect.value;
 
-  function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  
-  // 单击切换画笔
-  penButton.addEventListener('click', togglePen);
-  
-  // 双击清空画布
-  penButton.addEventListener('dblclick', (e) => {
-      e.preventDefault();  // 防止文本选中
-      clearCanvas();
-  });
-</script>
+            const applyHigh = () => {
+                codeElement.className = 'language-' + newLanguage;
+                codeElement.innerHTML = hljs.highlight(codeSnippet, {
+                    language: newLanguage,
+                }).value;
+            };
+
+            // 如果语言未注册，动态导入
+            if (!hljs.getLanguage(newLanguage)) {
+                try {
+                    const module = await import(`%BASE_URL%/node_modules/@highlightjs/cdn-assets/es/languages/${newLanguage}.min.js`);
+                    hljs.registerLanguage(newLanguage, module.default);
+                    applyHigh();
+                } catch (error) {
+                    console.error(`Failed to load language: ${newLanguage}`, error);
+                    return;
+                }
+            } else {
+                applyHigh();
+            }
+
+            // 在高亮完成后重新调整 canvas 大小
+            setTimeout(resizeCanvas, 0);
+        }
+
+        // 生成图片时需要包含整个窗口
+        async function generateImage() {
+            try {
+                console.log('Generating image...');
+                console.log('domtoimage available:', typeof domtoimage);
+
+                const windowElement = document.querySelector('.window');
+
+                // 直接生成图片，不修改任何样式
+                const dataBlob = await domtoimage.toBlob(windowElement);
+                const dataUrl = await domtoimage.toPng(windowElement);
+
+                return { dataBlob, dataUrl };
+            } catch (error) {
+                console.error('Error generating image:', error);
+                vscode.postMessage({
+                    command: 'error',
+                    text: 'Error generating image'
+                });
+                return null;
+            }
+        }
+
+        // 复制图片到剪贴板
+        async function copyImage() {
+            const result = await generateImage();
+            if (result) {
+                try {
+                    const blob = await new Promise(resolve => resolve(result.dataBlob));
+                    if (blob) {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
+                        vscode.postMessage({
+                            command: 'info',
+                            text: '%COPIED_TEXT%'
+                        });
+                    }
+                } catch (error) {
+                    vscode.postMessage({
+                        command: 'error',
+                        text: '%COPY_ERROR_TEXT%'
+                    });
+                }
+            }
+        }
+
+        // 下载图片
+        async function downloadImage() {
+            const result = await generateImage();
+            if (result) {
+                vscode.postMessage({
+                    command: 'downloadImage',
+                    data: result.dataUrl
+                });
+            }
+        }
+
+        // 打开远程图片
+        function openRemoteImage(event) {
+            const remoteImageUrl = '%REMOTE_IMAGE_URL%';
+            // 发送消息到扩展主代码
+            vscode.postMessage({
+                command: 'openExternal',
+                url: remoteImageUrl
+            });
+        }
+
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const penButton = document.getElementById('penButton');
+        let isDrawing = false;
+        let isDrawingMode = false;
+
+        // 添加上一个点的位置记录
+        let lastX = 0;
+        let lastY = 0;
+
+        // 设置画布大小
+        function resizeCanvas() {
+            const contentElement = document.querySelector('.content');
+            const rect = contentElement.getBoundingClientRect();
+
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+
+        // 初始化画布
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 修改 togglePen 函数
+        function togglePen() {
+            isDrawingMode = !isDrawingMode;
+            penButton.classList.toggle('active');
+            document.body.classList.toggle('drawing');
+            canvas.classList.toggle('drawing-mode');
+
+            // 更新提示文本
+            penButton.setAttribute(
+                'data-tooltip',
+                isDrawingMode ? '%DISABLE_PEN_TEXT%' : '%ENABLE_PEN_TEXT%'
+            );
+
+            // 如果关闭画笔模式，清除当前的绘制状态
+            if (!isDrawingMode) {
+                isDrawing = false;
+            }
+        }
+
+        // 修改绘制相关的代码
+        function startDrawing(e) {
+            if (!isDrawingMode) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // 检查是否在有效范围内
+            if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+                return;
+            }
+
+            isDrawing = true;
+
+            // 记录起始点
+            lastX = x;
+            lastY = y;
+
+            // 设置画笔样式
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 2;  // 稍微细一点的线条
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // 开始新的路径
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing || !isDrawingMode) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // 检查是否在有效范围内
+            if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+                stopDrawing();
+                return;
+            }
+
+            // 直接连接到当前点
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            // 更新最后的位置
+            lastX = x;
+            lastY = y;
+        }
+
+        // 添加快捷键支持
+        document.addEventListener('keydown', (e) => {
+            // 按 Escape 键退出画笔模式
+            if (e.key === 'Escape' && isDrawingMode) {
+                togglePen();
+            }
+        });
+
+        // 添加点击其他按钮时自动关闭画笔模式
+        document.querySelector('.dropdown').addEventListener('click', () => {
+            if (isDrawingMode) {
+                togglePen();
+            }
+        });
+
+        // 事件监听
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function stopDrawing() {
+            if (isDrawing) {
+                ctx.stroke(); // 确保最后一笔完整
+            }
+            isDrawing = false;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 单击切换画笔
+        penButton.addEventListener('click', togglePen);
+
+        // 双击清空画布
+        penButton.addEventListener('dblclick', (e) => {
+            e.preventDefault();  // 防止文本选中
+            clearCanvas();
+        });
+
+        new VanillaContextMenu({
+            scope: document.querySelector('body'),
+            menuItems: [
+                {
+                    label: '%COPY_IMAGE_TEXT%',
+                    callback: () => {
+                        copyImage();
+                    },
+                },
+                {
+                    label: '%DOWNLOAD_IMAGE_TEXT%',
+                    callback: downloadImage,
+                },
+                {
+                    label: '%OPEN_REMOTE_IMAGE_TEXT%',
+                    callback: openRemoteImage,
+                }
+            ]
+        });
+    </script>
 </body>
 
 </html>

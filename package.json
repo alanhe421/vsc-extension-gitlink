@@ -295,6 +295,7 @@
     "@highlightjs/cdn-assets": "^11.11.1",
     "choices.js": "^11.1.0",
     "dom-to-image-even-more": "^1.0.4",
-    "highlightjs-line-numbers.js": "^2.9.0"
+    "highlightjs-line-numbers.js": "^2.9.0",
+    "vanilla-context-menu": "^1.6.0"
   }
 }
