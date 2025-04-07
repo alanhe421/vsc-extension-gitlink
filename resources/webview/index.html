@@ -595,6 +595,9 @@
             if (!isDrawingMode) {
                 isDrawing = false;
             }
+            contextMenu.updateOptions({
+                menuItems: buildContextMenu()
+            });
         }
 
         // 修改绘制相关的代码
@@ -690,25 +693,48 @@
             clearCanvas();
         });
 
-        new VanillaContextMenu({
-            scope: document.querySelector('body'),
-            menuItems: [
+
+        function buildContextMenu() {
+            const menuItems = [
                 {
                     label: '%COPY_IMAGE_TEXT%',
                     callback: () => {
                         copyImage();
-                    },
+                    }
                 },
                 {
                     label: '%DOWNLOAD_IMAGE_TEXT%',
-                    callback: downloadImage,
+                    callback: () => {
+                        downloadImage();
+                    }
                 },
                 {
                     label: '%OPEN_REMOTE_IMAGE_TEXT%',
-                    callback: openRemoteImage,
-                }
-            ]
+                    callback: () => {
+                        openRemoteImage();
+                    }
+                },
+                {
+                    label: isDrawingMode ? '%DISABLE_PEN%' : '%ENABLE_PEN%',
+                    callback: () => {
+                        togglePen();
+                    }
+                },
+                {
+                    label: '%CLEAR_PEN%',
+                    callback: () => {
+                        clearCanvas();
+                    }
+                },
+            ];
+
+            return menuItems;
+        }
+        const contextMenu = new VanillaContextMenu({
+            scope: document.querySelector('body'),
+            menuItems: buildContextMenu()
         });
+
     </script>
 </body>
 

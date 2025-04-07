@@ -20,5 +20,8 @@
   "Error copying image": "Error copying image",
   "Open in Ray.so": "Open in Ray.so",
   "Enable Pen, DoubleClick to clear": "Enable Pen, DoubleClick to clear",
-  "Disable Pen, DoubleClick to clear": "Disable Pen, DoubleClick to clear"
+  "Disable Pen, DoubleClick to clear": "Disable Pen, DoubleClick to clear",
+  "Enable Pen": "Enable Pen",
+  "Disable Pen": "Disable Pen",
+  "Clear Pen": "Clear Pen"
 }
