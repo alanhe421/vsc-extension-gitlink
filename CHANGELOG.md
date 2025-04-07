@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.6.0...v1.7.0) (2025-04-07)
+
+
+### Features
+
+* enhance context menu with additional pen options and update localization strings ([7d7f95e](https://github.com/alanhe421/vsc-extension-gitlink/commit/7d7f95e95c8ca2e0c42e58d505e8eb2e9e883112))
+
 ## [1.6.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.5.1...v1.6.0) (2025-04-05)
 
 
