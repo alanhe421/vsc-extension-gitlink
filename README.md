@@ -65,9 +65,9 @@ This extension provides the following settings:
   * `domain`: Domain (e.g., github.com, gitlab.com)
   * `platform`: Platform name, must match a platform name defined in `gitlink.platforms`
 
-* `gitlink.useCompactMenu`: Whether to use compact menu style. When enabled, all GitLink commands will be grouped under a single submenu to reduce clutter in context menus. When disabled, main commands will appear directly in the context menu. Default is false.
+* `gitlink.menuLevel`: Context menu level for GitLink commands.
 
-* `gitlink.rememberRemoteSelection`: Whether to remember the remote selection for the current session. When enabled, the extension will remember your remote selection for the current session. You'll only be prompted to select a remote once per project session. When disabled, you'll be prompted each time. Default is false.
+* `gitlink.rememberRemoteSelection`: Whether to remember the remote selection for the cumenurent session. When enabled, the extension will remember yoursubmenue selection for the current session. You'll only be prompt is false.
 
 * `gitlink.useRemoteForCodeImage`: Whether to use remote service for code snippet images. When enabled, the extension will use the remote service - ray.so to create code snippet images. When disabled, the extension will use the local service to create code snippet images. Default is false.
 
