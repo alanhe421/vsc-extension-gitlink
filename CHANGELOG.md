@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.7.0...v1.8.0) (2025-04-09)
+
+
+### Features
+
+* update context menu configuration for GitLink commands and add localization descriptions ([a523ea9](https://github.com/alanhe421/vsc-extension-gitlink/commit/a523ea9c4346dbd87618428469722322be1de24b))
+* update context menu configuration to use 'menu' instead of 'root' for GitLink commands ([bbaef0b](https://github.com/alanhe421/vsc-extension-gitlink/commit/bbaef0b8e3d2643b4c3a39a023aa22d7d3de9983))
+
 ## [1.7.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.6.0...v1.7.0) (2025-04-07)
 
 
