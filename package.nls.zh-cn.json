@@ -17,11 +17,16 @@
   "config.domainRegistry.items.domain.description": "域名（例如：github.com、gitlab.com）",
   "config.domainRegistry.items.platform.description": "与已定义平台匹配的平台名称",
 
-  "config.useCompactMenu.description": "使用紧凑菜单样式",
-  "config.useCompactMenu.markdownDescription": "启用后，所有 GitLink 命令将被分组到一个子菜单下以减少上下文菜单的混乱。禁用时，主要命令将直接显示在上下文菜单中。",
-
   "config.rememberRemoteSelection.description": "当有多个远程仓库时，记住上次选择的远程仓库。",
   "config.rememberRemoteSelection.markdownDescription": "当有多个远程仓库时，记住上次选择的远程仓库。",
   "config.useRemoteForCodeImage.description": "创建代码片段图片时，使用 ray.so 而不是本地生成。",
-  "config.useRemoteForCodeImage.markdownDescription": "创建代码片段图片时，使用 [ray.so](https://ray.so) 而不是本地生成。"
+  "config.useRemoteForCodeImage.markdownDescription": "创建代码片段图片时，使用 [ray.so](https://ray.so) 而不是本地生成。",
+
+  "config.menuLevel.openInGitHub.description":"'Open in GitHub' 菜单项的上下文菜单级别",
+  "config.menuLevel.copyGitHubLink.description":"'Copy GitHub Link' 菜单项的上下文菜单级别",
+  "config.menuLevel.copyGitHubMarkdownLink.description":"'Copy GitHub Markdown Link' 菜单项的上下文菜单级别",
+  "config.menuLevel.copyGitHubMarkdownSnippet.description":"'Copy GitHub Markdown Snippet' 菜单项的上下文菜单级别",
+  "config.menuLevel.copyGitHubSnippetImage.description":"''Copy GitHub Snippet Image' 菜单项的上下文菜单级别",
+  "config.menuLevel.description":"'GitLink' 命令的上下文菜单级别",
+  "config.menuLevel.markdownDescription":"GitLink 命令的上下文菜单级别。支持 root/submenu"
 }

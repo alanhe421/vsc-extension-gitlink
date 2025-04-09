@@ -63,77 +63,89 @@
         {
           "command": "gitlink.openInGitHub",
           "group": "gitlink@1",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLevel.openInGitHub == 'root'"
         },
         {
           "command": "gitlink.copyGitHubLink",
           "group": "gitlink@2",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLevel.copyGitHubLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "group": "gitlink@3",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet",
+          "group": "gitlink@4",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownSnippet == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "group": "gitlink@5",
+          "when": "config.gitlink.menuLevel.copyGitHubSnippetImage == 'root'"
         },
         {
           "submenu": "gitlink.submenu.others",
-          "group": "gitlink@4",
-          "when": "!config.gitlink.useCompactMenu"
-        },
-        {
-          "submenu": "gitlink.submenu.all",
-          "group": "gitlink@1",
-          "when": "config.gitlink.useCompactMenu"
+          "group": "gitlink@6"
         }
       ],
       "editor/context": [
         {
           "command": "gitlink.openInGitHub",
           "group": "gitlink@1",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLevel.openInGitHub == 'root'"
         },
         {
           "command": "gitlink.copyGitHubLink",
           "group": "gitlink@2",
-          "when": "!config.gitlink.useCompactMenu"
+          "when": "config.gitlink.menuLevel.copyGitHubLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownLink",
+          "group": "gitlink@3",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownLink == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubMarkdownSnippet",
+          "group": "gitlink@4",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownSnippet == 'root'"
+        },
+        {
+          "command": "gitlink.copyGitHubSnippetImage",
+          "group": "gitlink@5",
+          "when": "config.gitlink.menuLevel.copyGitHubSnippetImage == 'root'"
         },
         {
           "submenu": "gitlink.submenu.others",
-          "group": "gitlink@4",
-          "when": "!config.gitlink.useCompactMenu"
-        },
-        {
-          "submenu": "gitlink.submenu.all",
-          "group": "gitlink@1",
-          "when": "config.gitlink.useCompactMenu"
+          "group": "gitlink@6"
         }
       ],
       "gitlink.submenu.others": [
         {
-          "command": "gitlink.copyGitHubMarkdownLink"
-        },
-        {
-          "command": "gitlink.copyGitHubMarkdownSnippet"
-        },
-        {
-          "command": "gitlink.copyGitHubSnippetImage"
-        }
-      ],
-      "gitlink.submenu.all": [
-        {
           "command": "gitlink.openInGitHub",
-          "group": "gitlink@1"
+          "group": "gitlink@1",
+          "when": "config.gitlink.menuLevel.openInGitHub == 'submenu'"
         },
         {
           "command": "gitlink.copyGitHubLink",
-          "group": "gitlink@2"
+          "group": "gitlink@2",
+          "when": "config.gitlink.menuLevel.copyGitHubLink == 'submenu'"
         },
         {
           "command": "gitlink.copyGitHubMarkdownLink",
-          "group": "gitlink@3"
+          "group": "gitlink@3",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownLink == 'submenu'"
         },
         {
           "command": "gitlink.copyGitHubMarkdownSnippet",
-          "group": "gitlink@4"
+          "group": "gitlink@4",
+          "when": "config.gitlink.menuLevel.copyGitHubMarkdownSnippet == 'submenu'"
         },
         {
           "command": "gitlink.copyGitHubSnippetImage",
-          "group": "gitlink@5"
+          "group": "gitlink@5",
+          "when": "config.gitlink.menuLevel.copyGitHubSnippetImage == 'submenu'"
         }
       ]
     },
@@ -238,12 +250,6 @@
             }
           }
         },
-        "gitlink.useCompactMenu": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.useCompactMenu.description%",
-          "markdownDescription": "%config.useCompactMenu.markdownDescription%"
-        },
         "gitlink.rememberRemoteSelection": {
           "type": "boolean",
           "default": false,
@@ -255,6 +261,50 @@
           "default": false,
           "description": "%config.useRemoteForCodeImage.description%",
           "markdownDescription": "%config.useRemoteForCodeImage.markdownDescription%"
+        },
+        "gitlink.menuLevel": {
+          "type": "object",
+          "default": {
+            "openInGitHub": "root",
+            "copyGitHubLink": "root",
+            "copyGitHubMarkdownLink": "submenu",
+            "copyGitHubMarkdownSnippet": "submenu",
+            "copyGitHubSnippetImage": "submenu"
+          },
+          "properties": {
+            "openInGitHub": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "root",
+              "description": "%config.menuLevel.openInGitHub.description%"
+            },
+            "copyGitHubLink": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "root",
+              "description": "%config.menuLevel.copyGitHubLink.description%"
+            },
+            "copyGitHubMarkdownLink": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu",
+              "description": "%config.menuLevel.copyGitHubMarkdownLink.description%"
+            },
+            "copyGitHubMarkdownSnippet": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu",
+              "description": "%config.menuLevel.copyGitHubMarkdownSnippet.description%"
+            },
+            "copyGitHubSnippetImage": {
+              "type": "string",
+              "enum": ["root", "submenu"],
+              "default": "submenu",
+              "description": "%config.menuLevel.copyGitHubSnippetImage.description%"
+            }
+          },
+          "description": "%config.menuLevel.description%",
+          "markdownDescription": "%config.menuLevel.markdownDescription%"
         }
       }
     }

@@ -17,11 +17,16 @@
   "config.domainRegistry.items.domain.description": "Domain (e.g., github.com, gitlab.com)",
   "config.domainRegistry.items.platform.description": "Platform name that matches with defined platforms",
 
-  "config.useCompactMenu.description": "Use compact menu style",
-  "config.useCompactMenu.markdownDescription": "When enabled, all GitLink commands will be grouped under a submenu to reduce context menu clutter. When disabled, main commands will be shown directly in the context menu.",
-
   "config.rememberRemoteSelection.description": "Remember the last selected remote when multiple remotes are available.",
   "config.rememberRemoteSelection.markdownDescription": "Remember the last selected remote when multiple remotes are available.",
   "config.useRemoteForCodeImage.description": "When creating code snippet images, use ray.so instead of local generation.",
-  "config.useRemoteForCodeImage.markdownDescription": "When creating code snippet images, use [ray.so](https://ray.so) instead of local generation."
+  "config.useRemoteForCodeImage.markdownDescription": "When creating code snippet images, use [ray.so](https://ray.so) instead of local generation.",
+
+  "config.menuLevel.openInGitHub.description":"context menu level for 'Open in GitHub' command",
+  "config.menuLevel.copyGitHubLink.description":"context menu level for 'Copy GitHub Link' command",
+  "config.menuLevel.copyGitHubMarkdownLink.description":"context menu level for 'Copy GitHub Markdown Link' command",
+  "config.menuLevel.copyGitHubMarkdownSnippet.description":"context menu level for 'Copy GitHub Markdown Snippet' command",
+  "config.menuLevel.copyGitHubSnippetImage.description":"context menu level for 'Copy GitHub Snippet Image' command",
+  "config.menuLevel.description":"context menu level for GitLink commands",
+  "config.menuLevel.markdownDescription":"context menu level for GitLink commands. support root/submenu"
 }
