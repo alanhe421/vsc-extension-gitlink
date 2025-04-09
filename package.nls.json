@@ -28,5 +28,5 @@
   "config.menuLevel.copyGitHubMarkdownSnippet.description":"context menu level for 'Copy GitHub Markdown Snippet' command",
   "config.menuLevel.copyGitHubSnippetImage.description":"context menu level for 'Copy GitHub Snippet Image' command",
   "config.menuLevel.description":"context menu level for GitLink commands",
-  "config.menuLevel.markdownDescription":"context menu level for GitLink commands. support root/submenu"
+  "config.menuLevel.markdownDescription":"context menu level for GitLink commands. support menu, submenu"
 }

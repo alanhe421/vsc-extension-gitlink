@@ -28,5 +28,5 @@
   "config.menuLevel.copyGitHubMarkdownSnippet.description":"'Copy GitHub Markdown Snippet' 菜单项的上下文菜单级别",
   "config.menuLevel.copyGitHubSnippetImage.description":"''Copy GitHub Snippet Image' 菜单项的上下文菜单级别",
   "config.menuLevel.description":"'GitLink' 命令的上下文菜单级别",
-  "config.menuLevel.markdownDescription":"GitLink 命令的上下文菜单级别。支持 root/submenu"
+  "config.menuLevel.markdownDescription":"GitLink 命令的上下文菜单级别。支持 menu, submenu"
 }
