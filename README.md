@@ -1,4 +1,4 @@
-# GitLink - VS Code Extension
+# Beautiful GitLink - VS Code Extension
 
 A VS Code extension that allows you to open the web version of files in your Git repository.
 
