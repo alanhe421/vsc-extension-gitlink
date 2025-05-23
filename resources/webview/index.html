@@ -390,6 +390,25 @@
             user-select: none;
             -webkit-user-select: none;
         }
+
+        /* 水印样式 */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .watermark.hidden {
+            display: none;
+        }
     </style>
 </head>
 
@@ -424,10 +443,12 @@
                 <div class="window-title">%CODE_SNIPPET_TEXT%</div>
             </div>
             <div class="content">
+                <div class="watermark" id="watermark">%WATERMARK_TEXT%</div>
                 <canvas id="drawingCanvas"></canvas>
                 <div id="editor">
                     <pre>
                     <code class="language-%LANGUAGE%"></code>
+                    
                 </pre>
                 </div>
             </div>
@@ -454,6 +475,17 @@
 
         const codeSnippet = decodeURIComponent`%CODE%`;
         const codeElement = editor.querySelector('code');
+
+        // 水印控制
+        const watermarkElement = document.getElementById('watermark');
+        const watermarkText = '%WATERMARK_TEXT%';
+        // 如果水印文本为空或未定义，隐藏水印
+        if (!watermarkText || watermarkText.trim() === '') {
+            watermarkElement.classList.add('hidden');
+        }
+
+        console.log('Watermark text:', watermarkText);
+
         // 设置初始语言
         languageSelect.value = '%DEFAULT_LANGUAGE%';
         updateLanguage();

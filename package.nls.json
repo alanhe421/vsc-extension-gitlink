@@ -21,6 +21,8 @@
   "config.rememberRemoteSelection.markdownDescription": "Remember the last selected remote when multiple remotes are available.",
   "config.useRemoteForCodeImage.description": "When creating code snippet images, use ray.so instead of local generation.",
   "config.useRemoteForCodeImage.markdownDescription": "When creating code snippet images, use [ray.so](https://ray.so) instead of local generation.",
+  "config.codeImageWatermark.description": "Watermark for code snippet images. Leave empty for no watermark.",
+  "config.codeImageWatermark.markdownDescription": "Watermark for code snippet images. Leave empty for no watermark.",
 
   "config.menuLevel.openInGitHub.description":"context menu level for 'Open in GitHub' command",
   "config.menuLevel.copyGitHubLink.description":"context menu level for 'Copy GitHub Link' command",

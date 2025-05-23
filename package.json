@@ -320,6 +320,12 @@
           },
           "description": "%config.menuLevel.description%",
           "markdownDescription": "%config.menuLevel.markdownDescription%"
+        },
+        "gitlink.codeImageWatermark": {
+          "type": "string",
+          "default": "",
+          "description": "%config.codeImageWatermark.description%",
+          "markdownDescription": "%config.codeImageWatermark.markdownDescription%"
         }
       }
     }
