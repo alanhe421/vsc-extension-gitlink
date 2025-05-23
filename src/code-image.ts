@@ -202,8 +202,7 @@ export class CodeImagePanel {
       fileName: string;
     }
   ): Promise<string> {
-    const config = vscode.workspace
-      .getConfiguration('gitlink');
+    const config = vscode.workspace.getConfiguration('gitlink');
     const { languages } = options;
 
     // 检查语言是否在支持列表中，如果不在则使用 text
@@ -257,9 +256,7 @@ export class CodeImagePanel {
       .replace(/%ENABLE_PEN%/g, vscode.l10n.t('Enable Pen'))
       .replace(/%DISABLE_PEN%/g, vscode.l10n.t('Disable Pen'))
       .replace(/%CLEAR_PEN%/g, vscode.l10n.t('Clear Pen'))
-      .replace(
-        /%WATERMARK_TEXT%/g,config.get('codeImageWatermark') as string
-      );
+      .replace(/%WATERMARK_TEXT%/g, config.get('codeImageWatermark') as string);
 
     return htmlTemplate;
   }
