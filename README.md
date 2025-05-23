@@ -30,6 +30,7 @@ A VS Code extension that allows you to open the web version of files in your Git
 - Automatically detects if the project uses a supported Git hosting platform when loading, and prompts the user if not.
 - Supports custom Git hosting platforms and URL templates.
 - Support pen tool to draw annotations on code snippet images. Double-click to clear drawings.
+- Support custom watermark on code snippet images. 
 
 
 ## Built-in Supported Platforms
