@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.8.0...v1.9.0) (2025-05-23)
+
+
+### Features
+
+* 更新 README 文件标题为 "Beautiful GitLink - VS Code Extension" ([41c31ce](https://github.com/alanhe421/vsc-extension-gitlink/commit/41c31ce8aece41677732af8ca05b54a9a585d71e))
+
 ## [1.8.0](https://github.com/alanhe421/vsc-extension-gitlink/compare/v1.7.0...v1.8.0) (2025-04-09)
 
 
