@@ -3,13 +3,12 @@
 A VS Code extension that allows you to open the web version of files in your Git repository.
 
 
-![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/AlanHe.cn-alanhe-gitlink)
-
 ![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/AlanHe.cn-alanhe-gitlink)
 
-[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/AlanHe.cn-alanhe-gitlink)](https://marketplace.visualstudio.com/items?itemName=AlanHe.cn-alanhe-gitlink)
-
 ![Localization Status](https://img.shields.io/badge/i18n-English%20%7C%20简体中文-blue)
+
+
+[Install ⏬](https://marketplace.visualstudio.com/items?itemName=AlanHe.cn-alanhe-gitlink&ssr=false#overview)
 
 > **Note for JetBrains IDE users**: If you're using IntelliJ IDEA, WebStorm, or other JetBrains IDEs, we recommend using [GitLink by Ben Gibson](https://github.com/ben-gibson/GitLink) which provides similar functionality for JetBrains platforms.
 
